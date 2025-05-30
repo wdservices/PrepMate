@@ -35,9 +35,9 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
     if (isOpen) {
       let initialMessageText = "";
       if (currentQuestionContext) {
-        initialMessageText = `Hi! I'm your AI assistant. I can help with the current ${subjectName} question: "${currentQuestionContext.text.substring(0,70)}...", or you can ask me any other academic question.`;
+        initialMessageText = `Hi! I'm your AI Tutor. I can help with the current ${subjectName} question: "${currentQuestionContext.text.substring(0,70)}...", or you can ask me any other academic question.`;
       } else {
-        initialMessageText = `Hi! I'm your AI assistant for ${subjectName}. How can I help you with your academic questions today?`;
+        initialMessageText = `Hi! I'm your AI Tutor for ${subjectName}. How can I help you with your academic questions today?`;
       }
       setMessages([
         { 
@@ -112,7 +112,7 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
       <DialogContent className="sm:max-w-[525px] p-0 flex flex-col max-h-[80vh]">
         <DialogHeader className="p-6 pb-2 border-b">
           <DialogTitle className="text-2xl flex items-center">
-             <Sparkles className="h-6 w-6 mr-2 text-primary" /> AI Question Assistant
+             <Sparkles className="h-6 w-6 mr-2 text-primary" /> AI Tutor
           </DialogTitle>
           <DialogDescription>
             Ask about {currentQuestionContext ? `${subjectName} or the current question` : 'any academic topic'}.
