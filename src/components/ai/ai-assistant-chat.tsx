@@ -5,7 +5,6 @@ import { useState, useRef, useEffect, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-// ScrollArea is removed
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Loader2, Send, User, Sparkles } from "lucide-react";
 import { aiQuestionAssistant } from "@/ai/flows/ai-question-assistant";
@@ -30,7 +29,7 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const messagesContainerRef = useRef<HTMLDivElement>(null); // Renamed from scrollViewportRef for clarity
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -104,7 +103,7 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[525px] p-0 flex flex-col max-h-[calc(100vh-4rem)] sm:max-h-[80vh] rounded-lg shadow-xl">
+      <DialogContent className="sm:max-w-[525px] p-0 flex flex-col max-h-[80svh] sm:max-h-[80vh] rounded-lg shadow-xl">
         <DialogHeader className="p-4 pb-2 border-b bg-card">
           <DialogTitle className="text-xl flex items-center font-semibold text-foreground">
              <Sparkles className="h-5 w-5 mr-2 text-primary" /> AI Tutor
@@ -114,7 +113,6 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
           </DialogDescription>
         </DialogHeader>
         
-        {/* Replaced ScrollArea with a div for native scrolling */}
         <div 
           ref={messagesContainerRef} 
           className="flex-1 min-h-0 overflow-y-auto bg-background/70"
