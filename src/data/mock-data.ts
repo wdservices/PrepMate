@@ -78,21 +78,18 @@ export const exams: Exam[] = [
     id: "jamb",
     name: "JAMB",
     description: "Joint Admissions and Matriculation Board examination for tertiary-level education in Nigeria.",
-    imageUrl: "https://placehold.co/600x400.png?text=JAMB",
     subjects: jambSubjects,
   },
   {
     id: "waec",
     name: "WAEC",
     description: "West African Examinations Council, a senior secondary school leaving examination.",
-    imageUrl: "https://placehold.co/600x400.png?text=WAEC",
     subjects: waecSubjects,
   },
   {
     id: "neco",
     name: "NECO",
     description: "National Examinations Council, another senior secondary school certificate examination in Nigeria.",
-    imageUrl: "https://placehold.co/600x400.png?text=NECO",
     subjects: necoSubjects,
   },
 ];
@@ -134,4 +131,3 @@ export function getPastQuestionsForAnalysis(examId: string, subjectId: string): 
   
   return relevantQuestions.map(q => q.text);
 }
-

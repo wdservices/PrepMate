@@ -25,7 +25,6 @@ export interface Exam {
   id: string;
   name: string;
   description: string;
-  imageUrl?: string;
   subjects: Subject[];
 }
 
