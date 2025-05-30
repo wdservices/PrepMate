@@ -8,19 +8,13 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, AlertTriangle, Brain, ListChecks, HelpCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { analyzeQuestionFrequency, type AnalysisOutput } from "@/ai/flows/predictive-analysis";
+import { analyzeQuestionFrequency, type AnalysisOutput, type FrequentQuestionDetail } from "@/ai/flows/predictive-analysis";
 import { exams, getPastQuestionsForAnalysis } from "@/data/mock-data";
 import type { Exam, Subject } from "@/types";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import type { Metadata } from 'next';
-
-// Static metadata for the page
-// export const metadata: Metadata = { // Cannot export metadata from client component, will be handled by layout or parent.
-// title: 'Smart Analysis',
-// };
 
 
-export default function SmartAnalysisPage() { // Renamed component
+export default function SmartAnalysisPage() { 
   const [selectedExamId, setSelectedExamId] = useState<string>("");
   const [selectedSubjectId, setSelectedSubjectId] = useState<string>("");
   const [analysisResult, setAnalysisResult] = useState<AnalysisOutput | null>(null);
@@ -50,8 +44,8 @@ export default function SmartAnalysisPage() { // Renamed component
         throw new Error("Selected exam or subject not found.");
       }
       
-      const pastQuestionsText = getPastQuestionsForAnalysis(exam.id, subject.id);
-      if (pastQuestionsText.length === 0) {
+      const pastQuestionsWithYears = getPastQuestionsForAnalysis(exam.id, subject.id);
+      if (pastQuestionsWithYears.length === 0) {
         toast({ title: "No Data", description: `No past questions found for ${subject.name} in ${exam.name} to analyze.`, variant: "default" });
         setIsLoading(false);
         return;
@@ -60,7 +54,7 @@ export default function SmartAnalysisPage() { // Renamed component
       const result = await analyzeQuestionFrequency({
         examName: exam.name,
         subject: subject.name,
-        pastQuestions: pastQuestionsText,
+        pastQuestions: pastQuestionsWithYears, // Pass data in the new format
       });
       setAnalysisResult(result);
     } catch (err: any) {
@@ -72,27 +66,43 @@ export default function SmartAnalysisPage() { // Renamed component
     }
   };
   
-  const renderQuestionList = (questions: string[], title: string, icon: React.ReactNode) => (
-    <Card className="shadow-sm">
-      {title && icon && ( // Only render header if title and icon are provided
-        <CardHeader className="bg-muted/30">
-          <CardTitle className="flex items-center text-xl">
-            {icon}
-            {title}
-          </CardTitle>
-        </CardHeader>
-      )}
-      <CardContent className="pt-4">
+  const renderFrequentQuestionList = (questions: FrequentQuestionDetail[]) => (
+    <Card className="shadow-sm border-none bg-transparent">
+      <CardContent className="pt-2">
+        {questions.length > 0 ? (
+          <ul className="space-y-3">
+            {questions.map((q, index) => (
+              <li key={index} className="text-sm p-3 border rounded-md shadow-sm bg-card hover:shadow-md transition-shadow">
+                <p className="font-medium text-foreground leading-relaxed">{q.questionText}</p>
+                <p className="text-xs text-muted-foreground mt-1.5">
+                  <span className="font-semibold">Appeared in:</span> {q.appearedInYears.join(', ')}
+                </p>
+                {q.topic && (
+                    <p className="text-xs text-primary/90 mt-1"><span className="font-semibold">Topic:</span> {q.topic}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-muted-foreground text-sm">No specific frequent questions identified with year data.</p>
+        )}
+      </CardContent>
+    </Card>
+  );
+
+  const renderPredictedQuestionList = (questions: string[]) => (
+    <Card className="shadow-sm border-none bg-transparent">
+      <CardContent className="pt-2">
         {questions.length > 0 ? (
           <ul className="space-y-2">
             {questions.map((q, index) => (
-              <li key={index} className="text-sm p-2 border-b last:border-b-0">
+              <li key={index} className="text-sm p-2.5 border-b last:border-b-0 bg-card rounded-md shadow-sm">
                 {q}
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-muted-foreground text-sm">No specific questions identified for this category.</p>
+          <p className="text-muted-foreground text-sm">No specific predictions identified for this category.</p>
         )}
       </CardContent>
     </Card>
@@ -106,11 +116,11 @@ export default function SmartAnalysisPage() { // Renamed component
           <Brain className="mr-3 h-10 w-10 text-primary" /> Smart Analysis
         </h1>
         <p className="mt-4 text-lg text-muted-foreground sm:text-xl max-w-2xl mx-auto">
-          Leverage AI to discover frequently asked questions and predict potential topics for your upcoming exams.
+          Leverage AI to discover frequently asked questions, the years they appeared, and predict potential topics for your upcoming exams.
         </p>
       </div>
 
-      <Card className="shadow-lg">
+      <Card className="shadow-lg rounded-xl">
         <CardHeader>
           <CardTitle>Select Exam and Subject</CardTitle>
           <CardDescription>Choose an exam and subject to generate smart analysis.</CardDescription>
@@ -163,7 +173,7 @@ export default function SmartAnalysisPage() { // Renamed component
       )}
 
       {error && (
-        <Card className="border-destructive bg-destructive/10">
+        <Card className="border-destructive bg-destructive/10 rounded-xl">
             <CardHeader className="flex flex-row items-center gap-3">
                 <AlertTriangle className="h-8 w-8 text-destructive" />
                 <CardTitle className="text-destructive">Analysis Error</CardTitle>
@@ -175,39 +185,39 @@ export default function SmartAnalysisPage() { // Renamed component
       )}
 
       {analysisResult && !isLoading && (
-        <Card className="shadow-xl">
-          <CardHeader className="bg-primary/10">
+        <Card className="shadow-xl rounded-xl">
+          <CardHeader className="bg-primary/5 border-b">
             <CardTitle className="text-2xl text-primary">Smart Analysis Results for {selectedExam?.name} - {selectedExam?.subjects.find(s => s.id === selectedSubjectId)?.name}</CardTitle>
           </CardHeader>
           <CardContent className="pt-6 space-y-6">
-            <Card>
-                <CardHeader className="bg-muted/30">
+            <Card className="rounded-lg">
+                <CardHeader className="bg-muted/30 border-b">
                     <CardTitle className="text-xl">Analysis Summary</CardTitle>
                 </CardHeader>
                 <CardContent className="pt-4">
-                    <p className="text-base whitespace-pre-line">{analysisResult.analysisSummary}</p>
+                    <p className="text-base whitespace-pre-line leading-relaxed">{analysisResult.analysisSummary}</p>
                 </CardContent>
             </Card>
             
             <Accordion type="single" collapsible className="w-full" defaultValue="frequent">
-              <AccordionItem value="frequent">
-                <AccordionTrigger className="text-xl font-semibold hover:no-underline">
+              <AccordionItem value="frequent" className="border rounded-lg overflow-hidden">
+                <AccordionTrigger className="text-xl font-semibold hover:no-underline px-4 py-3 bg-muted/40 hover:bg-muted/60">
                   <div className="flex items-center">
-                    <ListChecks className="mr-3 h-6 w-6 text-accent" /> Frequently Asked Questions
+                    <ListChecks className="mr-3 h-6 w-6 text-primary" /> Frequently Asked Questions
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="p-1">
-                  {renderQuestionList(analysisResult.frequentQuestions, "", null)}
+                <AccordionContent className="p-1 pt-3 bg-background">
+                  {renderFrequentQuestionList(analysisResult.frequentQuestions)}
                 </AccordionContent>
               </AccordionItem>
-              <AccordionItem value="predicted">
-                <AccordionTrigger className="text-xl font-semibold hover:no-underline">
+              <AccordionItem value="predicted" className="border rounded-lg overflow-hidden mt-4">
+                <AccordionTrigger className="text-xl font-semibold hover:no-underline px-4 py-3 bg-muted/40 hover:bg-muted/60">
                    <div className="flex items-center">
-                    <HelpCircle className="mr-3 h-6 w-6 text-accent" /> Predicted Likely Questions/Topics
+                    <HelpCircle className="mr-3 h-6 w-6 text-primary" /> Predicted Likely Questions/Topics
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="p-1">
-                  {renderQuestionList(analysisResult.predictedQuestions, "", null)}
+                <AccordionContent className="p-1 pt-3 bg-background">
+                  {renderPredictedQuestionList(analysisResult.predictedQuestions)}
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -218,3 +228,4 @@ export default function SmartAnalysisPage() { // Renamed component
     </div>
   );
 }
+

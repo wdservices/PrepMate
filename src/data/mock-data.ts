@@ -1,5 +1,6 @@
 
 import type { Exam, Subject, Question } from "@/types";
+import { PastQuestionWithYear as AIPastQuestionInput } from "@/ai/flows/predictive-analysis"; // Import type from AI flow
 import { BookText, Atom, Languages, Calculator, Leaf, FlaskConical, Users, GraduationCap, BookOpenText, ClipboardCheck, Landmark, Scale } from "lucide-react";
 
 const biologyQuestions2010: Question[] = [
@@ -41,6 +42,18 @@ const biologyQuestions2011: Question[] = [
       { id: "opt4", text: "Flowers" },
     ],
     correctOptionId: "opt3",
+  },
+  { // Adding a repeated question for testing
+    id: "bio-2011-q2",
+    year: 2011,
+    text: "Which of the following is a characteristic of living organisms?",
+    options: [
+      { id: "opt1", text: "Melting" },
+      { id: "opt2", text: "Respiration" },
+      { id: "opt3", text: "Boiling" },
+      { id: "opt4", text: "Rusting" },
+    ],
+    correctOptionId: "opt2",
   },
 ];
 
@@ -123,14 +136,14 @@ export const exams: Exam[] = [
     id: "waec",
     name: "WAEC",
     description: "West African Examinations Council, a senior secondary school leaving examination.",
-    subjects: commonSubjects, // Assuming same subjects for simplicity, can be customized
+    subjects: commonSubjects, 
     icon: BookOpenText,
   },
   {
     id: "neco",
     name: "NECO",
     description: "National Examinations Council, another senior secondary school certificate examination in Nigeria.",
-    subjects: commonSubjects, // Assuming same subjects for simplicity, can be customized
+    subjects: commonSubjects, 
     icon: ClipboardCheck,
   },
 ];
@@ -155,14 +168,12 @@ export function getSubjectById(examId: string, subjectId: string): Subject | und
 
 export function getQuestions(examId: string, subjectId: string, year: number): Question[] {
   // In a real app, this would fetch from a database
-  // For mock, filter allQuestions based on examId (implicit), subjectId and year
   if (subjectId === 'biology' && year === 2010) return biologyQuestions2010;
   if (subjectId === 'biology' && year === 2011) return biologyQuestions2011;
   if (subjectId === 'chemistry' && year === 2010) return chemistryQuestions2010;
   if (subjectId === 'english' && year === 2010) return englishQuestions2010;
   if (subjectId === 'mathematics' && year === 2010) return mathematicsQuestions2010;
   
-  // Fallback for other combinations if needed or return empty array
   return allQuestions.filter(q => 
     q.year === year &&
     (
@@ -170,26 +181,38 @@ export function getQuestions(examId: string, subjectId: string, year: number): Q
       (subjectId === 'chemistry' && q.id.startsWith('chem-')) ||
       (subjectId === 'english' && q.id.startsWith('eng-')) ||
       (subjectId === 'mathematics' && q.id.startsWith('math-'))
-      // Add other subjects here
     )
   );
 }
 
-export function getPastQuestionsForAnalysis(examId: string, subjectId: string): string[] {
-  // Filter allQuestions for the given exam and subject across all years
-  // This is a simplified mock version.
+export function getPastQuestionsForAnalysis(examId: string, subjectId: string): AIPastQuestionInput[] {
   let relevantQuestions: Question[] = [];
-  if (subjectId === 'biology') {
-    relevantQuestions = allQuestions.filter(q => q.id.startsWith('bio-'));
-  } else if (subjectId === 'chemistry') {
-    relevantQuestions = allQuestions.filter(q => q.id.startsWith('chem-'));
-  } else if (subjectId === 'english') {
-    relevantQuestions = allQuestions.filter(q => q.id.startsWith('eng-'));
-  } else if (subjectId === 'mathematics') {
-    relevantQuestions = allQuestions.filter(q => q.id.startsWith('math-'));
-  }
-  // Add more subject filters as needed
-  
-  return relevantQuestions.map(q => q.text);
-}
+  const exam = getExamById(examId);
+  const subject = exam?.subjects.find(s => s.id === subjectId);
 
+  if (subject) {
+    subject.availableYears.forEach(year => {
+      const questionsForYear = getQuestions(examId, subjectId, year);
+      relevantQuestions.push(...questionsForYear);
+    });
+  }
+  
+  // If still no questions (e.g. subject has no available years, or no questions for those years)
+  // Fallback to broader filter if needed, though ideally availableYears should be accurate.
+  if (relevantQuestions.length === 0) {
+    if (subjectId === 'biology') {
+      relevantQuestions = allQuestions.filter(q => q.id.startsWith('bio-'));
+    } else if (subjectId === 'chemistry') {
+      relevantQuestions = allQuestions.filter(q => q.id.startsWith('chem-'));
+    } else if (subjectId === 'english') {
+      relevantQuestions = allQuestions.filter(q => q.id.startsWith('eng-'));
+    } else if (subjectId === 'mathematics') {
+      relevantQuestions = allQuestions.filter(q => q.id.startsWith('math-'));
+    }
+  }
+  
+  return relevantQuestions.map(q => ({
+    questionText: q.text,
+    year: q.year,
+  }));
+}
