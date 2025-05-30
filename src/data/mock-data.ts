@@ -1,7 +1,13 @@
 
 import type { Exam, Subject, Question } from "@/types";
 import { PastQuestionWithYear as AIPastQuestionInput } from "@/ai/flows/predictive-analysis"; // Import type from AI flow
-import { BookText, Atom, Languages, Calculator, Leaf, FlaskConical, Users, GraduationCap, BookOpenText, ClipboardCheck, Landmark, Scale } from "lucide-react";
+import { 
+  BookText, Atom, Languages, Calculator, Leaf, FlaskConical, Users, GraduationCap, 
+  BookOpenText, ClipboardCheck, Landmark, Scale, TrendingUp, DollarSign, Tractor, Sprout, 
+  Store, ShoppingBag, Globe2, Map as MapIcon, NotebookText, BookHeart, Feather, Cross, 
+  FunctionSquare, InfinityIcon, MessagesSquare, Palette, Brush, Laptop, Code, CookingPot, 
+  Apple, ScrollText, MoonStar, BookOpen, Milestone 
+} from "lucide-react";
 
 const biologyQuestions2010: Question[] = [
   {
@@ -116,12 +122,29 @@ const mathematicsQuestions2010: Question[] = [
 
 
 export const commonSubjects: Subject[] = [
-  { id: "biology", name: "Biology", icon: Leaf, availableYears: [2010, 2011], description: "Study of life and living organisms, their structure, function, growth, origin, evolution, distribution, and taxonomy." },
-  { id: "chemistry", name: "Chemistry", icon: FlaskConical, availableYears: [2010], description: "Scientific discipline involved with elements and compounds composed of atoms, molecules and ions: their composition, structure, properties, behavior and the changes they undergo during a reaction with other substances." },
   { id: "english", name: "English Language", icon: Languages, availableYears: [2010], description: "Core subject focusing on grammar, comprehension, literature, and effective communication skills." },
-  { id: "mathematics", name: "Mathematics", icon: Calculator, availableYears: [2010], description: "Abstract science of number, quantity, and space, either as abstract concepts (pure mathematics) or as applied to other disciplines such as physics and engineering (applied mathematics)." },
-  { id: "physics", name: "Physics", icon: Atom, availableYears: [], description: "Natural science that studies matter, its motion and behavior through space and time, and the related entities of energy and force." },
-  { id: "government", name: "Government", icon: Users, availableYears: [], description: "Study of political systems, institutions, processes, and behavior, and the analysis of political ideas and theories." },
+  { id: "mathematics", name: "Mathematics", icon: Calculator, availableYears: [2010], description: "Abstract science of number, quantity, and space, fundamental to all sciences." },
+  { id: "biology", name: "Biology", icon: Leaf, availableYears: [2010, 2011], description: "Study of life and living organisms, their structure, function, growth, and evolution." },
+  { id: "civics", name: "Civic Education", icon: Landmark, availableYears: [], description: "Study of the rights and responsibilities of citizens and the workings of government." },
+  { id: "economics", name: "Economics", icon: TrendingUp, availableYears: [], description: "Study of production, distribution, and consumption of goods and services." },
+  { id: "agricultural-science", name: "Agricultural Science", icon: Sprout, availableYears: [], description: "Application of scientific principles to agriculture." },
+  { id: "chemistry", name: "Chemistry", icon: FlaskConical, availableYears: [2010], description: "Scientific discipline involving elements and compounds and their transformations." },
+  { id: "commerce", name: "Commerce", icon: Store, availableYears: [], description: "Study of trade and business activities." },
+  { id: "geography", name: "Geography", icon: Globe2, availableYears: [], description: "Study of the earth's landscapes, environments, and the relationship between people and their environments." },
+  { id: "financial-accounting", name: "Financial Accounting", icon: NotebookText, availableYears: [], description: "Process of recording, summarizing, and reporting the myriad of a company's business transactions." },
+  { id: "english-literature", name: "English Literature", icon: BookHeart, availableYears: [], description: "Study of literary works written in the English language." },
+  { id: "physics", name: "Physics", icon: Atom, availableYears: [], description: "Natural science that studies matter, its motion and behavior through space and time." },
+  { id: "crs", name: "Christian Religious Studies", icon: Cross, availableYears: [], description: "Study of Christian beliefs, practices, and history." },
+  { id: "further-mathematics", name: "Further Mathematics", icon: FunctionSquare, availableYears: [], description: "Advanced mathematical concepts beyond standard mathematics." },
+  { id: "igbo", name: "Igbo Language", icon: MessagesSquare, availableYears: [], description: "Study of the Igbo language, literature, and culture." },
+  { id: "yoruba", name: "Yoruba Language", icon: MessagesSquare, availableYears: [], description: "Study of the Yoruba language, literature, and culture." },
+  { id: "arts", name: "Fine Arts", icon: Palette, availableYears: [], description: "Study and creation of visual arts." },
+  { id: "computer-studies", name: "Computer Studies", icon: Laptop, availableYears: [], description: "Study of computers and algorithmic processes, including their principles, hardware/software designs, applications, and societal impact." },
+  { id: "food-nutrition", name: "Food and Nutrition", icon: CookingPot, availableYears: [], description: "Study of food composition, diet, and health." },
+  { id: "french", name: "French Language", icon: Milestone, availableYears: [], description: "Study of the French language, literature, and culture. Using 'Milestone' as a proxy for 'Languages' for variety." },
+  { id: "history", name: "History", icon: ScrollText, availableYears: [], description: "Study of past events, particularly in human affairs." },
+  { id: "islamic-studies", name: "Islamic Studies", icon: MoonStar, availableYears: [], description: "Study of Islamic beliefs, practices, and history." },
+  { id: "government", name: "Government", icon: Users, availableYears: [], description: "Study of political systems, institutions, processes, and behavior." },
 ];
 
 export const exams: Exam[] = [
@@ -168,21 +191,29 @@ export function getSubjectById(examId: string, subjectId: string): Subject | und
 
 export function getQuestions(examId: string, subjectId: string, year: number): Question[] {
   // In a real app, this would fetch from a database
+  // This filtering logic needs to be robust if more questions are added.
+  // For now, it uses the specific arrays for known data and then a general filter.
+
   if (subjectId === 'biology' && year === 2010) return biologyQuestions2010;
   if (subjectId === 'biology' && year === 2011) return biologyQuestions2011;
   if (subjectId === 'chemistry' && year === 2010) return chemistryQuestions2010;
   if (subjectId === 'english' && year === 2010) return englishQuestions2010;
   if (subjectId === 'mathematics' && year === 2010) return mathematicsQuestions2010;
   
-  return allQuestions.filter(q => 
-    q.year === year &&
-    (
-      (subjectId === 'biology' && q.id.startsWith('bio-')) ||
-      (subjectId === 'chemistry' && q.id.startsWith('chem-')) ||
-      (subjectId === 'english' && q.id.startsWith('eng-')) ||
-      (subjectId === 'mathematics' && q.id.startsWith('math-'))
-    )
-  );
+  // Fallback or general logic for other subjects/years if they get added directly to allQuestions
+  // This will need to be more sophisticated if subject data grows significantly.
+  return allQuestions.filter(q => {
+    const questionSubjectId = q.id.split('-')[0]; // e.g., 'bio' from 'bio-2010-q1'
+    let matchesSubject = false;
+
+    if (subjectId === 'biology' && questionSubjectId === 'bio') matchesSubject = true;
+    else if (subjectId === 'chemistry' && questionSubjectId === 'chem') matchesSubject = true;
+    else if (subjectId === 'english' && questionSubjectId === 'eng') matchesSubject = true;
+    else if (subjectId === 'mathematics' && questionSubjectId === 'math') matchesSubject = true;
+    // Add more conditions here if you add more subjects with specific id prefixes
+
+    return matchesSubject && q.year === year;
+  });
 }
 
 export function getPastQuestionsForAnalysis(examId: string, subjectId: string): AIPastQuestionInput[] {
@@ -200,15 +231,8 @@ export function getPastQuestionsForAnalysis(examId: string, subjectId: string): 
   // If still no questions (e.g. subject has no available years, or no questions for those years)
   // Fallback to broader filter if needed, though ideally availableYears should be accurate.
   if (relevantQuestions.length === 0) {
-    if (subjectId === 'biology') {
-      relevantQuestions = allQuestions.filter(q => q.id.startsWith('bio-'));
-    } else if (subjectId === 'chemistry') {
-      relevantQuestions = allQuestions.filter(q => q.id.startsWith('chem-'));
-    } else if (subjectId === 'english') {
-      relevantQuestions = allQuestions.filter(q => q.id.startsWith('eng-'));
-    } else if (subjectId === 'mathematics') {
-      relevantQuestions = allQuestions.filter(q => q.id.startsWith('math-'));
-    }
+    const questionSubjectIdPrefix = subjectId.substring(0,4); // Basic prefix like 'biol', 'chem'
+    relevantQuestions = allQuestions.filter(q => q.id.startsWith(questionSubjectIdPrefix + '-') || q.id.startsWith(subjectId + '-'));
   }
   
   return relevantQuestions.map(q => ({
@@ -216,3 +240,4 @@ export function getPastQuestionsForAnalysis(examId: string, subjectId: string): 
     year: q.year,
   }));
 }
+
