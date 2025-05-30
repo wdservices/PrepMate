@@ -26,6 +26,7 @@ export interface Exam {
   name: string;
   description: string;
   subjects: Subject[];
+  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>; // Lucide icon for the exam itself
 }
 
 export interface PastQuestionForAnalysis {

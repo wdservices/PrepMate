@@ -1,6 +1,6 @@
 
 import type { Exam, Subject, Question } from "@/types";
-import { BookText, Atom, Languages, Calculator, Leaf, FlaskConical, Users } from "lucide-react";
+import { BookText, Atom, Languages, Calculator, Leaf, FlaskConical, Users, GraduationCap, BookOpenText, ClipboardCheck } from "lucide-react";
 
 const biologyQuestions2010: Question[] = [
   {
@@ -79,18 +79,21 @@ export const exams: Exam[] = [
     name: "JAMB",
     description: "Joint Admissions and Matriculation Board examination for tertiary-level education in Nigeria.",
     subjects: jambSubjects,
+    icon: GraduationCap,
   },
   {
     id: "waec",
     name: "WAEC",
     description: "West African Examinations Council, a senior secondary school leaving examination.",
     subjects: waecSubjects,
+    icon: BookOpenText,
   },
   {
     id: "neco",
     name: "NECO",
     description: "National Examinations Council, another senior secondary school certificate examination in Nigeria.",
     subjects: necoSubjects,
+    icon: ClipboardCheck,
   },
 ];
 
