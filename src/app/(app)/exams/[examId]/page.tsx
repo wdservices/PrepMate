@@ -48,8 +48,8 @@ export default function ExamSubjectsPage({ params }: Props) {
       {exam.subjects.length > 0 ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {exam.subjects.map((subject) => (
-            <Card key={subject.id} className="flex flex-col overflow-hidden rounded-lg shadow-md transition-all hover:shadow-xl">
-              <CardHeader className="flex flex-row items-center space-x-3 p-4 bg-muted/30">
+            <Card key={subject.id} className="flex flex-col overflow-hidden rounded-lg shadow transition-shadow duration-300 ease-in-out hover:shadow-lg">
+              <CardHeader className="flex flex-row items-center space-x-3 p-4 border-b">
                 {subject.icon && <subject.icon className="h-8 w-8 text-primary" />}
                 <CardTitle className="text-xl font-semibold">{subject.name}</CardTitle>
               </CardHeader>

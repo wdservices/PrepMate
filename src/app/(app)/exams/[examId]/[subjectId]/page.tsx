@@ -47,8 +47,8 @@ export default function SubjectYearsPage({ params }: Props) {
       {subject.availableYears.length > 0 ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {subject.availableYears.sort((a,b) => b - a).map((year) => ( // Sort years descending
-            <Card key={year} className="overflow-hidden rounded-lg shadow-md transition-all hover:shadow-xl">
-              <CardHeader className="bg-muted/30 p-4">
+            <Card key={year} className="overflow-hidden rounded-lg shadow transition-shadow duration-300 ease-in-out hover:shadow-lg">
+              <CardHeader className="p-4 border-b">
                 <CardTitle className="flex items-center text-xl font-semibold">
                   <CalendarDays className="mr-3 h-6 w-6 text-primary" />
                   Year {year}

@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
-import { ArrowRight, BookOpen, Library, GraduationCap, BookOpenText, ClipboardCheck } from 'lucide-react'; // Added new icons
+import { ArrowRight, BookOpen } from 'lucide-react';
 import { exams } from '@/data/mock-data'; // Import mock data
 
 export const metadata: Metadata = {
@@ -24,12 +24,12 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {exams.map((exam) => {
-          const ExamIcon = exam.icon || Library; // Fallback to Library if no icon is specified
+          const ExamIcon = exam.icon; 
           return (
-            <Card key={exam.id} className="flex flex-col overflow-hidden rounded-xl shadow-lg transition-all hover:shadow-2xl">
-              <CardHeader className="p-6 bg-muted/30">
+            <Card key={exam.id} className="flex flex-col overflow-hidden rounded-xl shadow-lg transition-shadow duration-300 ease-in-out hover:shadow-xl">
+              <CardHeader className="p-5 border-b">
                 <div className="flex items-center space-x-3">
-                  <ExamIcon className="h-10 w-10 text-primary" />
+                  {ExamIcon && <ExamIcon className="h-10 w-10 text-primary" />}
                   <CardTitle className="text-2xl font-semibold text-primary">{exam.name}</CardTitle>
                 </div>
               </CardHeader>
