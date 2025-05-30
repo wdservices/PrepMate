@@ -146,7 +146,7 @@ export function QuestionDisplay({ question, subjectName, onNextQuestion, isLastQ
       <CardFooter className="flex justify-end gap-4">
         {!isSubmitted ? (
           <Button onClick={handleSubmit} disabled={!selectedOptionId || isLoadingAi} size="lg">
-            Submit Answer
+            Check Answer
           </Button>
         ) : (
           onNextQuestion && (

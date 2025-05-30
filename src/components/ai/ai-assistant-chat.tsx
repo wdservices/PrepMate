@@ -15,7 +15,7 @@ type AiAssistantChatProps = {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   currentQuestionContext: Question | null; // The question being viewed for context
-  subjectName: string;
+  subjectName: string; // Subject name for initial greeting context, e.g. "Biology" or "General Academic Support"
 };
 
 interface ChatMessage {
@@ -32,27 +32,21 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isOpen && currentQuestionContext) {
+    if (isOpen) {
+      let initialMessageText = "";
+      if (currentQuestionContext) {
+        initialMessageText = `Hi! I'm your AI assistant. I can help with the current ${subjectName} question: "${currentQuestionContext.text.substring(0,70)}...", or you can ask me any other academic question.`;
+      } else {
+        initialMessageText = `Hi! I'm your AI assistant for ${subjectName}. How can I help you with your academic questions today?`;
+      }
       setMessages([
         { 
           id: "initial-ai-prompt", 
           sender: "ai", 
-          text: `Hi! I'm your AI assistant for ${subjectName}. How can I help you with the current question: "${currentQuestionContext.text.substring(0,50)}..."? You can ask for explanations, summaries, or general academic questions related to this topic.`,
+          text: initialMessageText,
           timestamp: new Date() 
         }
       ]);
-    } else if (isOpen) {
-       setMessages([
-        { 
-          id: "initial-ai-prompt-no-context", 
-          sender: "ai", 
-          text: `Hi! I'm your AI assistant for ${subjectName}. How can I help you today?`,
-          timestamp: new Date() 
-        }
-      ]);
-    } else {
-      // Reset messages when dialog closes if needed
-      // setMessages([]); 
     }
   }, [isOpen, currentQuestionContext, subjectName]);
   
@@ -81,9 +75,14 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
     setIsLoading(true);
 
     try {
+      // For the AI flow, if there's no specific question context, pass a generic one.
+      // The subjectName prop is used for the initial greeting, but the AI flow might receive a more general subject.
+      // AiTutorPage passes "General Academic Support" as subjectName.
+      // SubjectYearQuestionsPage passes the specific subject.name.
+      // The AI prompt is designed to handle both.
       const response = await aiQuestionAssistant({
-        subject: subjectName,
-        question: currentQuestionContext?.text || "General question",
+        subject: subjectName, // This subject is context for the AI
+        question: currentQuestionContext?.text || "No specific question being viewed.", // Context for the AI
         studentQuery: userMessage.text,
       });
 
@@ -116,7 +115,7 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
              <Sparkles className="h-6 w-6 mr-2 text-primary" /> AI Question Assistant
           </DialogTitle>
           <DialogDescription>
-            Ask questions about {subjectName} or the current exam question.
+            Ask about {currentQuestionContext ? `${subjectName} or the current question` : 'any academic topic'}.
           </DialogDescription>
         </DialogHeader>
         
@@ -171,7 +170,7 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
             <Input
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
-              placeholder="Type your question..."
+              placeholder="Ask any academic question..."
               className="flex-1"
               disabled={isLoading}
               autoFocus
