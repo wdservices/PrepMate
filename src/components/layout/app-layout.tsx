@@ -16,18 +16,27 @@ import {
   SidebarInset,
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
-import { LayoutGrid, BarChart3, Sparkles, LayoutList, BotMessageSquare } from 'lucide-react'; // Added LayoutList, BotMessageSquare
+import { LayoutGrid, BarChart3, Sparkles, BotMessageSquare, BookOpen } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { exams } from '@/data/mock-data'; // Import exams data
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   const navItems = [
-    { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
-    { href: '/exams', label: 'Exams', icon: LayoutList }, // Added Exams
-    { href: '/insights', label: 'Smart Analysis', icon: BarChart3 },
-    { href: '/ai-tutor', label: 'AI Tutor', icon: BotMessageSquare }, // Added AI Tutor
-    // { href: '/settings', label: 'Settings', icon: Settings }, // Removed Settings
+    { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid, type: 'static' as const },
+    ...exams.map(exam => {
+      const ExamIcon = exam.icon || BookOpen; // Fallback icon
+      return {
+        href: `/exams/${exam.id}`,
+        label: exam.name,
+        icon: ExamIcon,
+        id: exam.id,
+        type: 'exam' as const,
+      };
+    }),
+    { href: '/insights', label: 'Smart Analysis', icon: BarChart3, type: 'static' as const },
+    { href: '/ai-tutor', label: 'AI Tutor', icon: BotMessageSquare, type: 'static' as const },
   ];
 
   return (
@@ -45,21 +54,32 @@ export function AppLayout({ children }: { children: ReactNode }) {
             </SidebarHeader>
             <SidebarContent>
               <SidebarMenu>
-                {navItems.map((item) => (
-                  <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === item.href || (item.href === "/exams" && pathname.startsWith("/exams")) || (item.href === "/dashboard" && pathname === "/dashboard")}
-                      tooltip={item.label} // Tooltip for collapsed state
-                      className="justify-start"
-                    >
-                      <Link href={item.href}>
-                        <item.icon className="flex-shrink-0" />
-                        <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                {navItems.map((item) => {
+                  let isActive = false;
+                  if (item.type === 'exam') {
+                    isActive = pathname.startsWith(item.href); 
+                  } else if (item.href === '/dashboard') {
+                    isActive = pathname === '/dashboard';
+                  } else {
+                    isActive = pathname === item.href;
+                  }
+                  const ItemIcon = item.icon;
+                  return (
+                    <SidebarMenuItem key={item.href}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={isActive}
+                        tooltip={item.label}
+                        className="justify-start"
+                      >
+                        <Link href={item.href}>
+                          <ItemIcon className="flex-shrink-0" />
+                          <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
               </SidebarMenu>
             </SidebarContent>
             {/* Optional SidebarFooter here */}
