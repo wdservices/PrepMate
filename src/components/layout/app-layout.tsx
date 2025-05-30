@@ -2,6 +2,7 @@
 import type { ReactNode } from 'react';
 import { Navbar } from '@/components/layout/navbar';
 import { ProtectedRoute } from './protected-route';
+import { siteConfig } from '@/config/site';
 
 export function AppLayout({ children }: { children: ReactNode }) {
   return (
@@ -12,7 +13,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
           {children}
         </main>
         <footer className="py-6 text-center text-sm text-muted-foreground border-t">
-          © {new Date().getFullYear()} ExamAI Prep. All rights reserved.
+          © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
         </footer>
       </div>
     </ProtectedRoute>

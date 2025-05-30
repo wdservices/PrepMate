@@ -21,6 +21,7 @@ import { auth } from "@/lib/firebase";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { siteConfig } from "@/config/site";
 
 const formSchemaBase = {
   email: z.string().email({ message: "Invalid email address." }),
@@ -60,7 +61,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         if (userCredential.user && 'name' in values && values.name) {
           await updateProfile(userCredential.user, { displayName: values.name });
         }
-        toast({ title: "Account Created", description: "Welcome to ExamAI Prep!" });
+        toast({ title: "Account Created", description: `Welcome to ${siteConfig.name}!` });
       } else {
         await signInWithEmailAndPassword(auth, values.email, values.password);
         toast({ title: "Logged In", description: "Welcome back!" });

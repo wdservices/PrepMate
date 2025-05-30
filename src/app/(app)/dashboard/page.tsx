@@ -16,7 +16,7 @@ export default function DashboardPage() {
     <div className="space-y-8">
       <div className="text-center">
         <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-          Welcome to ExamAI Prep
+          Welcome to PrepMate
         </h1>
         <p className="mt-4 text-lg text-muted-foreground sm:text-xl">
           Your AI-powered guide to acing your exams. Select an exam to get started.

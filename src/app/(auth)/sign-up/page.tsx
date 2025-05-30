@@ -11,7 +11,7 @@ export default function SignUpPage() {
     <div>
       <h1 className="mb-1 text-2xl font-semibold tracking-tight">Create an account</h1>
       <p className="mb-6 text-sm text-muted-foreground">
-        Enter your details to get started with ExamAI Prep.
+        Enter your details to get started with PrepMate.
       </p>
       <AuthForm mode="signup" />
     </div>
