@@ -3,30 +3,32 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { LayoutGrid, LogIn, LogOut, UserPlus, BarChart3, Settings, ShieldQuestion, Sparkles } from "lucide-react";
-import { useAuth } from "@/components/providers/firebase-provider";
-import { auth } from "@/lib/firebase";
-import { signOut } from "firebase/auth";
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // Temporarily disabled
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuLabel,
+//   DropdownMenuSeparator,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu"; // Temporarily disabled
+import { LayoutGrid, BarChart3, Sparkles } from "lucide-react"; // LogIn, LogOut, UserPlus, Settings, ShieldQuestion removed
+// import { useAuth } from "@/components/providers/firebase-provider"; // Temporarily disabled
+// import { auth as firebaseAuth } from "@/lib/firebase"; // firebaseAuth can be null
+// import { signOut } from "firebase/auth"; // Temporarily disabled
 import { useRouter } from "next/navigation";
 import { siteConfig } from "@/config/site";
 
 export function Navbar() {
-  const { user } = useAuth();
-  const router = useRouter();
+  // const { user } = useAuth(); // Temporarily disabled
+  const router = useRouter(); // Keep router if needed for other nav items
 
-  const handleSignOut = async () => {
-    await signOut(auth);
-    router.push("/auth/login");
-  };
+  // const handleSignOut = async () => { // Temporarily disabled
+  //   if (firebaseAuth) {
+  //     await signOut(firebaseAuth);
+  //   }
+  //   router.push("/auth/login");
+  // };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-card shadow-sm">
@@ -36,23 +38,28 @@ export function Navbar() {
           <span className="text-xl font-bold text-foreground">{siteConfig.name}</span>
         </Link>
         <nav className="flex items-center gap-4">
-          {user && (
-            <>
-              <Button variant="ghost" asChild>
-                <Link href="/dashboard">
-                  <LayoutGrid className="mr-2 h-5 w-5" />
-                  Dashboard
-                </Link>
-              </Button>
-              <Button variant="ghost" asChild>
-                <Link href="/insights">
-                  <BarChart3 className="mr-2 h-5 w-5" />
-                  Insights
-                </Link>
-              </Button>
-            </>
-          )}
-          {user ? (
+          {/* Always show Dashboard and Insights as auth is bypassed */}
+          <Button variant="ghost" asChild>
+            <Link href="/dashboard">
+              <LayoutGrid className="mr-2 h-5 w-5" />
+              Dashboard
+            </Link>
+          </Button>
+          <Button variant="ghost" asChild>
+            <Link href="/insights">
+              <BarChart3 className="mr-2 h-5 w-5" />
+              Insights
+            </Link>
+          </Button>
+          <Button variant="ghost" asChild>
+            <Link href="/settings"> {/* Assuming settings page doesn't strictly require auth for now */}
+              {/* <Settings className="mr-2 h-5 w-5" /> Re-add if needed */}
+              Settings
+            </Link>
+          </Button>
+
+          {/* Auth-related UI is temporarily removed */}
+          {/* {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
@@ -95,7 +102,7 @@ export function Navbar() {
                 </Link>
               </Button>
             </div>
-          )}
+          )} */}
         </nav>
       </div>
     </header>

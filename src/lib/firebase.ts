@@ -31,9 +31,7 @@ const firebaseConfig: FirebaseOptions = {
   appId: appId,
 };
 
-// Log the configuration being used (excluding API key for security in client-side logs if it were to be logged there)
-// On the server-side, this log will appear in your Next.js development server console.
-if (typeof window === 'undefined') { // Log only on the server-side
+if (typeof window === 'undefined') {
   console.log("Attempting to initialize Firebase with the following configuration (API Key is intentionally omitted from this log for security):");
   console.log({
     authDomain: firebaseConfig.authDomain,
@@ -45,22 +43,21 @@ if (typeof window === 'undefined') { // Log only on the server-side
   });
 }
 
-// Check if all required Firebase config values are present
 const requiredConfigs = {
   apiKey,
   authDomain,
   projectId,
-  // storageBucket, messagingSenderId, and appId are often optional for basic auth/firestore but good to have
 };
 
 let allConfigsPresent = true;
 for (const [key, value] of Object.entries(requiredConfigs)) {
-  if (!value) {
+  if (!value || value.includes("YOUR_ACTUAL_") || value.includes("_HERE")) {
     allConfigsPresent = false;
+    const envVarName = `NEXT_PUBLIC_FIREBASE_${key.replace(/([A-Z])/g, '_$1').toUpperCase()}`;
     if (typeof window === 'undefined') {
-      console.error(`Firebase config error: NEXT_PUBLIC_FIREBASE_${key.toUpperCase()} is missing in .env`);
+      console.error(`Firebase config error: ${envVarName} is missing or uses a placeholder value in .env`);
     } else {
-      console.error(`Firebase config error: NEXT_PUBLIC_FIREBASE_${key.toUpperCase()} is missing.`);
+      console.error(`Firebase config error: ${envVarName} is missing or uses a placeholder value.`);
     }
   }
 }
@@ -68,17 +65,31 @@ for (const [key, value] of Object.entries(requiredConfigs)) {
 if (!allConfigsPresent && typeof window === 'undefined') {
   console.error(`
     ****************************************************************************************
-    CRITICAL: One or more required Firebase environment variables are missing.
+    CRITICAL: One or more required Firebase environment variables are missing or placeholders.
     Firebase SDK will not initialize correctly. Please check your .env file.
     Ensure all NEXT_PUBLIC_FIREBASE_... variables are correctly set.
     ****************************************************************************************
   `);
 }
 
+// !!! TEMPORARILY DISABLING FIREBASE AUTH AND FIRESTORE INITIALIZATION !!!
+// !!! This is to bypass 'auth/invalid-api-key' errors.              !!!
+// !!! Login, Sign Up, and Firestore-dependent features will not work.   !!!
+// !!! User needs to provide correct Firebase config in .env and uncomment original code. !!!
+console.warn("FIREBASE AUTH & FIRESTORE ARE TEMPORARILY DISABLED to bypass config errors. Login and DB features are off. Ensure .env is correct and re-enable.");
 
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+// const auth = getAuth(app); // Temporarily disabled
+// const db = getFirestore(app); // Temporarily disabled
+
+export const auth = null; // Force auth to be null
+export const db = null;   // Force db to be null
+export { app };
+
+/*
+// Original Firebase initialization (RE-ENABLE WHEN .ENV IS CORRECT):
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
 const db = getFirestore(app);
-
 export { app, auth, db };
-
+*/
