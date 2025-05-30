@@ -1,8 +1,7 @@
 
 "use client";
 
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 // import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // Temporarily disabled
 // import {
 //   DropdownMenu,
@@ -12,12 +11,15 @@ import { Button } from "@/components/ui/button";
 //   DropdownMenuSeparator,
 //   DropdownMenuTrigger,
 // } from "@/components/ui/dropdown-menu"; // Temporarily disabled
-import { LayoutGrid, BarChart3, Sparkles } from "lucide-react"; // LogIn, LogOut, UserPlus, Settings, ShieldQuestion removed
+// import { LogOut, Settings as SettingsIcon } from "lucide-react"; // Icons for dropdown, SettingsIcon renamed to avoid conflict
 // import { useAuth } from "@/components/providers/firebase-provider"; // Temporarily disabled
 // import { auth as firebaseAuth } from "@/lib/firebase"; // firebaseAuth can be null
 // import { signOut } from "firebase/auth"; // Temporarily disabled
 import { useRouter } from "next/navigation";
-import { siteConfig } from "@/config/site";
+// import { siteConfig } from "@/config/site"; // Site name is now in SidebarHeader
+// import Link from "next/link"; // Link for site name removed
+// import { Sparkles } from "lucide-react"; // Sparkles for site name removed
+
 
 export function Navbar() {
   // const { user } = useAuth(); // Temporarily disabled
@@ -31,33 +33,16 @@ export function Navbar() {
   // };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-card shadow-sm">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2">
-          <Sparkles className="h-7 w-7 text-primary" />
-          <span className="text-xl font-bold text-foreground">{siteConfig.name}</span>
-        </Link>
+    <header className="sticky top-0 z-40 w-full border-b bg-card shadow-sm">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center">
+          {/* SidebarTrigger for mobile and also for desktop if sidebar is collapsible */}
+          <SidebarTrigger /> 
+          {/* Site name/logo has moved to SidebarHeader */}
+        </div>
+        
         <nav className="flex items-center gap-4">
-          {/* Always show Dashboard and Insights as auth is bypassed */}
-          <Button variant="ghost" asChild>
-            <Link href="/dashboard">
-              <LayoutGrid className="mr-2 h-5 w-5" />
-              Dashboard
-            </Link>
-          </Button>
-          <Button variant="ghost" asChild>
-            <Link href="/insights">
-              <BarChart3 className="mr-2 h-5 w-5" />
-              Insights
-            </Link>
-          </Button>
-          <Button variant="ghost" asChild>
-            <Link href="/settings"> {/* Assuming settings page doesn't strictly require auth for now */}
-              {/* <Settings className="mr-2 h-5 w-5" /> Re-add if needed */}
-              Settings
-            </Link>
-          </Button>
-
+          {/* Primary navigation has moved to Sidebar */}
           {/* Auth-related UI is temporarily removed */}
           {/* {user ? (
             <DropdownMenu>
@@ -80,7 +65,7 @@ export function Navbar() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => router.push('/settings')}>
-                  <Settings className="mr-2 h-4 w-4" />
+                  <SettingsIcon className="mr-2 h-4 w-4" />
                   <span>Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleSignOut}>

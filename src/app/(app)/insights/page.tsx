@@ -12,8 +12,15 @@ import { analyzeQuestionFrequency, type AnalysisOutput } from "@/ai/flows/predic
 import { exams, getPastQuestionsForAnalysis } from "@/data/mock-data";
 import type { Exam, Subject } from "@/types";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import type { Metadata } from 'next';
 
-export default function InsightsPage() {
+// Static metadata for the page
+// export const metadata: Metadata = { // Cannot export metadata from client component, will be handled by layout or parent.
+// title: 'Smart Analysis',
+// };
+
+
+export default function SmartAnalysisPage() { // Renamed component
   const [selectedExamId, setSelectedExamId] = useState<string>("");
   const [selectedSubjectId, setSelectedSubjectId] = useState<string>("");
   const [analysisResult, setAnalysisResult] = useState<AnalysisOutput | null>(null);
@@ -58,7 +65,7 @@ export default function InsightsPage() {
       setAnalysisResult(result);
     } catch (err: any) {
       console.error("Analysis failed:", err);
-      setError(err.message || "Failed to generate insights. Please try again.");
+      setError(err.message || "Failed to generate smart analysis. Please try again.");
       toast({ title: "Analysis Failed", description: err.message || "An unexpected error occurred.", variant: "destructive" });
     } finally {
       setIsLoading(false);
@@ -67,12 +74,14 @@ export default function InsightsPage() {
   
   const renderQuestionList = (questions: string[], title: string, icon: React.ReactNode) => (
     <Card className="shadow-sm">
-      <CardHeader className="bg-muted/30">
-        <CardTitle className="flex items-center text-xl">
-          {icon}
-          {title}
-        </CardTitle>
-      </CardHeader>
+      {title && icon && ( // Only render header if title and icon are provided
+        <CardHeader className="bg-muted/30">
+          <CardTitle className="flex items-center text-xl">
+            {icon}
+            {title}
+          </CardTitle>
+        </CardHeader>
+      )}
       <CardContent className="pt-4">
         {questions.length > 0 ? (
           <ul className="space-y-2">
@@ -94,7 +103,7 @@ export default function InsightsPage() {
     <div className="space-y-8">
       <div className="text-center">
         <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl flex items-center justify-center">
-          <Brain className="mr-3 h-10 w-10 text-primary" /> Exam Insights
+          <Brain className="mr-3 h-10 w-10 text-primary" /> Smart Analysis
         </h1>
         <p className="mt-4 text-lg text-muted-foreground sm:text-xl max-w-2xl mx-auto">
           Leverage AI to discover frequently asked questions and predict potential topics for your upcoming exams.
@@ -104,7 +113,7 @@ export default function InsightsPage() {
       <Card className="shadow-lg">
         <CardHeader>
           <CardTitle>Select Exam and Subject</CardTitle>
-          <CardDescription>Choose an exam and subject to generate predictive analysis.</CardDescription>
+          <CardDescription>Choose an exam and subject to generate smart analysis.</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-6">
@@ -140,7 +149,7 @@ export default function InsightsPage() {
           <CardFooter>
             <Button type="submit" disabled={isLoading || !selectedExamId || !selectedSubjectId} className="w-full sm:w-auto" size="lg">
               {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Brain className="mr-2 h-5 w-5" />}
-              Analyze Questions
+              Generate Smart Analysis
             </Button>
           </CardFooter>
         </form>
@@ -149,7 +158,7 @@ export default function InsightsPage() {
       {isLoading && (
         <div className="flex justify-center items-center py-10">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          <p className="ml-4 text-lg text-muted-foreground">Generating insights, please wait...</p>
+          <p className="ml-4 text-lg text-muted-foreground">Generating smart analysis, please wait...</p>
         </div>
       )}
 
@@ -168,7 +177,7 @@ export default function InsightsPage() {
       {analysisResult && !isLoading && (
         <Card className="shadow-xl">
           <CardHeader className="bg-primary/10">
-            <CardTitle className="text-2xl text-primary">Analysis Results for {selectedExam?.name} - {selectedExam?.subjects.find(s => s.id === selectedSubjectId)?.name}</CardTitle>
+            <CardTitle className="text-2xl text-primary">Smart Analysis Results for {selectedExam?.name} - {selectedExam?.subjects.find(s => s.id === selectedSubjectId)?.name}</CardTitle>
           </CardHeader>
           <CardContent className="pt-6 space-y-6">
             <Card>
