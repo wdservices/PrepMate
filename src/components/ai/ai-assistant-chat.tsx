@@ -31,7 +31,7 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollViewportRef = useRef<HTMLDivElement>(null);
-  const lastMessageRef = useRef<HTMLDivElement>(null); // Ref for the last message element
+  const lastMessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -54,9 +54,12 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
   }, [isOpen, currentQuestionContext, subjectName]);
   
   useEffect(() => {
-    // Scroll to the last message when messages change
     if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    } else if (scrollViewportRef.current && messages.length > 0) {
+      // Fallback for initial message or if lastMessageRef isn't ready
+      const viewport = scrollViewportRef.current;
+      viewport.scrollTop = viewport.scrollHeight;
     }
   }, [messages]);
 
@@ -106,21 +109,20 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[525px] p-0 flex flex-col max-h-[calc(100vh-4rem)] sm:max-h-[80vh] rounded-lg shadow-xl">
-        <DialogHeader className="p-4 pb-2 border-b">
-          <DialogTitle className="text-xl flex items-center font-semibold">
+        <DialogHeader className="p-4 pb-2 border-b bg-card">
+          <DialogTitle className="text-xl flex items-center font-semibold text-foreground">
              <Sparkles className="h-5 w-5 mr-2 text-primary" /> AI Tutor
           </DialogTitle>
-          <DialogDescription className="text-xs">
+          <DialogDescription className="text-xs text-muted-foreground">
             Ask about {currentQuestionContext ? `${subjectName} or the current question` : 'any academic topic'}.
           </DialogDescription>
         </DialogHeader>
         
-        <ScrollArea className="flex-grow min-h-0" viewportRef={scrollViewportRef}> {/* Added min-h-0 here */}
+        <ScrollArea className="flex-1 min-h-0 bg-background/70" viewportRef={scrollViewportRef}>
            <div className="p-4 space-y-4">
             {messages.map((msg, index) => (
               <div
                 key={msg.id}
-                // Attach the ref to the last message element
                 ref={index === messages.length - 1 ? lastMessageRef : null}
                 className={cn(
                   "flex items-end gap-2 animate-in fade-in-50 slide-in-from-bottom-2",
@@ -128,8 +130,8 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
                 )}
               >
                 {msg.sender === "ai" && (
-                  <Avatar className="h-8 w-8 border-2 border-primary/50">
-                    <AvatarFallback className="bg-primary/10"><Sparkles className="h-4 w-4 text-primary"/></AvatarFallback>
+                  <Avatar className="h-8 w-8 border-2 border-primary/50 bg-primary/10">
+                    <AvatarFallback className="bg-transparent"><Sparkles className="h-4 w-4 text-primary"/></AvatarFallback>
                   </Avatar>
                 )}
                 <div
@@ -147,16 +149,16 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
                   </p>
                 </div>
                  {msg.sender === "user" && (
-                  <Avatar className="h-8 w-8 border-2 border-muted">
-                    <AvatarFallback className="bg-muted/50"><User className="h-4 w-4 text-muted-foreground"/></AvatarFallback>
+                  <Avatar className="h-8 w-8 border-2 border-muted bg-muted/30">
+                    <AvatarFallback className="bg-transparent"><User className="h-4 w-4 text-muted-foreground"/></AvatarFallback>
                   </Avatar>
                 )}
               </div>
             ))}
             {isLoading && (
               <div className="flex items-end gap-2 justify-start animate-pulse">
-                <Avatar className="h-8 w-8 border-2 border-primary/50">
-                   <AvatarFallback className="bg-primary/10"><Sparkles className="h-4 w-4 text-primary"/></AvatarFallback>
+                <Avatar className="h-8 w-8 border-2 border-primary/50 bg-primary/10">
+                   <AvatarFallback className="bg-transparent"><Sparkles className="h-4 w-4 text-primary"/></AvatarFallback>
                 </Avatar>
                 <div className="max-w-[75%] rounded-lg px-4 py-3 shadow-sm bg-card border border-border">
                   <Loader2 className="h-5 w-5 animate-spin text-primary" />
@@ -166,7 +168,7 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
           </div>
         </ScrollArea>
 
-        <DialogFooter className="p-3 border-t bg-background/95">
+        <DialogFooter className="p-3 border-t bg-card">
           <form onSubmit={handleSubmit} className="flex w-full items-center gap-2">
             <Input
               value={userInput}
