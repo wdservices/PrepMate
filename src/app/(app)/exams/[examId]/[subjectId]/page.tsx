@@ -67,10 +67,11 @@ export default function SubjectYearsPage({ params }: Props) {
       ) : (
          <div className="text-center py-10 bg-card rounded-lg shadow">
           <CalendarDays className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
-          <p className="text-xl text-muted-foreground">No past questions available for {subject.name} ({year}) yet.</p>
+          <p className="text-xl text-muted-foreground">No past questions available for {subject.name} yet.</p>
           <p className="text-sm text-muted-foreground mt-2">Please check back later or try another subject/year.</p>
         </div>
       )}
     </div>
   );
 }
+
