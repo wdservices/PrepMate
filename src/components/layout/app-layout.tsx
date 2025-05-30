@@ -16,7 +16,7 @@ import {
   SidebarInset,
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
-import { LayoutGrid, BarChart3, Settings, Sparkles } from 'lucide-react';
+import { LayoutGrid, BarChart3, Sparkles, LayoutList, BotMessageSquare } from 'lucide-react'; // Added LayoutList, BotMessageSquare
 import { usePathname } from 'next/navigation';
 
 export function AppLayout({ children }: { children: ReactNode }) {
@@ -24,8 +24,10 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid },
+    { href: '/exams', label: 'Exams', icon: LayoutList }, // Added Exams
     { href: '/insights', label: 'Smart Analysis', icon: BarChart3 },
-    { href: '/settings', label: 'Settings', icon: Settings },
+    { href: '/ai-tutor', label: 'AI Tutor', icon: BotMessageSquare }, // Added AI Tutor
+    // { href: '/settings', label: 'Settings', icon: Settings }, // Removed Settings
   ];
 
   return (
@@ -47,7 +49,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton
                       asChild
-                      isActive={pathname === item.href}
+                      isActive={pathname === item.href || (item.href === "/exams" && pathname.startsWith("/exams")) || (item.href === "/dashboard" && pathname === "/dashboard")}
                       tooltip={item.label} // Tooltip for collapsed state
                       className="justify-start"
                     >
