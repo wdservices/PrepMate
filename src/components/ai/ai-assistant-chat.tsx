@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
+// ScrollArea is removed
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Loader2, Send, User, Sparkles } from "lucide-react";
 import { aiQuestionAssistant } from "@/ai/flows/ai-question-assistant";
@@ -30,7 +30,7 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const scrollViewportRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null); // Renamed from scrollViewportRef for clarity
   const lastMessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -56,10 +56,6 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
   useEffect(() => {
     if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
-    } else if (scrollViewportRef.current && messages.length > 0) {
-      // Fallback for initial message or if lastMessageRef isn't ready
-      const viewport = scrollViewportRef.current;
-      viewport.scrollTop = viewport.scrollHeight;
     }
   }, [messages]);
 
@@ -118,7 +114,11 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
           </DialogDescription>
         </DialogHeader>
         
-        <ScrollArea className="flex-1 min-h-0 bg-background/70" viewportRef={scrollViewportRef}>
+        {/* Replaced ScrollArea with a div for native scrolling */}
+        <div 
+          ref={messagesContainerRef} 
+          className="flex-1 min-h-0 overflow-y-auto bg-background/70"
+        >
            <div className="p-4 space-y-4">
             {messages.map((msg, index) => (
               <div
@@ -166,7 +166,7 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
               </div>
             )}
           </div>
-        </ScrollArea>
+        </div>
 
         <DialogFooter className="p-3 border-t bg-card">
           <form onSubmit={handleSubmit} className="flex w-full items-center gap-2">
