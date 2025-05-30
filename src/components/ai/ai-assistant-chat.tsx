@@ -30,7 +30,7 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const scrollViewportRef = useRef<HTMLDivElement>(null); 
+  const lastMessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -53,13 +53,8 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
   }, [isOpen, currentQuestionContext, subjectName]);
   
   useEffect(() => {
-    const viewport = scrollViewportRef.current;
-    if (viewport) {
-      // Scroll to the bottom after messages update
-      // This relies on the DOM being updated before this effect runs.
-      viewport.scrollTop = viewport.scrollHeight;
-    }
-  }, [messages]); // Dependency on messages ensures this runs when messages change
+    lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -116,11 +111,12 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
           </DialogDescription>
         </DialogHeader>
         
-        <ScrollArea className="flex-grow" viewportRef={scrollViewportRef}>
+        <ScrollArea className="flex-grow">
            <div className="p-4 space-y-4">
-            {messages.map((msg) => (
+            {messages.map((msg, index) => (
               <div
                 key={msg.id}
+                ref={index === messages.length - 1 ? lastMessageRef : null}
                 className={cn(
                   "flex items-end gap-2 animate-in fade-in-50 slide-in-from-bottom-2",
                   msg.sender === "user" ? "justify-end" : "justify-start"
@@ -132,7 +128,7 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
                   </Avatar>
                 )}
                 <div
-                  className={cn("max-w-[75%] rounded-lg px-3 py-2 shadow-sm text-sm",
+                  className={cn("max-w-[75%] rounded-lg px-3 py-2 shadow-sm text-sm break-words", // Added break-words
                     msg.sender === "user"
                       ? "bg-primary text-primary-foreground rounded-br-none"
                       : "bg-card text-card-foreground border border-border rounded-bl-none"
