@@ -11,20 +11,20 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const AiExplainAnswerInputSchema = z.object({
+const AiExplainAnswerInputSchema = z.object({
   question: z.string().describe('The question that was asked.'),
   correctAnswerText: z.string().describe('The text of the correct answer.'),
-  isCorrect: z.boolean().describe('Whether the student\u2019s answer was correct.'),
-  studentAnswerTextIfIncorrect: z.string().optional().describe('The student\u2019s incorrect answer text, if applicable.'),
+  isCorrect: z.boolean().describe('Whether the student’s answer was correct.'),
+  studentAnswerTextIfIncorrect: z.string().optional().describe('The student’s incorrect answer text, if applicable.'),
   subject: z.string().describe('The subject of the question.'),
 });
 export type AiExplainAnswerInput = z.infer<typeof AiExplainAnswerInputSchema>;
 
-export const AiExplainAnswerOutputSchema = z.object({
+const AiExplainAnswerOutputSchema = z.object({
   explanation: z
     .string()
     .describe(
-      'An explanation of why the provided answer is correct, or why the student\u2019s answer was incorrect and the correct answer is correct.'
+      'An explanation of why the provided answer is correct, or why the student’s answer was incorrect and the correct answer is correct.'
     ),
 });
 export type AiExplainAnswerOutput = z.infer<typeof AiExplainAnswerOutputSchema>;
@@ -67,3 +67,4 @@ const aiExplainAnswerFlow = ai.defineFlow(
     return output!;
   }
 );
+
