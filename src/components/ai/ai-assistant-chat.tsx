@@ -55,13 +55,11 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
   useEffect(() => {
     const viewport = scrollViewportRef.current;
     if (viewport) {
-      // Using a timeout to ensure DOM has updated dimensions and scrollHeight is accurate
-      const timer = setTimeout(() => {
-        viewport.scrollTop = viewport.scrollHeight;
-      }, 100); // Increased delay slightly for more reliability
-      return () => clearTimeout(timer);
+      // Scroll to the bottom after messages update
+      // This relies on the DOM being updated before this effect runs.
+      viewport.scrollTop = viewport.scrollHeight;
     }
-  }, [messages]);
+  }, [messages]); // Dependency on messages ensures this runs when messages change
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -187,4 +185,6 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
     </Dialog>
   );
 }
+    
+
     
