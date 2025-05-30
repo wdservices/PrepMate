@@ -36,7 +36,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       };
     }),
     { href: '/insights', label: 'Smart Analysis', icon: BarChart3, type: 'static' as const },
-    { href: '/ai-tutor', label: 'AI Tutor', icon: BotMessageSquare, type: 'static' as const },
+    { href: '/ai-tutor', label: 'AI Tutor', icon: BotMessageSquare, type: 'static' as const }, // Changed icon here
   ];
 
   return (

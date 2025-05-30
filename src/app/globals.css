@@ -1,99 +1,100 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 220 60% 98%; /* Very Soft Blue-White */
-    --foreground: 225 25% 20%; /* Dark Grayish Blue */
+    --background: 240 50% 98%; /* Very light cool off-white */
+    --foreground: 258 30% 25%; /* Dark muted purple */
 
     --card: 0 0% 100%; /* White */
-    --card-foreground: 225 25% 20%;
+    --card-foreground: 258 30% 25%; /* Dark muted purple */
 
     --popover: 0 0% 100%;
-    --popover-foreground: 225 25% 20%;
+    --popover-foreground: 258 30% 25%;
 
-    --primary: 210 90% 58%; /* Vibrant Blue */
-    --primary-foreground: 0 0% 100%; /* White */
+    --primary: 205 100% 82%; /* Medium Blue from palette */
+    --primary-foreground: 205 100% 25%; /* Dark blue for text on primary */
 
-    --secondary: 250 60% 96%; /* Soft Lavender */
-    --secondary-foreground: 250 25% 30%; /* Darker Lavender */
+    --secondary: 260 45% 75%; /* Lavender from palette */
+    --secondary-foreground: 260 45% 20%; /* Dark lavender */
 
-    --muted: 220 30% 94%; /* Light Gray-Blue */
-    --muted-foreground: 220 15% 45%; /* Medium Gray-Blue */
+    --muted: 338 100% 94%; /* Very Light Pink for muted backgrounds */
+    --muted-foreground: 338 50% 60%; /* Medium Pink for muted text */
 
-    --accent: 265 80% 62%; /* Modern Purple */
-    --accent-foreground: 0 0% 100%; /* White */
+    --accent: 330 100% 88%; /* Medium Pink from palette */
+    --accent-foreground: 330 100% 20%; /* Dark pink */
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 84% 60%; /* Standard red */
     --destructive-foreground: 0 0% 98%;
 
-    --border: 220 25% 90%; /* Light Blueish Gray Border */
-    --input: 220 25% 90%;
-    --ring: 210 80% 65%; /* Lighter Primary for Focus Rings */
+    --border: 260 30% 90%; /* Light lavender border */
+    --input: 260 30% 90%;
+    --ring: 205 90% 75%; /* Lighter blue for focus rings */
     
-    --chart-1: 210 80% 60%;
-    --chart-2: 265 70% 55%;
-    --chart-3: 170 70% 45%;
-    --chart-4: 30 80% 58%;
-    --chart-5: 340 80% 60%;
+    --chart-1: 205 100% 82%; /* Medium Blue */
+    --chart-2: 260 45% 75%; /* Lavender */
+    --chart-3: 330 100% 88%; /* Medium Pink */
+    --chart-4: 207 100% 88%; /* Light Blue */
+    --chart-5: 338 100% 92%; /* Light Pink */
     --radius: 0.5rem;
 
     /* Sidebar specific variables */
-    --sidebar-background: 225 30% 97%; /* Slightly darker soft blue-white */
-    --sidebar-foreground: 225 25% 15%;
-    --sidebar-primary: 210 90% 58%; /* Match primary */
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 265 80% 62%; /* Match accent */
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 220 20% 85%;
-    --sidebar-ring: 210 80% 65%;
+    --sidebar-background: 260 60% 97%; /* Very light lavender tint */
+    --sidebar-foreground: 258 30% 20%; /* Dark muted purple (slightly darker than main foreground for depth) */
+    --sidebar-primary: 205 100% 82%; /* Match primary */
+    --sidebar-primary-foreground: 205 100% 25%; /* Match primary-foreground */
+    --sidebar-accent: 330 100% 88%; /* Match accent */
+    --sidebar-accent-foreground: 330 100% 20%; /* Match accent-foreground */
+    --sidebar-border: 260 30% 88%; /* Slightly darker lavender border */
+    --sidebar-ring: 205 90% 75%; /* Match ring */
   }
 
   .dark {
-    --background: 230 25% 10%; /* Deep Dark Blue-Purple */
-    --foreground: 220 40% 95%; /* Light Grayish Blue */
+    --background: 258 20% 12%; /* Very dark purple-blue */
+    --foreground: 260 50% 92%; /* Light lavender-white */
 
-    --card: 230 25% 14%; /* Slightly lighter than background */
-    --card-foreground: 220 40% 95%;
+    --card: 258 20% 16%; /* Slightly lighter than background */
+    --card-foreground: 260 50% 92%;
 
-    --popover: 230 25% 14%;
-    --popover-foreground: 220 40% 95%;
+    --popover: 258 20% 16%;
+    --popover-foreground: 260 50% 92%;
 
-    --primary: 210 90% 65%; /* Brighter Blue for Dark Mode */
-    --primary-foreground: 230 15% 10%; /* Dark for Contrast */
+    --primary: 205 90% 70%; /* Brighter Medium Blue for Dark Mode */
+    --primary-foreground: 205 100% 15%; /* Very dark blue for contrast */
 
-    --secondary: 250 35% 20%; /* Dark Muted Purple */
-    --secondary-foreground: 250 30% 85%; /* Lighter Muted Purple */
+    --secondary: 260 55% 68%; /* Brighter Lavender */
+    --secondary-foreground: 260 50% 95%; /* Very light lavender */
 
-    --muted: 230 20% 17%; /* Very Dark Grayish Blue */
-    --muted-foreground: 220 20% 65%; /* Muted Light Gray */
+    --muted: 338 30% 20%; /* Dark Muted Pink */
+    --muted-foreground: 338 60% 75%; /* Muted Light Pink */
 
-    --accent: 265 85% 70%; /* Brighter Purple for Dark Mode */
-    --accent-foreground: 260 15% 10%; /* Dark for Contrast */
+    --accent: 330 90% 75%; /* Brighter Medium Pink for Dark Mode */
+    --accent-foreground: 330 100% 15%; /* Very dark pink */
     
     --destructive: 0 70% 55%; /* Brighter Red for Dark Mode */
     --destructive-foreground: 0 0% 98%;
 
-    --border: 230 20% 22%; /* Darker Border */
-    --input: 230 20% 22%;
-    --ring: 210 90% 70%; /* Brighter Primary for Focus Rings */
+    --border: 260 20% 25%; /* Dark lavender border */
+    --input: 260 20% 25%;
+    --ring: 205 90% 65%; /* Brighter ring */
     
-    --chart-1: 210 85% 68%;
-    --chart-2: 265 75% 60%;
-    --chart-3: 170 75% 50%;
-    --chart-4: 30 85% 62%;
-    --chart-5: 340 85% 65%;
+    --chart-1: 205 90% 70%;
+    --chart-2: 260 55% 68%;
+    --chart-3: 330 90% 75%;
+    --chart-4: 207 90% 78%; /* Light Blue - dark mode adjusted */
+    --chart-5: 338 90% 82%; /* Light Pink - dark mode adjusted */
 
     /* Dark Sidebar specific variables */
-    --sidebar-background: 230 28% 12%; /* Slightly different from main bg for depth */
-    --sidebar-foreground: 220 40% 92%;
-    --sidebar-primary: 210 90% 65%;
-    --sidebar-primary-foreground: 230 15% 10%;
-    --sidebar-accent: 265 85% 70%;
-    --sidebar-accent-foreground: 260 15% 10%;
-    --sidebar-border: 230 15% 20%;
-    --sidebar-ring: 210 90% 70%;
+    --sidebar-background: 258 22% 10%; /* Slightly different from main bg for depth */
+    --sidebar-foreground: 260 50% 90%;
+    --sidebar-primary: 205 90% 70%;
+    --sidebar-primary-foreground: 205 100% 15%;
+    --sidebar-accent: 330 90% 75%;
+    --sidebar-accent-foreground: 330 100% 15%;
+    --sidebar-border: 260 15% 22%;
+    --sidebar-ring: 205 90% 65%;
   }
 }
 
