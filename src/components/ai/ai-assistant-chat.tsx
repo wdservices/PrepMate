@@ -30,7 +30,7 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const scrollViewportRef = useRef<HTMLDivElement>(null); // Ref for the viewport
+  const scrollViewportRef = useRef<HTMLDivElement>(null); 
 
   useEffect(() => {
     if (isOpen) {
@@ -48,19 +48,18 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
           timestamp: new Date() 
         }
       ]);
-      setUserInput(""); // Clear input when dialog opens
+      setUserInput(""); 
     }
   }, [isOpen, currentQuestionContext, subjectName]);
   
   useEffect(() => {
-    // Scroll to bottom when new messages are added
-    if (scrollViewportRef.current) {
-      // Using a slight delay can help ensure the DOM has updated
-      setTimeout(() => {
-        if (scrollViewportRef.current) {
-          scrollViewportRef.current.scrollTop = scrollViewportRef.current.scrollHeight;
-        }
-      }, 0);
+    const viewport = scrollViewportRef.current;
+    if (viewport) {
+      // Using a timeout to ensure DOM has updated dimensions and scrollHeight is accurate
+      const timer = setTimeout(() => {
+        viewport.scrollTop = viewport.scrollHeight;
+      }, 100); // Increased delay slightly for more reliability
+      return () => clearTimeout(timer);
     }
   }, [messages]);
 
@@ -188,5 +187,4 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
     </Dialog>
   );
 }
-
     
