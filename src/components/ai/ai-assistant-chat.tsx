@@ -30,7 +30,8 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const lastMessageRef = useRef<HTMLDivElement>(null);
+  const scrollViewportRef = useRef<HTMLDivElement>(null);
+  const lastMessageRef = useRef<HTMLDivElement>(null); // Ref for the last message element
 
   useEffect(() => {
     if (isOpen) {
@@ -53,7 +54,10 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
   }, [isOpen, currentQuestionContext, subjectName]);
   
   useEffect(() => {
-    lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+    // Scroll to the last message when messages change
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
   }, [messages]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -111,11 +115,12 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
           </DialogDescription>
         </DialogHeader>
         
-        <ScrollArea className="flex-grow">
+        <ScrollArea className="flex-grow min-h-0" viewportRef={scrollViewportRef}> {/* Added min-h-0 here */}
            <div className="p-4 space-y-4">
             {messages.map((msg, index) => (
               <div
                 key={msg.id}
+                // Attach the ref to the last message element
                 ref={index === messages.length - 1 ? lastMessageRef : null}
                 className={cn(
                   "flex items-end gap-2 animate-in fade-in-50 slide-in-from-bottom-2",
@@ -128,7 +133,7 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
                   </Avatar>
                 )}
                 <div
-                  className={cn("max-w-[75%] rounded-lg px-3 py-2 shadow-sm text-sm break-words", // Added break-words
+                  className={cn("max-w-[75%] rounded-lg px-3 py-2 shadow-sm text-sm break-words", 
                     msg.sender === "user"
                       ? "bg-primary text-primary-foreground rounded-br-none"
                       : "bg-card text-card-foreground border border-border rounded-bl-none"
@@ -181,6 +186,4 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
     </Dialog>
   );
 }
-    
-
     
