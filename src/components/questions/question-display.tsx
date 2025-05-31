@@ -3,6 +3,7 @@
 
 import type { Question } from "@/types";
 import { useState, useEffect } from "react";
+import Image from 'next/image';
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -28,6 +29,7 @@ export function QuestionDisplay({ question, subjectName, questionNumber }: Quest
   const { toast } = useToast();
 
   useEffect(() => {
+    // Reset state when the question ID changes
     setSelectedOptionId(undefined);
     setIsSubmitted(false);
     setIsCorrect(undefined);
@@ -83,7 +85,18 @@ export function QuestionDisplay({ question, subjectName, questionNumber }: Quest
           {questionNumber ? `Question ${questionNumber} ` : 'Question '} 
           (Year {question.year})
         </CardTitle>
-        <CardDescription className="text-md mt-2 text-foreground leading-relaxed">{question.text}</CardDescription>
+        <CardDescription className="text-md mt-2 text-foreground leading-relaxed whitespace-pre-line">{question.text}</CardDescription>
+        {question.imageUrl && (
+          <div className="mt-4 relative w-full max-w-md h-64 mx-auto border rounded-md overflow-hidden shadow-sm">
+            <Image 
+              src={question.imageUrl} 
+              alt={`Question ${questionNumber || ''} image`} 
+              layout="fill"
+              objectFit="contain" 
+              data-ai-hint="diagram chart" // Generic hint for question images
+            />
+          </div>
+        )}
       </CardHeader>
       <CardContent className="pt-6 pb-4 space-y-4 bg-background/30">
         <RadioGroup
@@ -109,6 +122,7 @@ export function QuestionDisplay({ question, subjectName, questionNumber }: Quest
                   icon = <XCircle className="h-5 w-5 text-red-600" />;
                 }
               } else if (isActualCorrect) {
+                // Style for the correct answer when an incorrect one was chosen by user
                 optionStyle = "border-green-500 ring-1 ring-green-400 bg-green-50 text-green-700";
               }
             }
@@ -118,18 +132,20 @@ export function QuestionDisplay({ question, subjectName, questionNumber }: Quest
                 key={option.id} 
                 className={cn(
                   "flex items-center space-x-3 rounded-lg border p-4 transition-all duration-150 ease-in-out",
-                  isSubmitted ? "" : "data-[state=checked]:bg-primary/10 data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground",
+                  // Apply active styling only if not submitted
+                  !isSubmitted && "data-[state=checked]:bg-primary/10 data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground",
                   optionStyle,
                   !isSubmitted && "cursor-pointer hover:shadow-md" 
                 )}
-                onClick={() => !isSubmitted && setSelectedOptionId(option.id)}
+                onClick={() => !isSubmitted && setSelectedOptionId(option.id)} // Allow clicking the whole div to select
               >
                 <RadioGroupItem 
                   value={option.id} 
                   id={`${question.id}-${option.id}`}
-                  checked={selectedOptionId === option.id}
+                  checked={selectedOptionId === option.id} // Ensure item is checked based on state
                   className={cn(
                     "border-muted-foreground data-[state=checked]:border-primary data-[state=checked]:text-primary",
+                    // Specific styling for submitted answers
                     isSubmitted && isSelected && isCorrect && "border-green-700 text-green-700",
                     isSubmitted && isSelected && !isCorrect && "border-red-700 text-red-700",
                   )}

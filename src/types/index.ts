@@ -11,6 +11,7 @@ export interface Question {
   correctOptionId: string;
   explanationFromAI?: string; // For AI generated explanation after wrong answer
   year: number;
+  imageUrl?: string; // Optional URL for an image associated with the question
 }
 
 export interface Subject {

@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent, type ChangeEvent } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { UploadCloud, AlertTriangle } from 'lucide-react';
+import { UploadCloud, AlertTriangle, ImagePlus } from 'lucide-react';
 import { exams } from '@/data/mock-data';
 import type { Question, QuestionOption } from '@/types';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -24,11 +24,28 @@ export function QuestionUploadForm() {
   const [optionCText, setOptionCText] = useState<string>("");
   const [optionDText, setOptionDText] = useState<string>("");
   const [correctOption, setCorrectOption] = useState<string>("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const { toast } = useToast();
 
   const selectedExam = exams.find(e => e.id === examId);
   const subjectsForSelectedExam = selectedExam ? selectedExam.subjects : [];
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImageFile(null);
+      setImagePreview(null);
+    }
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,19 +75,29 @@ export function QuestionUploadForm() {
       text: questionText,
       options: options,
       correctOptionId: correctOption,
+      // In a real app, imageUrl would be the URL from Firebase Storage after upload
+      imageUrl: imageFile ? `placeholder_for_${imageFile.name}` : undefined, 
     };
 
     console.log("New Question Data:", questionData);
+    if (imageFile) {
+      console.log("Selected Image File:", {
+        name: imageFile.name,
+        type: imageFile.type,
+        size: imageFile.size,
+      });
+    }
+
 
     toast({
       title: "Question Data Logged",
-      description: "Question data has been logged to the console. Backend submission not yet implemented.",
+      description: "Question data (and image file info if selected) has been logged to the console. Backend submission not yet implemented.",
     });
 
     // Reset form (optional)
     // setExamId(""); setSubjectId(""); setYear(""); setQuestionText(""); 
     // setOptionAText(""); setOptionBText(""); setOptionCText(""); setOptionDText("");
-    // setCorrectOption("");
+    // setCorrectOption(""); setImageFile(null); setImagePreview(null);
   };
 
   return (
@@ -141,6 +168,26 @@ export function QuestionUploadForm() {
             />
           </div>
 
+          <div>
+            <Label htmlFor="upload-questionImage">Question Image (Optional)</Label>
+            <div className="mt-1 flex items-center gap-4">
+                <Input
+                id="upload-questionImage"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="flex-1"
+                />
+                <ImagePlus className="h-6 w-6 text-muted-foreground" />
+            </div>
+            {imagePreview && (
+              <div className="mt-3 relative w-32 h-32 border rounded-md overflow-hidden shadow-sm">
+                <img src={imagePreview} alt="Selected image preview" className="object-contain w-full h-full" />
+              </div>
+            )}
+          </div>
+
+
           <div className="space-y-4">
             <Label>Options*</Label>
             <Input id="upload-optionA" value={optionAText} onChange={(e) => setOptionAText(e.target.value)} placeholder="Option A text (Required)" />
@@ -176,12 +223,22 @@ export function QuestionUploadForm() {
       </form>
        <Alert variant="default" className="mt-6 mx-6 mb-6 bg-blue-50 border-blue-300 text-blue-700">
         <AlertTriangle className="h-5 w-5 !text-blue-600" />
-        <AlertTitle className="font-semibold">Next Steps</AlertTitle>
+        <AlertTitle className="font-semibold">Next Steps & Image Uploading</AlertTitle>
         <AlertDescription>
-          This form currently logs the question data to the browser console.
-          To make this functional, it needs to be connected to a backend service (like a Firebase Cloud Function)
-          that saves the data to a Firestore database. The question display pages would then also need to be updated
-          to fetch questions from Firestore.
+          This form currently logs the question data (including image file details if selected) to the browser console.
+          To make this fully functional:
+          <ul className="list-disc list-inside mt-2">
+            <li>Connect to a backend (e.g., Firebase Cloud Function) to save text data to Firestore.</li>
+            <li>For images, the backend function would also need to:
+                <ol className="list-decimal list-inside ml-4">
+                    <li>Receive the image file.</li>
+                    <li>Upload it to a storage service (like Firebase Storage).</li>
+                    <li>Get the public URL of the stored image.</li>
+                    <li>Save this URL along with the question text in Firestore.</li>
+                </ol>
+            </li>
+            <li>Update question display pages to fetch data from Firestore.</li>
+          </ul>
         </AlertDescription>
       </Alert>
     </Card>
