@@ -14,16 +14,18 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarInset,
+  SidebarFooter, // Added SidebarFooter
+  SidebarSeparator, // Added SidebarSeparator
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
-import { LayoutGrid, BarChart3, Sparkles, BotMessageSquare, BookOpen } from 'lucide-react';
+import { LayoutGrid, BarChart3, Sparkles, BotMessageSquare, BookOpen, UploadCloud, Settings } from 'lucide-react'; // Added UploadCloud, Settings
 import { usePathname } from 'next/navigation';
 import { exams } from '@/data/mock-data'; // Import exams data
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
-  const navItems = [
+  const mainNavItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid, type: 'static' as const },
     ...exams.map(exam => {
       const ExamIcon = exam.icon || BookOpen; // Fallback icon
@@ -36,8 +38,17 @@ export function AppLayout({ children }: { children: ReactNode }) {
       };
     }),
     { href: '/insights', label: 'Smart Analysis', icon: BarChart3, type: 'static' as const },
-    { href: '/ai-tutor', label: 'AI Tutor', icon: BotMessageSquare, type: 'static' as const }, // Changed icon here
+    { href: '/ai-tutor', label: 'AI Tutor', icon: BotMessageSquare, type: 'static' as const },
   ];
+
+  const adminNavItems = [
+     { href: '/admin/upload-question', label: 'Upload Questions', icon: UploadCloud, type: 'admin' as const },
+     // Add more admin links here later if needed
+  ];
+
+  const utilityNavItems = [
+    { href: '/settings', label: 'Settings', icon: Settings, type: 'static' as const },
+  ]
 
   return (
     <ProtectedRoute>
@@ -52,14 +63,14 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 </span>
               </Link>
             </SidebarHeader>
-            <SidebarContent>
+            <SidebarContent className="flex-grow">
               <SidebarMenu>
-                {navItems.map((item) => {
+                {mainNavItems.map((item) => {
                   let isActive = false;
                   if (item.type === 'exam') {
                     isActive = pathname.startsWith(item.href); 
                   } else if (item.href === '/dashboard') {
-                    isActive = pathname === '/dashboard';
+                    isActive = pathname === '/dashboard' || pathname === '/'; // Treat root as dashboard
                   } else {
                     isActive = pathname === item.href;
                   }
@@ -81,8 +92,59 @@ export function AppLayout({ children }: { children: ReactNode }) {
                   );
                 })}
               </SidebarMenu>
+
+              {/* Admin Section - could be made conditional based on user role later */}
+              {adminNavItems.length > 0 && (
+                <>
+                  <SidebarSeparator className="my-2" />
+                  <SidebarMenu>
+                     {adminNavItems.map((item) => {
+                      const isActive = pathname.startsWith(item.href);
+                      const ItemIcon = item.icon;
+                      return (
+                        <SidebarMenuItem key={item.href}>
+                          <SidebarMenuButton
+                            asChild
+                            isActive={isActive}
+                            tooltip={item.label}
+                            className="justify-start"
+                          >
+                            <Link href={item.href}>
+                              <ItemIcon className="flex-shrink-0" />
+                              <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      );
+                    })}
+                  </SidebarMenu>
+                </>
+              )}
             </SidebarContent>
-            {/* Optional SidebarFooter here */}
+            
+            <SidebarFooter className="mt-auto border-t border-sidebar-border">
+              <SidebarMenu>
+                {utilityNavItems.map((item) => {
+                  const isActive = pathname === item.href;
+                  const ItemIcon = item.icon;
+                    return (
+                      <SidebarMenuItem key={item.href}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={isActive}
+                          tooltip={item.label}
+                          className="justify-start"
+                        >
+                          <Link href={item.href}>
+                            <ItemIcon className="flex-shrink-0" />
+                            <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                })}
+              </SidebarMenu>
+            </SidebarFooter>
           </Sidebar>
 
           <SidebarInset className="flex-1 flex flex-col">
@@ -99,3 +161,4 @@ export function AppLayout({ children }: { children: ReactNode }) {
     </ProtectedRoute>
   );
 }
+

@@ -63,10 +63,9 @@ const biologyQuestions2011: Question[] = [
   },
 ];
 
-// These are generic 2010 Chemistry questions, not specific to an exam body.
 const chemistryQuestions2010: Question[] = [
   {
-    id: "chem-2010-q1", // Generic ID
+    id: "chem-2010-q1", 
     year: 2010,
     text: "What is the chemical symbol for Water?",
     options: [
@@ -78,7 +77,7 @@ const chemistryQuestions2010: Question[] = [
     correctOptionId: "opt2",
   },
   {
-    id: "chem-2010-q2", // Generic ID
+    id: "chem-2010-q2", 
     year: 2010,
     text: "An element with atomic number 12 has how many protons?",
     options: [
@@ -90,12 +89,6 @@ const chemistryQuestions2010: Question[] = [
     correctOptionId: "opt2",
   },
 ];
-
-// Placeholder for English 2010 questions
-const englishQuestions2010: Question[] = [];
-
-// Placeholder for Mathematics 2010 questions
-const mathematicsQuestions2010: Question[] = [];
 
 const jambChemistry2010: Question[] = [
   {
@@ -1906,6 +1899,609 @@ const jambChemistry2012: Question[] = [
   }
 ];
 
+const jambChemistry2013: Question[] = [
+  {
+    id: "jamb-chem-2013-q1",
+    year: 2013,
+    text: "Which Question Paper Type of Chemistry is given to you?",
+    options: [
+      { id: "opt1", text: "Type D" },
+      { id: "opt2", text: "Type I" },
+      { id: "opt3", text: "Type B" },
+      { id: "opt4", text: "Type U" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2013-q2",
+    year: 2013,
+    text: "The presence of an impurity in substance will cause the melting point to",
+    options: [
+      { id: "opt1", text: "be zero" },
+      { id: "opt2", text: "reduce" },
+      { id: "opt3", text: "increase" },
+      { id: "opt4", text: "be stable" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2013-q3",
+    year: 2013,
+    text: "What volume of carbon (II) oxide is produced by reacting excess carbon with 10 dm³ of oxygen?",
+    options: [
+      { id: "opt1", text: "5 dm³" },
+      { id: "opt2", text: "20 dm³" },
+      { id: "opt3", text: "15 dm³" },
+      { id: "opt4", text: "10 dm³" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2013-q4",
+    year: 2013,
+    text: "From the diagram above, an ideal gas is represented by",
+    options: [
+      { id: "opt1", text: "M" },
+      { id: "opt2", text: "N" },
+      { id: "opt3", text: "K" },
+      { id: "opt4", text: "L" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2013-q5",
+    year: 2013,
+    text: "The rate of diffusion of a gas Y is twice that of Z. If the relative molecular mass of Y is 64 and the two gases diffuse under the same conditions, find the relative molecular mass of Z",
+    options: [
+      { id: "opt1", text: "32" },
+      { id: "opt2", text: "4" },
+      { id: "opt3", text: "8" },
+      { id: "opt4", text: "16" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2013-q6",
+    year: 2013,
+    text: "The radioisotope used in industrial radiography for the rapid checking of faults in welds and casting is",
+    options: [
+      { id: "opt1", text: "Carbon-14" },
+      { id: "opt2", text: "phosphorus-32" },
+      { id: "opt3", text: "cobalt-60" },
+      { id: "opt4", text: "iodine-131" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2013-q7",
+    year: 2013,
+    text: "How many unpaired electrons are in the p-orbitals of a fluorine atom?",
+    options: [
+      { id: "opt1", text: "3" },
+      { id: "opt2", text: "0" },
+      { id: "opt3", text: "1" },
+      { id: "opt4", text: "2" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2013-q8",
+    year: 2013,
+    text: "The radioactive emission with the least ionization power is",
+    options: [
+      { id: "opt1", text: "α-particles" },
+      { id: "opt2", text: "X-rays" },
+      { id: "opt3", text: "γ-rays" },
+      { id: "opt4", text: "β-particles" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2013-q9",
+    year: 2013,
+    text: "The shape of the carbon (IV) oxide molecule is",
+    options: [
+      { id: "opt1", text: "pyramidal" },
+      { id: "opt2", text: "linear" },
+      { id: "opt3", text: "angular" },
+      { id: "opt4", text: "tetrahedral" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2013-q10",
+    year: 2013,
+    text: "Which of the following molecules is held together by hydrogen bond?",
+    options: [
+      { id: "opt1", text: "CH₄" },
+      { id: "opt2", text: "HBr" },
+      { id: "opt3", text: "H₂SO₄" },
+      { id: "opt4", text: "HF" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2013-q11",
+    year: 2013,
+    text: "The bond formed between two elements with electron configurations 1s² 2s² 2p⁶ 3s² and 1s² 2s² 2p⁴ is",
+    options: [
+      { id: "opt1", text: "metallic" },
+      { id: "opt2", text: "covalent" },
+      { id: "opt3", text: "native" },
+      { id: "opt4", text: "ionic" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2013-q12",
+    year: 2013,
+    text: "The constituent of air that acts as a diluent is",
+    options: [
+      { id: "opt1", text: "nitrogen" },
+      { id: "opt2", text: "carbon (IV) oxide" },
+      { id: "opt3", text: "noble gases" },
+      { id: "opt4", text: "oxygen" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2013-q13",
+    year: 2013,
+    text: "Steam changes the colour of anhydrous cobalt (II) chloride from",
+    options: [
+      { id: "opt1", text: "white to red" },
+      { id: "opt2", text: "blue to white" },
+      { id: "opt3", text: "blue to pink" },
+      { id: "opt4", text: "white to blue" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2013-q14",
+    year: 2013,
+    text: "An example of a hygroscopic substance is",
+    options: [
+      { id: "opt1", text: "CuO(s)" },
+      { id: "opt2", text: "MgCl₂(s)" },
+      { id: "opt3", text: "CaCl₂(s)" },
+      { id: "opt4", text: "NaOH(s)" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2013-q15",
+    year: 2013,
+    text: "If 24.4g of lead (II) trioxonitrate (V) were dissolved in 100g of distilled water at 20°C; calculate the solubility of the solute in gdm⁻³ [Pb = 207, N = 14, O = 16]",
+    options: [
+      { id: "opt1", text: "581.000" },
+      { id: "opt2", text: "0.581" },
+      { id: "opt3", text: "5.810" },
+      { id: "opt4", text: "58.100" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2013-q16",
+    year: 2013,
+    text: "The solvent used for removing grease stain is",
+    options: [
+      { id: "opt1", text: "turpentine" },
+      { id: "opt2", text: "ammonia solution" },
+      { id: "opt3", text: "ethanol" },
+      { id: "opt4", text: "solution of borax in water" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2013-q17",
+    year: 2013,
+    text: "In a water body, too much sewage leads to",
+    options: [
+      { id: "opt1", text: "a decrease in the temperature of the water which cause in death of aquatic animals" },
+      { id: "opt2", text: "an increase in the number of aquatic animals in the water" },
+      { id: "opt3", text: "an increase in the bacterial population which reduces the level of oxygen in the water" },
+      { id: "opt4", text: "a decrease in the bacterial population which increases the level of oxygen in the water" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2013-q18",
+    year: 2013,
+    text: "10.0 dm³ of water was added to 2.0 moldm⁻³ of 2.5dm³ solution of HCl. What is the concentration of the final solution in mol dm⁻³?",
+    options: [
+      { id: "opt1", text: "0.4" },
+      { id: "opt2", text: "8.0" },
+      { id: "opt3", text: "2.0" },
+      { id: "opt4", text: "0.5" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2013-q19",
+    year: 2013,
+    text: "Three drops of a 1.0 mol dm⁻³ solution of HCl was added to 20cm³ of a solution of pH6.4. The pH of the resulting solution will be",
+    options: [
+      { id: "opt1", text: "close to that of pure water" },
+      { id: "opt2", text: "less than 6.4" },
+      { id: "opt3", text: "greater than 6.4" },
+      { id: "opt4", text: "unaltered" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2013-q20",
+    year: 2013,
+    text: "Which of the following substances is not a salt?",
+    options: [
+      { id: "opt1", text: "Aluminium oxide" },
+      { id: "opt2", text: "Sodium hydrogen trioxosulphate (V)" },
+      { id: "opt3", text: "Sodium trioxocarbonate (V)" },
+      { id: "opt4", text: "Zinc chloride" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2013-q21",
+    year: 2013,
+    text: "An insoluble salt can be prepared by",
+    options: [
+      { id: "opt1", text: "the reaction of trioxocarbonate (V) with an acid" },
+      { id: "opt2", text: "double decomposition" },
+      { id: "opt3", text: "the action of dilute acid on an insoluble base" },
+      { id: "opt4", text: "the reaction of metals with an acid" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2013-q22",
+    year: 2013,
+    text: "2H₂O(l) + 2F₂(g) → 4HF(aq) + O₂(g). In the reaction above, the substance that is being reduced is",
+    options: [
+      { id: "opt1", text: "O₂(g)" },
+      { id: "opt2", text: "H₂O(l)" },
+      { id: "opt3", text: "F₂(g)" },
+      { id: "opt4", text: "HF(aq)" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2013-q23",
+    year: 2013,
+    text: "Zn(s) + CuSO₄(aq) → ZnSO₄(aq) + Cu(s). In the reaction above, the oxidizing agent is",
+    options: [
+      { id: "opt1", text: "CuSO₄(aq)" },
+      { id: "opt2", text: "ZnSO₄(aq)" },
+      { id: "opt3", text: "Cu(s)" },
+      { id: "opt4", text: "Zn(s)" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2013-q24",
+    year: 2013,
+    text: "In an electrochemical cell, polarization is caused by",
+    options: [
+      { id: "opt1", text: "chlorine" },
+      { id: "opt2", text: "oxygen" },
+      { id: "opt3", text: "tetraoxosulphate (VI) acid" },
+      { id: "opt4", text: "hydrogen" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2013-q25",
+    year: 2013,
+    text: "Calculate the volume in cm³ of oxygen evolved at s.t.p. when a current of 5 A is passed through acidified water for 193s [F = 96500 Cmol⁻¹, Molar volume of a gas at s.t.p. = 22.4 dm³]",
+    options: [
+      { id: "opt1", text: "224.000 dm³" },
+      { id: "opt2", text: "0.056 dm³" },
+      { id: "opt3", text: "0.224 dm³" },
+      { id: "opt4", text: "56.000 dm³" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2013-q26",
+    year: 2013,
+    text: "In an endothermic reaction, if there is a loss in entropy the reaction will",
+    options: [
+      { id: "opt1", text: "be indeterminate" },
+      { id: "opt2", text: "be spontaneous" },
+      { id: "opt3", text: "not be spontaneous" },
+      { id: "opt4", text: "be at equilibrium" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2013-q27",
+    year: 2013,
+    text: "2SO₂(g) + O₂(g) ⇌ 2SO₃(g) ΔH = -395.7 kJmol⁻¹. In the reaction above, the concentration of SO₃(g) can be increased by",
+    options: [
+      { id: "opt1", text: "decreasing the pressure" },
+      { id: "opt2", text: "decreasing the temperature" },
+      { id: "opt3", text: "increasing the temperature" },
+      { id: "opt4", text: "the addition of catalyst" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2013-q28",
+    year: 2013,
+    text: "The minimum amount of energy required for a reaction to take place is",
+    options: [
+      { id: "opt1", text: "lattice energy" },
+      { id: "opt2", text: "ionization energy" },
+      { id: "opt3", text: "activation energy" },
+      { id: "opt4", text: "kinetic energy" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2013-q29",
+    year: 2013,
+    text: "In the graph above, the activation energy of the catalyzed reaction is",
+    options: [
+      { id: "opt1", text: "100KJ" },
+      { id: "opt2", text: "300KJ" },
+      { id: "opt3", text: "250KJ" },
+      { id: "opt4", text: "200KJ" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2013-q30",
+    year: 2013,
+    text: "3Fe(s) + 4H₂O(g) ⇌ Fe₃O₄(s) + 4H₂(g). The equilibrium constant, K, of the reaction above is represented as",
+    options: [
+      { id: "opt1", text: "[Fe₃O₄][H₂]/[Fe][H₂O]" },
+      { id: "opt2", text: "[H₂O]⁴/[H₂]⁴" },
+      { id: "opt3", text: "[H₂]⁴/[H₂O]⁴" },
+      { id: "opt4", text: "[Fe]³[H₂O]²/[Fe₃O₄][H₂]⁴" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2013-q31",
+    year: 2013,
+    text: "Which of the following compounds is a neutral oxide?",
+    options: [
+      { id: "opt1", text: "Carbon (IV) oxide" },
+      { id: "opt2", text: "Sulphur (VI) oxide" },
+      { id: "opt3", text: "Sulphur (IV) oxide" },
+      { id: "opt4", text: "Carbon (II) oxide" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2013-q32",
+    year: 2013,
+    text: "In the laboratory preparation of ammonia, the flask is placed in a slanting position so as to",
+    options: [
+      { id: "opt1", text: "prevent condensed water from breaking the reaction flask" },
+      { id: "opt2", text: "enable the proper mixing of the reactions in the flask" },
+      { id: "opt3", text: "enhance the speed of the reaction" },
+      { id: "opt4", text: "prevent formation of precipitate" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2013-q33",
+    year: 2013,
+    text: "Which of the gases is employed as an anaesthesia?",
+    options: [
+      { id: "opt1", text: "N₂O" },
+      { id: "opt2", text: "NO₂" },
+      { id: "opt3", text: "NH₃" },
+      { id: "opt4", text: "NO" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2013-q34",
+    year: 2013,
+    text: "Sulphur (IV) oxide is a strong reducing agent in the presence of water due to the formation of",
+    options: [
+      { id: "opt1", text: "hydroxide ion" },
+      { id: "opt2", text: "sulphur (VI) oxide" },
+      { id: "opt3", text: "hydrogen sulphide" },
+      { id: "opt4", text: "trioxosulphate (IV) salt" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2013-q35",
+    year: 2013,
+    text: "A metal that forms soluble trioxosulphate (IV) ion is",
+    options: [
+      { id: "opt1", text: "barium" },
+      { id: "opt2", text: "potassium" },
+      { id: "opt3", text: "manganese" },
+      { id: "opt4", text: "aluminium" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2013-q36",
+    year: 2013,
+    text: "Copper is displaced from the solution of its salts by most metals because it",
+    options: [
+      { id: "opt1", text: "is a transition element" },
+      { id: "opt2", text: "is at the bottom of the activity series" },
+      { id: "opt3", text: "is very reactive" },
+      { id: "opt4", text: "has completely filled 3d-orbitals" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2013-q37",
+    year: 2013,
+    text: "The coloured nature of transition metal ions are associated with their partially filled",
+    options: [
+      { id: "opt1", text: "f-orbital" },
+      { id: "opt2", text: "s-orbital" },
+      { id: "opt3", text: "p-orbital" },
+      { id: "opt4", text: "d-orbital" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2013-q38",
+    year: 2013,
+    text: "Aluminium containers are frequently used to transport trioxonitrate (V) acid because aluminium",
+    options: [
+      { id: "opt1", text: "has a silvery-white appearance" },
+      { id: "opt2", text: "has a low density" },
+      { id: "opt3", text: "does not react with the acid" },
+      { id: "opt4", text: "does not corrode" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2013-q39",
+    year: 2013,
+    text: "2-methylbutan-2-ol is an example of a",
+    options: [
+      { id: "opt1", text: "dihydric alkanol" },
+      { id: "opt2", text: "tertiary alkanol" },
+      { id: "opt3", text: "secondary alkanol" },
+      { id: "opt4", text: "primary alkanol" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2013-q40",
+    year: 2013,
+    text: "The reaction between ammonia and ethyl ethanoate produces",
+    options: [
+      { id: "opt1", text: "propanol and ethanamide" },
+      { id: "opt2", text: "propanol and propanamide" },
+      { id: "opt3", text: "ethanol and propanamide" },
+      { id: "opt4", text: "ethanol and ethanamide" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2013-q41",
+    year: 2013,
+    text: "The decarboxylation of ethanoic acid will produce carbon (IV) oxide and",
+    options: [
+      { id: "opt1", text: "methane" },
+      { id: "opt2", text: "ethane" },
+      { id: "opt3", text: "propane" },
+      { id: "opt4", text: "butane" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2013-q42",
+    year: 2013,
+    text: "The compound above is an",
+    options: [
+      { id: "opt1", text: "alkanone" },
+      { id: "opt2", text: "alkanoate" },
+      { id: "opt3", text: "alkanal" },
+      { id: "opt4", text: "alkanol" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2013-q43",
+    year: 2013,
+    text: "The compound that will react with sodium hydroxide to form salt and water is",
+    options: [
+      { id: "opt1", text: "C₆H₁₂O₆" },
+      { id: "opt2", text: "(CH₃)₃COH" },
+      { id: "opt3", text: "CH₃CH=CH₂" },
+      { id: "opt4", text: "CH₃CH₂COOH" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2013-q44",
+    year: 2013,
+    text: "Which of the following compounds in solution will turn red litmus paper blue?",
+    options: [
+      { id: "opt1", text: "R'OR''" },
+      { id: "opt2", text: "R-C-N-R" },
+      { id: "opt3", text: "RNH₂" },
+      { id: "opt4", text: "R-C-O-R" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2013-q45",
+    year: 2013,
+    text: "The dehydration of ammonium salt of alkanoic acids produces a compound with the general formula",
+    options: [
+      { id: "opt1", text: "R-C-O" },
+      { id: "opt2", text: "R-C-O" },
+      { id: "opt3", text: "R-NH₂" },
+      { id: "opt4", text: "R-C-R" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2013-q46",
+    year: 2013,
+    text: "Which of the following fraction is used as raw material for the cracking process?",
+    options: [
+      { id: "opt1", text: "kerosene" },
+      { id: "opt2", text: "lubricating oil" },
+      { id: "opt3", text: "bitumen" },
+      { id: "opt4", text: "diesel oils" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2013-q47",
+    year: 2013,
+    text: "An organic compound with a pleasant smell is likely to have a general formula",
+    options: [
+      { id: "opt1", text: "CₙH₂ₙ₊₁CHO" },
+      { id: "opt2", text: "CₙH₂ₙ₊₁COOH" },
+      { id: "opt3", text: "CₙH₂ₙ₊₁COOCₙH₂ₙ₊₁" },
+      { id: "opt4", text: "CₙH₂ₙ₊₁COCₙH₂ₙ₊₁" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2013-q48",
+    year: 2013,
+    text: "A primary amide is generally represented by the formula",
+    options: [
+      { id: "opt1", text: "RCOOR" },
+      { id: "opt2", text: "RCONH₂" },
+      { id: "opt3", text: "RCONHR" },
+      { id: "opt4", text: "RCONR₂" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2013-q49",
+    year: 2013,
+    text: "The IUPAC nomenclature for the compound above is",
+    options: [
+      { id: "opt1", text: "4-methylpent-1-ene" },
+      { id: "opt2", text: "3-methylpent-2-ene" },
+      { id: "opt3", text: "2-methylpent-1-ene" },
+      { id: "opt4", text: "2-methylpent-4-ene" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2013-q50",
+    year: 2013,
+    text: "An organic compound contains 60% carbon, 13.3% hydrogen and 26.7% oxygen. Calculate the empirical formula (C=12, H=1, O=16)",
+    options: [
+      { id: "opt1", text: "C₅H₁₂O" },
+      { id: "opt2", text: "C₃H₈O" },
+      { id: "opt3", text: "C₆H₁₃O₂" },
+      { id: "opt4", text: "C₄H₉O" },
+    ],
+    correctOptionId: "opt2",
+  }
+];
+
 const jambChemistry2014: Question[] = [
   {
     id: "jamb-chem-2014-q1",
@@ -2509,77 +3105,296 @@ const jambChemistry2014: Question[] = [
   }
 ];
 
-// Combine all question arrays here
-export const allQuestions: Question[] = [
+// Define empty arrays for subjects that don't have questions yet to avoid ReferenceErrors
+const englishQuestions2010: Question[] = [];
+const mathematicsQuestions2010: Question[] = [];
+
+
+const allQuestions: Question[] = [
   ...biologyQuestions2010,
   ...biologyQuestions2011,
-  ...chemistryQuestions2010, // This seems to be a generic placeholder
+  ...chemistryQuestions2010,
   ...jambChemistry2010,
   ...jambChemistry2011,
   ...jambChemistry2012,
   ...jambChemistry2013,
   ...jambChemistry2014,
-  ...englishQuestions2010,
-  ...mathematicsQuestions2010,
+  ...englishQuestions2010, // Included to prevent reference errors, populate later
+  ...mathematicsQuestions2010, // Included to prevent reference errors, populate later
+];
+
+const commonSubjects: Subject[] = [
+  { 
+    id: "biology", 
+    name: "Biology", 
+    icon: Leaf, 
+    description: "Study of life and living organisms, including their physical structure, chemical processes, molecular interactions, physiological mechanisms, development and evolution.",
+    availableYears: [2010, 2011] 
+  },
+  { 
+    id: "chemistry", 
+    name: "Chemistry", 
+    icon: FlaskConical, 
+    description: "Scientific discipline involved with elements and compounds composed of atoms, molecules and ions: their composition, structure, properties, behavior and the changes they undergo during a reaction with other substances.",
+    availableYears: [2010, 2011, 2012, 2013, 2014] 
+  },
+  { 
+    id: "physics", 
+    name: "Physics", 
+    icon: Atom, 
+    description: "Natural science that studies matter, its fundamental constituents, its motion and behavior through space and time, and the related entities of energy and force.",
+    availableYears: [2010] 
+  },
+  { 
+    id: "mathematics", 
+    name: "Mathematics", 
+    icon: Calculator, 
+    description: "An area of knowledge, which includes the study of such topics as numbers (arithmetic and number theory), formulas and related structures (algebra), shapes and spaces in which they are contained (geometry), and quantities and their changes (calculus and analysis).",
+    availableYears: [2010] 
+  },
+  { 
+    id: "english", 
+    name: "English Language", 
+    icon: Languages, 
+    description: "Study of the English language, including its grammar, vocabulary, literature, and usage.",
+    availableYears: [2010] 
+  },
+  { 
+    id: "crs", 
+    name: "Christian Religious Studies", 
+    icon: Cross,
+    description: "Academic discipline that studies Christian beliefs, practices, and history.",
+    availableYears: [] 
+  },
+  { 
+    id: "irs", 
+    name: "Islamic Religious Studies", 
+    icon: MoonStar,
+    description: "Study of Islamic beliefs, practices, history, and culture.",
+    availableYears: [] 
+  },
+  { 
+    id: "government", 
+    name: "Government", 
+    icon: Landmark,
+    description: "Study of the systems by which states and other political units are ruled.",
+    availableYears: [] 
+  },
+  { 
+    id: "literature", 
+    name: "Literature in English", 
+    icon: BookHeart,
+    description: "Study of written works, especially those considered of superior or lasting artistic merit.",
+    availableYears: [] 
+  },
+  { 
+    id: "economics", 
+    name: "Economics", 
+    icon: DollarSign, 
+    description: "Social science that studies the production, distribution, and consumption of goods and services.",
+    availableYears: [] 
+  },
+  { 
+    id: "geography", 
+    name: "Geography", 
+    icon: Globe2,
+    description: "Scientific study of lands, features, inhabitants, and phenomena of Earth and planets.",
+    availableYears: [] 
+  },
+  { 
+    id: "history", 
+    name: "History", 
+    icon: ScrollText,
+    description: "Study of past events, particularly in human affairs.",
+    availableYears: [] 
+  },
+  { 
+    id: "commerce", 
+    name: "Commerce", 
+    icon: Store,
+    description: "Study of trade and business activities.",
+    availableYears: [] 
+  },
+  { 
+    id: "accounting", 
+    name: "Principles of Accounts", 
+    icon: NotebookText,
+    description: "Study of recording, classifying, and summarizing financial transactions.",
+    availableYears: [] 
+  },
+  { 
+    id: "agric", 
+    name: "Agricultural Science", 
+    icon: Tractor,
+    description: "Multidisciplinary field of biology that encompasses the parts of exact, natural, economic and social sciences that are used in the practice and understanding of agriculture.",
+    availableYears: [] 
+  },
+  { 
+    id: "further-maths", 
+    name: "Further Mathematics", 
+    icon: FunctionSquare,
+    description: "Advanced topics in mathematics beyond the standard high school curriculum.",
+    availableYears: [] 
+  },
+  { 
+    id: "yoruba", 
+    name: "Yoruba Language", 
+    icon: MessagesSquare,
+    description: "Study of the Yoruba language, literature, and culture.",
+    availableYears: [] 
+  },
+  { 
+    id: "igbo", 
+    name: "Igbo Language", 
+    icon: MessagesSquare,
+    description: "Study of the Igbo language, literature, and culture.",
+    availableYears: [] 
+  },
+  { 
+    id: "hausa", 
+    name: "Hausa Language", 
+    icon: MessagesSquare,
+    description: "Study of the Hausa language, literature, and culture.",
+    availableYears: [] 
+  },
+  { 
+    id: "fine-art", 
+    name: "Fine Art", 
+    icon: Palette,
+    description: "Art developed primarily for aesthetics and intellectual stimulation, judged for beauty and meaningfulness.",
+    availableYears: [] 
+  },
+  { 
+    id: "music", 
+    name: "Music", 
+    icon: InfinityIcon, // Using infinity as a placeholder, consider specific music icon
+    description: "Art form and cultural activity whose medium is sound organized in time.",
+    availableYears: [] 
+  },
+  { 
+    id: "technical-drawing", 
+    name: "Technical Drawing", 
+    icon: Milestone, // Using Milestone as placeholder
+    description: "Act and discipline of composing drawings that visually communicate how something functions or is constructed.",
+    availableYears: [] 
+  },
+  { 
+    id: "home-economics", 
+    name: "Home Economics", 
+    icon: CookingPot,
+    description: "Field of study that deals with the economics and management of the home and community.",
+    availableYears: [] 
+  },
+  { 
+    id: "food-nutrition", 
+    name: "Food and Nutrition", 
+    icon: Apple,
+    description: "Study of nutrients in food, how the body uses them, and the relationship between diet, health, and disease.",
+    availableYears: [] 
+  },
+  { 
+    id: "computer-studies", 
+    name: "Computer Studies", 
+    icon: Laptop,
+    description: "Study of computers and computational systems, including their theory, design, development, and application.",
+    availableYears: [] 
+  },
+  // Add other common subjects as needed
 ];
 
 
-// Helper function to get specific exam, subject, and year questions
-export function getQuestions(examId: string, subjectId: string, year: number): Question[] {
-  // JAMB questions
-  if (examId === "jamb" && subjectId === "biology" && year === 2010) return biologyQuestions2010;
-  if (examId === "jamb" && subjectId === "biology" && year === 2011) return biologyQuestions2011;
-  
-  if (examId === "jamb" && subjectId === "chemistry" && year === 2010) return jambChemistry2010;
-  if (examId === "jamb" && subjectId === "chemistry" && year === 2011) return jambChemistry2011;
-  if (examId === "jamb" && subjectId === "chemistry" && year === 2012) return jambChemistry2012;
-  if (examId === "jamb" && subjectId === "chemistry" && year === 2013) return jambChemistry2013;
-  if (examId === "jamb" && subjectId === "chemistry" && year === 2014) return jambChemistry2014;
-  
-  // WAEC questions (placeholder, use specific arrays when available)
-  if (examId === "waec" && subjectId === "biology" && year === 2010) return biologyQuestions2010; 
-  if (examId === "waec" && subjectId === "chemistry" && year === 2010) return chemistryQuestions2010;
+export const exams: Exam[] = [
+  {
+    id: "jamb",
+    name: "JAMB",
+    icon: GraduationCap,
+    description: "Joint Admissions and Matriculation Board examination for tertiary-level education in Nigeria.",
+    subjects: [
+      ...commonSubjects.filter(s => ["english", "mathematics", "physics", "chemistry", "biology", "economics", "government", "literature", "crs", "irs", "geography", "history", "agric", "commerce", "accounting", "further-maths", "yoruba", "igbo", "hausa", "fine-art", "music"].includes(s.id)),
+      // JAMB specific subjects can be added here if they are not in commonSubjects
+    ],
+  },
+  {
+    id: "waec",
+    name: "WAEC",
+    icon: BookOpenText,
+    description: "West African Examinations Council - Senior School Certificate Examination.",
+    subjects: [
+        ...commonSubjects, // WAEC typically offers a broad range of subjects
+        // WAEC specific subjects can be added here
+    ],
+  },
+  {
+    id: "neco",
+    name: "NECO",
+    icon: ClipboardCheck,
+    description: "National Examinations Council - Senior School Certificate Examination.",
+    subjects: [
+        ...commonSubjects, // NECO also offers a broad range of subjects
+        // NECO specific subjects can be added here
+    ],
+  },
+];
 
-  // NECO questions (placeholder)
-  if (examId === "neco" && subjectId === "biology" && year === 2010) return biologyQuestions2010; 
-
-  // Fallback for generic subjects if specific exam-subject-year combo not found
-  if (subjectId === "biology" && year === 2010) return biologyQuestions2010;
-  if (subjectId === "chemistry" && year === 2010) return chemistryQuestions2010; // Will be overridden by jambChemistry2010 for JAMB
-  if (subjectId === "english" && year === 2010) return englishQuestions2010;
-  if (subjectId === "mathematics" && year === 2010) return mathematicsQuestions2010;
-  
-  return []; 
-}
-
+// Helper function to get an exam by its ID
 export function getExamById(examId: string): Exam | undefined {
-  return exams.find(exam => exam.id === examId);
+  return exams.find((exam) => exam.id === examId);
 }
 
+// Helper function to get a subject by exam ID and subject ID
 export function getSubjectById(examId: string, subjectId: string): Subject | undefined {
   const exam = getExamById(examId);
-  return exam?.subjects.find(subject => subject.id === subjectId);
+  return exam?.subjects.find((subject) => subject.id === subjectId);
 }
 
 
-// Function to get all past questions for a specific subject and exam, formatted for AI analysis
+// Function to get questions. This will be expanded as we add more questions.
+export function getQuestions(examId: string, subjectId: string, year: number): Question[] {
+  // JAMB Questions
+  if (examId === "jamb") {
+    if (subjectId === "chemistry") {
+      if (year === 2010) return jambChemistry2010;
+      if (year === 2011) return jambChemistry2011;
+      if (year === 2012) return jambChemistry2012;
+      if (year === 2013) return jambChemistry2013;
+      if (year === 2014) return jambChemistry2014;
+    }
+    // Add other JAMB subjects and years here
+    // e.g., if (subjectId === "physics" && year === 2010) return jambPhysics2010;
+  }
+  // WAEC Questions (example structure)
+  if (examId === "waec") {
+    if (subjectId === "biology") {
+      if (year === 2010) return biologyQuestions2010;
+      if (year === 2011) return biologyQuestions2011;
+    }
+    if (subjectId === "chemistry") {
+      if (year === 2010) return chemistryQuestions2010;
+    }
+    // Add other WAEC subjects and years here
+  }
+
+  // NECO Questions (example structure)
+  // if (examId === "neco") { ... }
+
+  return []; // Return empty array if no questions found for the criteria
+}
+
+// Function to get all past questions for AI analysis
 export function getPastQuestionsForAnalysis(examId: string, subjectId: string): AIPastQuestionInput[] {
-  const exam = getExamById(examId);
-  const subject = getSubjectById(examId, subjectId);
-  if (!exam || !subject) return [];
+  const subjectData = getSubjectById(examId, subjectId);
+  if (!subjectData) return [];
 
-  let relevantQuestions: AIPastQuestionInput[] = [];
+  const questionsForSubject: AIPastQuestionInput[] = [];
 
-  // Go through all available years for the subject
-  subject.availableYears.forEach(year => {
-    const questionsForYear = getQuestions(examId, subjectId, year);
-    questionsForYear.forEach(q => {
-      relevantQuestions.push({
+  subjectData.availableYears.forEach(year => {
+    const questionsInYear = getQuestions(examId, subjectId, year);
+    questionsInYear.forEach(q => {
+      questionsForSubject.push({
         questionText: q.text,
         year: q.year,
       });
     });
   });
-
-  return relevantQuestions;
+  return questionsForSubject;
 }
