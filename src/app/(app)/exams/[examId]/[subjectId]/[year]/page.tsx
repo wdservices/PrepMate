@@ -19,30 +19,28 @@ export default function SubjectYearQuestionsPage() {
   const examId = params.examId as string;
   const subjectId = params.subjectId as string;
   const year = parseInt(params.year as string);
-
+  
   const [questions, setQuestions] = useState<Question[]>([]);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Calculate exam and subject based on params. These are not state variables themselves.
   const exam = getExamById(examId);
   const subject = getSubjectById(examId, subjectId);
 
-  // Effect to fetch questions
   useEffect(() => {
     if (examId && subjectId && year) {
       const fetchedQuestions = getQuestions(examId, subjectId, year);
       setQuestions(fetchedQuestions);
     }
-    setIsLoading(false); // Set loading to false after attempting to fetch or if params are missing
+    setIsLoading(false);
   }, [examId, subjectId, year]);
 
-  // Effect to handle redirection if exam or subject is not found *after* loading attempt
   useEffect(() => {
     if (!isLoading && (!exam || !subject)) {
       router.push('/404'); 
     }
   }, [isLoading, exam, subject, router]);
+
 
   if (isLoading) {
     return (
@@ -56,7 +54,6 @@ export default function SubjectYearQuestionsPage() {
     );
   }
   
-  // This condition is a fallback UI. The useEffect above should handle the actual redirect.
   if (!exam || !subject) {
      return (
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] text-center p-6">
@@ -69,7 +66,6 @@ export default function SubjectYearQuestionsPage() {
     );
   }
 
-  // Ensure this check only happens after loading is complete
   if (!isLoading && questions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] text-center p-6">
@@ -116,6 +112,7 @@ export default function SubjectYearQuestionsPage() {
             key={question.id}
             question={question}
             subjectName={subject.name}
+            questionNumber={index + 1} 
           />
         ))}
       </div>

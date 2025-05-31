@@ -16,11 +16,10 @@ import { cn } from "@/lib/utils";
 type QuestionDisplayProps = {
   question: Question;
   subjectName: string;
-  // onNextQuestion?: () => void; // Removed
-  // isLastQuestion?: boolean; // Removed
+  questionNumber?: number; // Added questionNumber prop
 };
 
-export function QuestionDisplay({ question, subjectName }: QuestionDisplayProps) {
+export function QuestionDisplay({ question, subjectName, questionNumber }: QuestionDisplayProps) {
   const [selectedOptionId, setSelectedOptionId] = useState<string | undefined>(undefined);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | undefined>(undefined);
@@ -29,13 +28,12 @@ export function QuestionDisplay({ question, subjectName }: QuestionDisplayProps)
   const { toast } = useToast();
 
   useEffect(() => {
-    // Reset state when question changes (e.g., if this component were reused in a single-question view that swaps questions)
     setSelectedOptionId(undefined);
     setIsSubmitted(false);
     setIsCorrect(undefined);
     setAiExplanation(undefined);
     setIsLoadingAi(false);
-  }, [question.id]); // Depend on question.id to reset if the question object itself changes
+  }, [question.id]);
 
   const handleSubmit = async () => {
     if (!selectedOptionId) {
@@ -81,7 +79,10 @@ export function QuestionDisplay({ question, subjectName }: QuestionDisplayProps)
   return (
     <Card className="w-full shadow-xl rounded-xl overflow-hidden">
       <CardHeader className="bg-card border-b">
-        <CardTitle className="text-xl font-semibold text-primary">{`Question (Year ${question.year})`}</CardTitle>
+        <CardTitle className="text-xl font-semibold text-primary">
+          {questionNumber ? `Question ${questionNumber} ` : 'Question '} 
+          (Year {question.year})
+        </CardTitle>
         <CardDescription className="text-md mt-2 text-foreground leading-relaxed">{question.text}</CardDescription>
       </CardHeader>
       <CardContent className="pt-6 pb-4 space-y-4 bg-background/30">
@@ -125,7 +126,7 @@ export function QuestionDisplay({ question, subjectName }: QuestionDisplayProps)
               >
                 <RadioGroupItem 
                   value={option.id} 
-                  id={`${question.id}-${option.id}`} // Ensure unique ID for radio item for accessibility
+                  id={`${question.id}-${option.id}`}
                   checked={selectedOptionId === option.id}
                   className={cn(
                     "border-muted-foreground data-[state=checked]:border-primary data-[state=checked]:text-primary",
@@ -176,8 +177,6 @@ export function QuestionDisplay({ question, subjectName }: QuestionDisplayProps)
             Check Answer
           </Button>
         ) : (
-          // If submitted, button could be disabled or show "Answered"
-          // For now, disable it to prevent re-submission or confusion
            <Button size="lg" disabled className="opacity-70">
              {isCorrect ? <CheckCircle className="mr-2"/> : <XCircle className="mr-2"/>}
             Answer Submitted
