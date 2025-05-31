@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { UploadCloud, AlertTriangle } from 'lucide-react';
 import { exams } from '@/data/mock-data'; // For exam and subject selection (can be dynamic later)
 import type { Question, QuestionOption } from '@/types';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function UploadQuestionPage() {
   const [examId, setExamId] = useState<string>("");
