@@ -1,7 +1,7 @@
 
 "use client";
 
-import type { Question, QuestionOption } from "@/types";
+import type { Question } from "@/types";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -16,11 +16,11 @@ import { cn } from "@/lib/utils";
 type QuestionDisplayProps = {
   question: Question;
   subjectName: string;
-  onNextQuestion?: () => void;
-  isLastQuestion?: boolean;
+  // onNextQuestion?: () => void; // Removed
+  // isLastQuestion?: boolean; // Removed
 };
 
-export function QuestionDisplay({ question, subjectName, onNextQuestion, isLastQuestion }: QuestionDisplayProps) {
+export function QuestionDisplay({ question, subjectName }: QuestionDisplayProps) {
   const [selectedOptionId, setSelectedOptionId] = useState<string | undefined>(undefined);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | undefined>(undefined);
@@ -29,13 +29,13 @@ export function QuestionDisplay({ question, subjectName, onNextQuestion, isLastQ
   const { toast } = useToast();
 
   useEffect(() => {
-    // Reset state when question changes
+    // Reset state when question changes (e.g., if this component were reused in a single-question view that swaps questions)
     setSelectedOptionId(undefined);
     setIsSubmitted(false);
     setIsCorrect(undefined);
     setAiExplanation(undefined);
     setIsLoadingAi(false);
-  }, [question]);
+  }, [question.id]); // Depend on question.id to reset if the question object itself changes
 
   const handleSubmit = async () => {
     if (!selectedOptionId) {
@@ -51,7 +51,7 @@ export function QuestionDisplay({ question, subjectName, onNextQuestion, isLastQ
     const correct = selectedOptionId === question.correctOptionId;
     setIsCorrect(correct);
     setIsLoadingAi(true);
-    setAiExplanation(undefined); // Clear previous explanation
+    setAiExplanation(undefined); 
 
     try {
       const studentAnswerText = question.options.find(opt => opt.id === selectedOptionId)?.text || "Not found";
@@ -79,37 +79,36 @@ export function QuestionDisplay({ question, subjectName, onNextQuestion, isLastQ
   };
 
   return (
-    <Card className="w-full shadow-xl rounded-lg">
-      <CardHeader>
-        <CardTitle className="text-2xl font-semibold text-primary">{`Question (Year ${question.year})`}</CardTitle>
-        <CardDescription className="text-lg mt-2 text-foreground">{question.text}</CardDescription>
+    <Card className="w-full shadow-xl rounded-xl overflow-hidden">
+      <CardHeader className="bg-card border-b">
+        <CardTitle className="text-xl font-semibold text-primary">{`Question (Year ${question.year})`}</CardTitle>
+        <CardDescription className="text-md mt-2 text-foreground leading-relaxed">{question.text}</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="pt-6 pb-4 space-y-4 bg-background/30">
         <RadioGroup
           value={selectedOptionId}
           onValueChange={setSelectedOptionId}
           disabled={isSubmitted}
+          className="space-y-3"
         >
           {question.options.map((option) => {
             const isSelected = option.id === selectedOptionId;
             const isActualCorrect = option.id === question.correctOptionId;
             
-            let optionStyle = "border-border hover:bg-muted/50";
+            let optionStyle = "border-border hover:bg-muted/50 bg-card";
             let icon = null;
 
             if (isSubmitted) {
               if (isSelected) {
                 if (isCorrect) {
-                  optionStyle = "bg-green-100 border-green-500 text-green-700";
+                  optionStyle = "bg-green-100 border-green-500 text-green-800 font-medium";
                   icon = <CheckCircle className="h-5 w-5 text-green-600" />;
                 } else {
-                  optionStyle = "bg-red-100 border-red-500 text-red-700";
+                  optionStyle = "bg-red-100 border-red-500 text-red-800 font-medium";
                   icon = <XCircle className="h-5 w-5 text-red-600" />;
                 }
               } else if (isActualCorrect) {
-                optionStyle = "border-green-500 ring-2 ring-green-300 bg-green-50";
-                // Optionally add icon for non-selected correct answer
-                // icon = <CheckCircle className="h-5 w-5 text-green-600" />;
+                optionStyle = "border-green-500 ring-1 ring-green-400 bg-green-50 text-green-700";
               }
             }
 
@@ -117,23 +116,25 @@ export function QuestionDisplay({ question, subjectName, onNextQuestion, isLastQ
               <div 
                 key={option.id} 
                 className={cn(
-                  "flex items-center space-x-3 rounded-md border p-4 transition-colors",
-                  isSubmitted ? "" : "data-[state=checked]:bg-accent data-[state=checked]:text-accent-foreground",
+                  "flex items-center space-x-3 rounded-lg border p-4 transition-all duration-150 ease-in-out",
+                  isSubmitted ? "" : "data-[state=checked]:bg-primary/10 data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground",
                   optionStyle,
-                  !isSubmitted && "cursor-pointer" 
+                  !isSubmitted && "cursor-pointer hover:shadow-md" 
                 )}
                 onClick={() => !isSubmitted && setSelectedOptionId(option.id)}
               >
                 <RadioGroupItem 
                   value={option.id} 
-                  id={option.id} 
+                  id={`${question.id}-${option.id}`} // Ensure unique ID for radio item for accessibility
                   checked={selectedOptionId === option.id}
                   className={cn(
+                    "border-muted-foreground data-[state=checked]:border-primary data-[state=checked]:text-primary",
                     isSubmitted && isSelected && isCorrect && "border-green-700 text-green-700",
                     isSubmitted && isSelected && !isCorrect && "border-red-700 text-red-700",
                   )}
+                  aria-labelledby={`${question.id}-${option.id}-label`}
                 />
-                <Label htmlFor={option.id} className={cn("text-base flex-1", !isSubmitted && "cursor-pointer")}>
+                <Label htmlFor={`${question.id}-${option.id}`} id={`${question.id}-${option.id}-label`} className={cn("text-base flex-1", !isSubmitted && "cursor-pointer")}>
                   {option.text}
                 </Label>
                 {isSubmitted && isSelected && icon}
@@ -143,42 +144,44 @@ export function QuestionDisplay({ question, subjectName, onNextQuestion, isLastQ
         </RadioGroup>
 
         {isSubmitted && !isLoadingAi && typeof isCorrect === 'boolean' && (
-          <Alert variant={isCorrect ? "default" : "destructive"} className={isCorrect ? "bg-green-50 border-green-400" : "bg-red-50 border-red-400"}>
-            {isCorrect ? <CheckCircle className="h-5 w-5 text-green-600" /> : <XCircle className="h-5 w-5 text-red-600" />}
-            <AlertTitle className={isCorrect ? "text-green-700" : "text-red-700"}>
+          <Alert variant={isCorrect ? "default" : "destructive"} className={cn("mt-4", isCorrect ? "bg-green-50 border-green-400 text-green-700" : "bg-red-50 border-red-400 text-red-700")}>
+            {isCorrect ? <CheckCircle className="h-5 w-5" /> : <XCircle className="h-5 w-5" />}
+            <AlertTitle className="font-semibold">
               {isCorrect ? "Your Answer: Correct!" : "Your Answer: Incorrect!"}
             </AlertTitle>
           </Alert>
         )}
 
         {isSubmitted && isLoadingAi && (
-          <div className="mt-4 p-3 bg-muted/50 rounded-md border flex items-center justify-center">
-            <Loader2 className="mr-2 h-5 w-5 animate-spin text-primary" />
+          <div className="mt-4 p-3 bg-muted/50 rounded-md border flex items-center justify-center space-x-2">
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
             <span className="text-muted-foreground">Loading AI explanation...</span>
           </div>
         )}
         
         {isSubmitted && !isLoadingAi && aiExplanation && (
-          <div className="mt-4 p-4 bg-card rounded-md border border-border shadow">
-            <div className="flex items-center font-semibold text-primary mb-2">
-              <Lightbulb className="h-5 w-5 mr-2"/> AI Explanation:
+          <div className="mt-4 p-4 bg-card rounded-lg border border-border shadow-sm">
+            <div className="flex items-center font-semibold text-primary mb-2 text-md">
+              <Lightbulb className="h-5 w-5 mr-2 stroke-current"/> AI Explanation
             </div>
-            <p className="text-sm text-foreground whitespace-pre-line">{aiExplanation}</p>
+            <p className="text-sm text-foreground whitespace-pre-line leading-relaxed">{aiExplanation}</p>
           </div>
         )}
 
       </CardContent>
-      <CardFooter className="flex justify-end gap-4">
+      <CardFooter className="flex justify-end gap-4 py-4 px-6 bg-card border-t">
         {!isSubmitted ? (
-          <Button onClick={handleSubmit} disabled={!selectedOptionId} size="lg">
+          <Button onClick={handleSubmit} disabled={!selectedOptionId || isLoadingAi} size="lg">
+            {isLoadingAi ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : null}
             Check Answer
           </Button>
         ) : (
-          onNextQuestion && (
-             <Button onClick={onNextQuestion} size="lg" variant="default" disabled={isLoadingAi}>
-              {isLastQuestion ? "Finish Quiz" : "Next Question"}
-            </Button>
-          )
+          // If submitted, button could be disabled or show "Answered"
+          // For now, disable it to prevent re-submission or confusion
+           <Button size="lg" disabled className="opacity-70">
+             {isCorrect ? <CheckCircle className="mr-2"/> : <XCircle className="mr-2"/>}
+            Answer Submitted
+          </Button>
         )}
       </CardFooter>
     </Card>
