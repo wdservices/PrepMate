@@ -694,6 +694,608 @@ const jambChemistry2010: Question[] = [
   }
 ];
 
+const jambChemistry2011: Question[] = [
+  {
+    id: "jamb-chem-2011-q1",
+    year: 2011,
+    text: "Which question Paper Type of Chemistry is given to you?",
+    options: [
+      { id: "opt1", text: "Type A" },
+      { id: "opt2", text: "Type B" },
+      { id: "opt3", text: "Type C" },
+      { id: "opt4", text: "Type D" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2011-q2",
+    year: 2011,
+    text: "What is the concentration of a solution containing 2g of NaOH in 100 cm³ of solution? [Na = 23, O = 16, H = 1]",
+    options: [
+      { id: "opt1", text: "0.40 mol dm⁻³" },
+      { id: "opt2", text: "0.50 mol dm⁻³" },
+      { id: "opt3", text: "0.05 mol dm⁻³" },
+      { id: "opt4", text: "0.30 mol dm⁻³" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2011-q3",
+    year: 2011,
+    text: "Which of the following properties is NOT peculiar to matter?",
+    options: [
+      { id: "opt1", text: "kinetic energy of particles increases from solid to gas" },
+      { id: "opt2", text: "Random motion of particles increases from liquid to gas" },
+      { id: "opt3", text: "Orderliness of particles increases from gas to liquid" },
+      { id: "opt4", text: "Random motion of particles increases from gas to solid" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2011-q4",
+    year: 2011,
+    text: "The principle of column chromatography is based on the ability of the constituents to",
+    options: [
+      { id: "opt1", text: "move at different speeds in the column" },
+      { id: "opt2", text: "dissolve in each other in the column" },
+      { id: "opt3", text: "react with the solvent in the column" },
+      { id: "opt4", text: "react with each other in the column" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2011-q5",
+    year: 2011,
+    text: "From the diagram above, an ideal gas can be represented by",
+    options: [
+      { id: "opt1", text: "M" },
+      { id: "opt2", text: "N" },
+      { id: "opt3", text: "K" },
+      { id: "opt4", text: "L" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2011-q6",
+    year: 2011,
+    text: "Which of the following questions is correct about the periodic table?",
+    options: [
+      { id: "opt1", text: "The non-metallic properties of the elements tend to decrease across each period" },
+      { id: "opt2", text: "The valence electrons of the elements increase progressively across the period" },
+      { id: "opt3", text: "Elements in the same group have the same number of electron shells" },
+      { id: "opt4", text: "Elements in the same period have the number of valence electrons" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2011-q7",
+    year: 2011,
+    text: "The relative atomic mass of a naturally occurring lithium consisting of 90% Li and 10% Li is",
+    options: [
+      { id: "opt1", text: "6.9" },
+      { id: "opt2", text: "7.1" },
+      { id: "opt3", text: "6.2" },
+      { id: "opt4", text: "6.8" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2011-q8",
+    year: 2011,
+    text: "An isotope has an atomic number of 15 and a mass number of 31. The number of protons it contain is",
+    options: [
+      { id: "opt1", text: "16" },
+      { id: "opt2", text: "15" },
+      { id: "opt3", text: "46" },
+      { id: "opt4", text: "31" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2011-q9",
+    year: 2011,
+    text: "The molecular lattice of iodine is held together by",
+    options: [
+      { id: "opt1", text: "dative bond" },
+      { id: "opt2", text: "metallic bond" },
+      { id: "opt3", text: "hydrogen bond" },
+      { id: "opt4", text: "van der Waal's forces" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2011-q10",
+    year: 2011,
+    text: "The arrangement of particles in crystal lattices can be studied using",
+    options: [
+      { id: "opt1", text: "X - rays" },
+      { id: "opt2", text: "Y - rays" },
+      { id: "opt3", text: "α - rays" },
+      { id: "opt4", text: "β - rays" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2011-q11",
+    year: 2011,
+    text: "From the diagram above, find the amount of solute deposited when 200 cm³ of the solution is cooled from 55°C to 40°C",
+    options: [
+      { id: "opt1", text: "0.10 mole" },
+      { id: "opt2", text: "0.20mole" },
+      { id: "opt3", text: "0.01 mole" },
+      { id: "opt4", text: "0.02 mole" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2011-q12",
+    year: 2011,
+    text: "The importance of sodium aluminate (III) in the treatment of water is to",
+    options: [
+      { id: "opt1", text: "cause coagulation" },
+      { id: "opt2", text: "neutralize acidity" },
+      { id: "opt3", text: "prevent goitre and tooth decay" },
+      { id: "opt4", text: "kill germs" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2011-q13",
+    year: 2011,
+    text: "What type of bond exits between an element X with atomic number 12 and Y with atomic number 17?",
+    options: [
+      { id: "opt1", text: "Electrovalent" },
+      { id: "opt2", text: "Metallic" },
+      { id: "opt3", text: "Covalent" },
+      { id: "opt4", text: "Dative" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2011-q14",
+    year: 2011,
+    text: "Hardness of water is mainly due to the presence of",
+    options: [
+      { id: "opt1", text: "calcium hydroxide or magnesium hydroxide" },
+      { id: "opt2", text: "calcium trioxocarbonate (IV) or calcium tetraoxosulphate (VI)" },
+      { id: "opt3", text: "sodium hydroxide or magnesium Hydroxide" },
+      { id: "opt4", text: "calcium chloride or sodium chloride salts" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2011-q15",
+    year: 2011,
+    text: "A suitable solvent for iodine and nephthalene is",
+    options: [
+      { id: "opt1", text: "carbon (IV) sulphide" },
+      { id: "opt2", text: "ethanol" },
+      { id: "opt3", text: "water" },
+      { id: "opt4", text: "benzene" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2011-q16",
+    year: 2011,
+    text: "Which of the following noble gases is commonly found in the atmosphere?",
+    options: [
+      { id: "opt1", text: "Xenon" },
+      { id: "opt2", text: "Neon" },
+      { id: "opt3", text: "Helium" },
+      { id: "opt4", text: "Argon" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2011-q17",
+    year: 2011,
+    text: "N₂O₄(g) ⇌ 2NO₂(g) ΔH = +ve. In the reaction above, an increase in temperature will",
+    options: [
+      { id: "opt1", text: "increase the value of the equilibrium constant" },
+      { id: "opt2", text: "decreases the value of the equilibrium constant" },
+      { id: "opt3", text: "increase in the reactant production" },
+      { id: "opt4", text: "shift the equilibrium to the left" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2011-q18",
+    year: 2011,
+    text: "CH₃COOH(aq) + OH⁻(aq) ⇌ CH₃COO⁻(aq) + H₂O(l). In the reaction above, CH₃COO⁻(aq) is",
+    options: [
+      { id: "opt1", text: "conjugate base" },
+      { id: "opt2", text: "acid" },
+      { id: "opt3", text: "base" },
+      { id: "opt4", text: "conjugate acid" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2011-q19",
+    year: 2011,
+    text: "How many cations will be produced from a solution of potassium aluminium tetraoxosulphate (VI)?",
+    options: [
+      { id: "opt1", text: "3" },
+      { id: "opt2", text: "4" },
+      { id: "opt3", text: "1" },
+      { id: "opt4", text: "2" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2011-q20",
+    year: 2011,
+    text: "Which of the following is NOT an alkali?",
+    options: [
+      { id: "opt1", text: "NH₃" },
+      { id: "opt2", text: "Mg(OH)₂" },
+      { id: "opt3", text: "Ca(OH)₂" },
+      { id: "opt4", text: "NaOH" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2011-q21",
+    year: 2011,
+    text: "An effect of thermal pollution on water bodies is that the",
+    options: [
+      { id: "opt1", text: "volume of water reduces" },
+      { id: "opt2", text: "volume of chemical waste increase" },
+      { id: "opt3", text: "level of oxides of nitrogen increase" },
+      { id: "opt4", text: "level of oxygen reduces" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2011-q22",
+    year: 2011,
+    text: "Which of the following is a deliquescent compound?",
+    options: [
+      { id: "opt1", text: "Na₂CO₃" },
+      { id: "opt2", text: "CaCl₂" },
+      { id: "opt3", text: "CuO" },
+      { id: "opt4", text: "Na₂CO₃.10H₂O" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2011-q23",
+    year: 2011,
+    text: "A chemical reaction which the hydration energy is greater than the lattice energy is referred to as",
+    options: [
+      { id: "opt1", text: "a spontaneous reaction" },
+      { id: "opt2", text: "an endothermic reaction" },
+      { id: "opt3", text: "an exothermic reaction" },
+      { id: "opt4", text: "a reversible reaction" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2011-q24",
+    year: 2011,
+    text: "The function of zinc electrode in a galvanic cell is that it",
+    options: [
+      { id: "opt1", text: "undergoes reduction" },
+      { id: "opt2", text: "serves as the positive electrode" },
+      { id: "opt3", text: "production electrons" },
+      { id: "opt4", text: "uses up electrons" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2011-q25",
+    year: 2011,
+    text: "CH₄(g) + Cl₂(g) → CH₃Cl(s) + HCl(g). The major factor that influence the rate of the reaction above is",
+    options: [
+      { id: "opt1", text: "catalyst" },
+      { id: "opt2", text: "temperature" },
+      { id: "opt3", text: "concentration" },
+      { id: "opt4", text: "light" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2011-q26",
+    year: 2011,
+    text: "The condition required for corrosion to take place is the presence of",
+    options: [
+      { id: "opt1", text: "water and carbon (IV) oxide" },
+      { id: "opt2", text: "water, carbon (IV) oxide and oxygen" },
+      { id: "opt3", text: "oxygen and carbon (IV) oxide" },
+      { id: "opt4", text: "water and oxygen" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2011-q27",
+    year: 2011,
+    text: "In the diagram above, X is the",
+    options: [
+      { id: "opt1", text: "enthalpy" },
+      { id: "opt2", text: "enthalpy change" },
+      { id: "opt3", text: "activation energy" },
+      { id: "opt4", text: "activated complex" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2011-q28",
+    year: 2011,
+    text: "The diagram below best illustrates the effect of decrease in",
+    options: [
+      { id: "opt1", text: "concentration" },
+      { id: "opt2", text: "temperature" },
+      { id: "opt3", text: "surface area" },
+      { id: "opt4", text: "pressure" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2011-q29",
+    year: 2011,
+    text: "MnO₄⁻(aq) + Y + 5Fe²⁺(aq) → Mn²⁺(aq) + 5Fe³⁺(aq) + 4H₂O(l). In the equation above, Y is",
+    options: [
+      { id: "opt1", text: "5H⁺(aq)" },
+      { id: "opt2", text: "4H⁺(aq)" },
+      { id: "opt3", text: "10H⁺(aq)" },
+      { id: "opt4", text: "8H⁺(aq)" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2011-q30",
+    year: 2011,
+    text: "Given that M is the mass of a substance deposited during electrolysis and Q is the quantity of electricity consumed, then Faraday's first law can be written as",
+    options: [
+      { id: "opt1", text: "M = E/Q" },
+      { id: "opt2", text: "M = EQ" },
+      { id: "opt3", text: "M = Q/E" },
+      { id: "opt4", text: "M = E/2Q" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2011-q31",
+    year: 2011,
+    text: "The impurities formed during the laboratory preparation of chlorine gas are removed by",
+    options: [
+      { id: "opt1", text: "H₂O" },
+      { id: "opt2", text: "NH₃" },
+      { id: "opt3", text: "H₂SO₄" },
+      { id: "opt4", text: "HCl" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2011-q32",
+    year: 2011,
+    text: "The effect of the presence of impurities such as carbon and sulphur on iron is that they",
+    options: [
+      { id: "opt1", text: "give it high tensile strength" },
+      { id: "opt2", text: "make it malleable and ductile" },
+      { id: "opt3", text: "increase its melting point" },
+      { id: "opt4", text: "lower its melting point" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2011-q33",
+    year: 2011,
+    text: "A few drops of concentrated HNO₃ is added to an unknown solution and boiled for a while. If this produces a brown solution, the cation presents are likely to be",
+    options: [
+      { id: "opt1", text: "Pb²⁺" },
+      { id: "opt2", text: "Cu²⁺" },
+      { id: "opt3", text: "Fe³⁺" },
+      { id: "opt4", text: "Fe²⁺" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2011-q34",
+    year: 2011,
+    text: "The bleaching action of chlorine gas is effective due to the presence of",
+    options: [
+      { id: "opt1", text: "hydrogen chloride" },
+      { id: "opt2", text: "water" },
+      { id: "opt3", text: "air" },
+      { id: "opt4", text: "oxygen" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2011-q35",
+    year: 2011,
+    text: "In the laboratory preparation of oxygen, dried oxygen is usually collected over",
+    options: [
+      { id: "opt1", text: "hydrochloric acid" },
+      { id: "opt2", text: "mercury" },
+      { id: "opt3", text: "calcium chloride" },
+      { id: "opt4", text: "tetraoxosulphate (VI) acid" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2011-q36",
+    year: 2011,
+    text: "The property of concentrated H₂SO₄ that makes it suitable for preparing HNO₃ is its",
+    options: [
+      { id: "opt1", text: "boiling point" },
+      { id: "opt2", text: "density" },
+      { id: "opt3", text: "oxidizing properties" },
+      { id: "opt4", text: "dehydrating properties" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2011-q37",
+    year: 2011,
+    text: "Bronze is preferred to copper in the making of medals because it",
+    options: [
+      { id: "opt1", text: "is stronger" },
+      { id: "opt2", text: "can withstand low temperature" },
+      { id: "opt3", text: "is lighter" },
+      { id: "opt4", text: "has low tensile strength" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2011-q38",
+    year: 2011,
+    text: "The constituents of baking powder that makes the dough to rise is",
+    options: [
+      { id: "opt1", text: "NaHCO₃" },
+      { id: "opt2", text: "NaOH" },
+      { id: "opt3", text: "Na₂CO₃" },
+      { id: "opt4", text: "NaCl" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2011-q39",
+    year: 2011,
+    text: "Which of the following compound is used as a gaseous fuel?",
+    options: [
+      { id: "opt1", text: "CH₃-C≡CH" },
+      { id: "opt2", text: "CH₃-CH₂-CH₃" },
+      { id: "opt3", text: "CH₃-CH₂-CH₂-COOH" },
+      { id: "opt4", text: "CH₃-CH₂-CH₂-CH₃" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2011-q40",
+    year: 2011,
+    text: "The ability of carbon to form long chains is referred to as",
+    options: [
+      { id: "opt1", text: "alkylation" },
+      { id: "opt2", text: "acylation" },
+      { id: "opt3", text: "catenation" },
+      { id: "opt4", text: "carbonation" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2011-q41",
+    year: 2011,
+    text: "Which of the following compounds will undergo polymerization reaction?",
+    options: [
+      { id: "opt1", text: "C₂H₄" },
+      { id: "opt2", text: "C₂H₅COOH" },
+      { id: "opt3", text: "C₂H₆" },
+      { id: "opt4", text: "C₂H₅OH" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2011-q42",
+    year: 2011,
+    text: "The compound above exhibits",
+    options: [
+      { id: "opt1", text: "geometric isomerism" },
+      { id: "opt2", text: "optical isomerism" },
+      { id: "opt3", text: "structural isomerism" },
+      { id: "opt4", text: "positional isomerism" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2011-q43",
+    year: 2011,
+    text: "An organic compound has an empirical formula CH₂O and vapour density of 45. What is the molecular formula? [C = 12, H = 1, O = 16]",
+    options: [
+      { id: "opt1", text: "C₃H₇OH" },
+      { id: "opt2", text: "C₂H₅OH" },
+      { id: "opt3", text: "C₃H₆O₃" },
+      { id: "opt4", text: "C₂H₄O₂" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2011-q44",
+    year: 2011,
+    text: "C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂ + energy. The reaction above represented by the equation above is useful in the production of",
+    options: [
+      { id: "opt1", text: "propanol" },
+      { id: "opt2", text: "butanol" },
+      { id: "opt3", text: "methanol" },
+      { id: "opt4", text: "ethanol" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2011-q45",
+    year: 2011,
+    text: "The number of isomers that can be obtained from C₄H₁₀ is",
+    options: [
+      { id: "opt1", text: "3" },
+      { id: "opt2", text: "4" },
+      { id: "opt3", text: "1" },
+      { id: "opt4", text: "2" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2011-q46",
+    year: 2011,
+    text: "The functional groups present in the compound above are",
+    options: [
+      { id: "opt1", text: "alkene and halo-group" },
+      { id: "opt2", text: "hydroxyl and chloro-group" },
+      { id: "opt3", text: "alkene and chloro-group" },
+      { id: "opt4", text: "hydroxyl and halo-group" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2011-q47",
+    year: 2011,
+    text: "Which of the following is a primary amine?",
+    options: [
+      { id: "opt1", text: "A" },
+      { id: "opt2", text: "B" },
+      { id: "opt3", text: "C" },
+      { id: "opt4", text: "D" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2011-q48",
+    year: 2011,
+    text: "Two organic compounds K and L were treated with a few drops of Fehling's solutions respectively. K formed a brick red precipitate while L remains unaffected. The compound K is an",
+    options: [
+      { id: "opt1", text: "alkanol" },
+      { id: "opt2", text: "alkane" },
+      { id: "opt3", text: "alkanal" },
+      { id: "opt4", text: "alkanone" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2011-q49",
+    year: 2011,
+    text: "Which of the following statements is true about 2-methylpropane and butane",
+    options: [
+      { id: "opt1", text: "They are members of the same homologous series" },
+      { id: "opt2", text: "They have the same boiling point" },
+      { id: "opt3", text: "They have different number of carbon atoms" },
+      { id: "opt4", text: "They have the same chemical properties" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2011-q50",
+    year: 2011,
+    text: "CH₃COOH + C₂H₅OH → CH₃COOC₂H₅ + H₂O. The reaction above is best described as",
+    options: [
+      { id: "opt1", text: "esterification" },
+      { id: "opt2", text: "Condensation" },
+      { id: "opt3", text: "saponification" },
+      { id: "opt4", text: "neutralization" },
+    ],
+    correctOptionId: "opt1",
+  },
+];
 
 const englishQuestions2010: Question[] = [
   {
@@ -740,7 +1342,7 @@ const priorityOrder = [
 const allListedSubjects: Subject[] = [
   { id: "mathematics", name: "Mathematics", icon: Calculator, availableYears: [2010], description: "Abstract science of number, quantity, and space, fundamental to all sciences." },
   { id: "english", name: "English Language", icon: Languages, availableYears: [2010], description: "Core subject focusing on grammar, comprehension, literature, and effective communication skills." },
-  { id: "chemistry", name: "Chemistry", icon: FlaskConical, availableYears: [2010], description: "Scientific discipline involving elements and compounds and their transformations." },
+  { id: "chemistry", name: "Chemistry", icon: FlaskConical, availableYears: [2010, 2011], description: "Scientific discipline involving elements and compounds and their transformations." },
   { id: "biology", name: "Biology", icon: Leaf, availableYears: [2010, 2011], description: "Study of life and living organisms, their structure, function, growth, and evolution." },
   { id: "physics", name: "Physics", icon: Atom, availableYears: [], description: "Natural science that studies matter, its motion and behavior through space and time." },
   { id: "geography", name: "Geography", icon: Globe2, availableYears: [], description: "Study of the earth's landscapes, environments, and the relationship between people and their environments." },
@@ -773,7 +1375,14 @@ const otherSubjects = allListedSubjects
   .filter(subject => !priorityOrder.includes(subject.name))
   .sort((a, b) => a.name.localeCompare(b.name)); // Sort remaining alphabetically
 
-export const commonSubjects: Subject[] = [...prioritizedSubjects, ...otherSubjects];
+export const commonSubjects: Subject[] = [...prioritizedSubjects, ...otherSubjects].map(subject => {
+  if (subject.id === 'chemistry') {
+    // Ensure 2011 is in availableYears for Chemistry if not already present
+    const updatedYears = new Set([...subject.availableYears, 2011]);
+    return { ...subject, availableYears: Array.from(updatedYears).sort((a,b) => a - b) };
+  }
+  return subject;
+});
 
 
 export const exams: Exam[] = [
@@ -806,6 +1415,7 @@ export const allQuestions: Question[] = [
   ...biologyQuestions2011,
   ...chemistryQuestions2010, // Generic chemistry 2010
   ...jambChemistry2010,   // JAMB specific chemistry 2010
+  ...jambChemistry2011,   // JAMB specific chemistry 2011
   ...englishQuestions2010,
   ...mathematicsQuestions2010,
 ];
@@ -820,12 +1430,9 @@ export function getSubjectById(examId: string, subjectId: string): Subject | und
 }
 
 export function getQuestions(examId: string, subjectId: string, year: number): Question[] {
-  // In a real app, this would fetch from a database
-  // This filtering logic needs to be robust if more questions are added.
-  // For now, it uses the specific arrays for known data and then a general filter.
-
   // Specific cases should come first
   if (examId === 'jamb' && subjectId === 'chemistry' && year === 2010) return jambChemistry2010;
+  if (examId === 'jamb' && subjectId === 'chemistry' && year === 2011) return jambChemistry2011;
 
   if (subjectId === 'biology' && year === 2010) return biologyQuestions2010;
   if (subjectId === 'biology' && year === 2011) return biologyQuestions2011;
@@ -836,22 +1443,15 @@ export function getQuestions(examId: string, subjectId: string, year: number): Q
   // Fallback or general logic for other subjects/years if they get added directly to allQuestions
   // This will need to be more sophisticated if subject data grows significantly.
   return allQuestions.filter(q => {
-    // Attempt to match based on a convention like 'jamb-chem-2010-q1' or 'waec-bio-2011-qX'
-    // This requires question IDs to follow a pattern: <examId>-<subjectIdAbbrev>-<year>-q<num>
-    // Or, more simply, if we don't have specific examId prefixes in all question IDs:
-    const questionSubjectId = q.id.split('-')[0]; // e.g., 'bio' from 'bio-2010-q1', or 'jamb' from 'jamb-chem-2010-q1'
+    const questionSubjectId = q.id.split('-')[0]; 
     let matchesSubject = false;
 
-    // This part needs to be more generic or rely on specific examId in question ID
     if (subjectId === 'biology' && (q.id.startsWith('bio-') || q.id.includes('-bio-'))) matchesSubject = true;
     else if (subjectId === 'chemistry' && (q.id.startsWith('chem-') || q.id.includes('-chem-'))) {
-      // If examId is not JAMB, and it's chemistry 2010, it will hit the generic chem-2010 questions
-      // if examId is JAMB, it's already handled by the specific case above.
       matchesSubject = true; 
     }
     else if (subjectId === 'english' && (q.id.startsWith('eng-') || q.id.includes('-eng-'))) matchesSubject = true;
     else if (subjectId === 'mathematics' && (q.id.startsWith('math-') || q.id.includes('-math-'))) matchesSubject = true;
-    // Add more conditions here if you add more subjects with specific id prefixes
 
     return matchesSubject && q.year === year;
   });
@@ -864,29 +1464,24 @@ export function getPastQuestionsForAnalysis(examId: string, subjectId: string): 
 
   if (subject) {
     subject.availableYears.forEach(year => {
-      // Pass examId here to get exam-specific questions if available
       const questionsForYear = getQuestions(examId, subjectId, year); 
       relevantQuestions.push(...questionsForYear);
     });
   }
   
-  // If still no questions (e.g. subject has no available years, or no questions for those years)
-  // Fallback to broader filter if needed, though ideally availableYears should be accurate.
   if (relevantQuestions.length === 0) {
-    // This fallback needs to be aware of examId too if question IDs are exam-specific
     relevantQuestions = allQuestions.filter(q => {
-      // Example: q.id might be "jamb-chem-2010-q1" or "chem-2010-q1"
       const idParts = q.id.split('-');
       let qExamId = null;
-      let qSubjectIdPart = idParts[0]; // Default to first part if not exam-prefixed
+      let qSubjectIdPart = idParts[0]; 
 
-      if (exams.some(ex => ex.id === idParts[0])) { // Check if first part is a known exam ID
+      if (exams.some(ex => ex.id === idParts[0])) { 
         qExamId = idParts[0];
-        qSubjectIdPart = idParts[1]; // e.g., "chem" from "jamb-chem-2010"
+        qSubjectIdPart = idParts[1]; 
       }
       
       const subjectMatches = (subjectId.startsWith(qSubjectIdPart) || qSubjectIdPart.startsWith(subjectId.substring(0,4)));
-      const examMatches = (qExamId === null || qExamId === examId); // If question has no examId, or it matches
+      const examMatches = (qExamId === null || qExamId === examId);
 
       return subjectMatches && examMatches;
     });
@@ -897,6 +1492,4 @@ export function getPastQuestionsForAnalysis(examId: string, subjectId: string): 
     year: q.year,
   }));
 }
-
-
     
