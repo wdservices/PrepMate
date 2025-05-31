@@ -14,13 +14,13 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarInset,
-  SidebarFooter, // Added SidebarFooter
-  SidebarSeparator, // Added SidebarSeparator
+  SidebarFooter, 
+  SidebarSeparator, 
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
-import { LayoutGrid, BarChart3, Sparkles, BotMessageSquare, BookOpen, UploadCloud, Settings, Users } from 'lucide-react'; // Added Users icon
+import { LayoutGrid, BarChart3, Sparkles, BotMessageSquare, BookOpen, Settings, Users } from 'lucide-react'; 
 import { usePathname } from 'next/navigation';
-import { exams } from '@/data/mock-data'; // Import exams data
+import { exams } from '@/data/mock-data'; 
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -28,7 +28,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const mainNavItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid, type: 'static' as const },
     ...exams.map(exam => {
-      const ExamIcon = exam.icon || BookOpen; // Fallback icon
+      const ExamIcon = exam.icon || BookOpen; 
       return {
         href: `/exams/${exam.id}`,
         label: exam.name,
@@ -42,9 +42,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
   ];
 
   const adminNavItems = [
-     { href: '/admin', label: 'Admin Dashboard', icon: Users, type: 'admin' as const }, // Changed icon, points to new dashboard
-     { href: '/admin/upload-question', label: 'Upload Questions', icon: UploadCloud, type: 'admin' as const },
-     // Add more admin links here later if needed
+     { href: '/admin', label: 'Admin Dashboard', icon: Users, type: 'admin' as const },
+     // The "Upload Questions" link is removed as this functionality is now part of the Admin Dashboard page.
   ];
 
   const utilityNavItems = [
@@ -71,7 +70,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
                   if (item.type === 'exam') {
                     isActive = pathname.startsWith(item.href); 
                   } else if (item.href === '/dashboard') {
-                    isActive = pathname === '/dashboard' || pathname === '/'; // Treat root as dashboard
+                    isActive = pathname === '/dashboard' || pathname === '/'; 
                   } else {
                     isActive = pathname === item.href;
                   }
@@ -94,13 +93,12 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 })}
               </SidebarMenu>
 
-              {/* Admin Section - could be made conditional based on user role later */}
               {adminNavItems.length > 0 && (
                 <>
                   <SidebarSeparator className="my-2" />
                   <SidebarMenu>
                      {adminNavItems.map((item) => {
-                      const isActive = pathname === item.href || (item.href === '/admin' && pathname.startsWith('/admin/')); // Make admin dashboard link active for sub-routes too
+                      const isActive = pathname === item.href || (item.href === '/admin' && pathname.startsWith('/admin/')); 
                       const ItemIcon = item.icon;
                       return (
                         <SidebarMenuItem key={item.href}>

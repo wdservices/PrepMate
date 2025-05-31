@@ -3,7 +3,8 @@ import type { Metadata } from 'next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Users, BarChart3, Eye, Clock, Activity } from 'lucide-react';
+import { Users, BarChart3, Eye, Clock, Activity, UploadCloud } from 'lucide-react';
+import { QuestionUploadForm } from '@/components/admin/question-upload-form';
 
 export const metadata: Metadata = {
   title: 'Admin Dashboard',
@@ -36,7 +37,7 @@ export default function AdminDashboardPage() {
             Admin Dashboard
           </h1>
           <p className="mt-2 text-lg text-muted-foreground">
-            Overview of application usage and user activity.
+            Overview of application usage, user activity, and content management.
           </p>
         </div>
       </div>
@@ -133,6 +134,10 @@ export default function AdminDashboardPage() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Question Upload Form */}
+      <QuestionUploadForm />
+
     </div>
   );
 }
