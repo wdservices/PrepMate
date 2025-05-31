@@ -24,17 +24,25 @@ export default function SubjectYearQuestionsPage() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Calculate exam and subject based on params. These are not state variables themselves.
   const exam = getExamById(examId);
   const subject = getSubjectById(examId, subjectId);
 
+  // Effect to fetch questions
   useEffect(() => {
     if (examId && subjectId && year) {
       const fetchedQuestions = getQuestions(examId, subjectId, year);
       setQuestions(fetchedQuestions);
     }
-    setIsLoading(false);
+    setIsLoading(false); // Set loading to false after attempting to fetch or if params are missing
   }, [examId, subjectId, year]);
 
+  // Effect to handle redirection if exam or subject is not found *after* loading attempt
+  useEffect(() => {
+    if (!isLoading && (!exam || !subject)) {
+      router.push('/404'); 
+    }
+  }, [isLoading, exam, subject, router]);
 
   if (isLoading) {
     return (
@@ -48,25 +56,21 @@ export default function SubjectYearQuestionsPage() {
     );
   }
   
-  useEffect(() => {
-    if (!isLoading && (!exam || !subject)) {
-      router.push('/404'); 
-    }
-  }, [isLoading, exam, subject, router]);
-
+  // This condition is a fallback UI. The useEffect above should handle the actual redirect.
   if (!exam || !subject) {
      return (
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] text-center p-6">
         <AlertTriangle className="h-16 w-16 text-destructive mb-6" />
         <h2 className="text-3xl font-semibold mb-3">Exam or Subject Not Found</h2>
         <p className="text-muted-foreground mb-6 max-w-md">
-          The requested exam or subject could not be found. You are being redirected.
+          The requested exam or subject could not be found. You may be redirected shortly.
         </p>
       </div>
     );
   }
 
-  if (questions.length === 0) {
+  // Ensure this check only happens after loading is complete
+  if (!isLoading && questions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] text-center p-6">
         <AlertTriangle className="h-16 w-16 text-destructive mb-6" />
@@ -112,7 +116,6 @@ export default function SubjectYearQuestionsPage() {
             key={question.id}
             question={question}
             subjectName={subject.name}
-            // onNextQuestion and isLastQuestion are removed
           />
         ))}
       </div>
@@ -121,7 +124,7 @@ export default function SubjectYearQuestionsPage() {
       <AiAssistantChat
         isOpen={isChatOpen}
         onOpenChange={setIsChatOpen}
-        currentQuestionContext={null} // No single "current" question when all are displayed
+        currentQuestionContext={null} 
         subjectName={subject.name}
       />
     </div>
