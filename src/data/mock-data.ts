@@ -1297,6 +1297,609 @@ const jambChemistry2011: Question[] = [
   },
 ];
 
+const jambChemistry2012: Question[] = [
+  {
+    id: "jamb-chem-2012-q1",
+    year: 2012,
+    text: "Which Question Paper Type of Chemistry is given to you?",
+    options: [
+      { id: "opt1", text: "Type Green" },
+      { id: "opt2", text: "Type Purple" },
+      { id: "opt3", text: "Type Red" },
+      { id: "opt4", text: "Type Yellow" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2012-q2",
+    year: 2012,
+    text: "Which of the following methods can be used to obtain pure water from a mixture of sand, water and methanoic acid?",
+    options: [
+      { id: "opt1", text: "neutralization with NaOH followed by filtration" },
+      { id: "opt2", text: "neutralization with NaOH followed by distillation" },
+      { id: "opt3", text: "fractional distillation" },
+      { id: "opt4", text: "filtration followed by distillation" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2012-q3",
+    year: 2012,
+    text: "How many atoms are present in 6.0g of magnesium? [Mg = 24, NA = 6.02 × 10²³ mol⁻¹]",
+    options: [
+      { id: "opt1", text: "1.20 × 10²²" },
+      { id: "opt2", text: "2.41 × 10²²" },
+      { id: "opt3", text: "1.51 × 10²³" },
+      { id: "opt4", text: "3.02 × 10²³" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2012-q4",
+    year: 2012,
+    text: "50 cm³ of gas was collected over water at 10°C and 765 mm Hg. Calculate the volume of the gas at s.t.p. if the saturated vapour pressure of water at 10°C is 5mm Hg",
+    options: [
+      { id: "opt1", text: "49.19 cm³" },
+      { id: "opt2", text: "48.87 cm³" },
+      { id: "opt3", text: "48.55 cm³" },
+      { id: "opt4", text: "48.23 cm³" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2012-q5",
+    year: 2012,
+    text: "An increase in the pressure exerted on gas at a constant temperature results in",
+    options: [
+      { id: "opt1", text: "a decrease in the number of effective collisions" },
+      { id: "opt2", text: "a decrease in volume" },
+      { id: "opt3", text: "an increase in the average intermolecular distance" },
+      { id: "opt4", text: "an increase in volume" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2012-q6",
+    year: 2012,
+    text: "In the reaction 2H₂(g) + O₂(g) → 2H₂O(g), what volume of hydrogen would be left over when 300 cm³ of oxygen and 1000 cm³ of hydrogen are exploded in a sealed tube?",
+    options: [
+      { id: "opt1", text: "200 cm³" },
+      { id: "opt2", text: "400 cm³" },
+      { id: "opt3", text: "600 cm³" },
+      { id: "opt4", text: "700 cm³" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2012-q7",
+    year: 2012,
+    text: "Which of the following can correctly be listed as evidences for the particulate nature of matter? I. Evaporation II. Sublimation III. Diffusion IV. Brownian motion",
+    options: [
+      { id: "opt1", text: "I and III only" },
+      { id: "opt2", text: "II and IV only" },
+      { id: "opt3", text: "I, II and III only" },
+      { id: "opt4", text: "I, II, III and IV" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2012-q8",
+    year: 2012,
+    text: "If the elements X and Y have atomic numbers 11 and 17 respectively, what type of bond can they form?",
+    options: [
+      { id: "opt1", text: "Dative" },
+      { id: "opt2", text: "Covalent" },
+      { id: "opt3", text: "Ionic" },
+      { id: "opt4", text: "Metallic" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2012-q9",
+    year: 2012,
+    text: "A hydrogen atom which has lost an electron contains",
+    options: [
+      { id: "opt1", text: "one proton only" },
+      { id: "opt2", text: "one neutron only" },
+      { id: "opt3", text: "one proton and one neutron" },
+      { id: "opt4", text: "one proton, one electron and one neutron" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2012-q10",
+    year: 2012,
+    text: "The electronic configuration of Mg²⁺ is",
+    options: [
+      { id: "opt1", text: "1s² 2s² 2p⁶ 3s² 3p²" },
+      { id: "opt2", text: "1s² 2s² 2p⁶ 3s²" },
+      { id: "opt3", text: "1s² 2s² 2p⁶" },
+      { id: "opt4", text: "1s² 2s² 2p⁴" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2012-q11",
+    year: 2012,
+    text: "Group VII elements are",
+    options: [
+      { id: "opt1", text: "monoatomic" },
+      { id: "opt2", text: "good oxidizing agents" },
+      { id: "opt3", text: "highly electropositive" },
+      { id: "opt4", text: "electron donors" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2012-q12",
+    year: 2012,
+    text: "Which of the following is used to study the arrangement of particles in crystal lattices?",
+    options: [
+      { id: "opt1", text: "Alpha-particles" },
+      { id: "opt2", text: "Beta-particles" },
+      { id: "opt3", text: "Gamma-rays" },
+      { id: "opt4", text: "X-rays" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2012-q13",
+    year: 2012,
+    text: "Which of the following shows that air is a mixture? I. It has a varied composition from one place to another. II. Its constituents can be separated by physical means III. It contains unreactive noble gases",
+    options: [
+      { id: "opt1", text: "I and II only" },
+      { id: "opt2", text: "II and III only" },
+      { id: "opt3", text: "I and III only" },
+      { id: "opt4", text: "I, II and III" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2012-q14",
+    year: 2012,
+    text: "The chemicals used to soften hard water involves the addition of",
+    options: [
+      { id: "opt1", text: "insoluble sodium compounds which form soluble solutions of calcium and magnesium ions" },
+      { id: "opt2", text: "soluble sodium compounds which form soluble solutions of calcium and magnesium ions" },
+      { id: "opt3", text: "soluble sodium compounds which form insoluble precipitates of calcium and magnesium ions" },
+      { id: "opt4", text: "insoluble precipitates of calcium and magnesium ions" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2012-q15",
+    year: 2012,
+    text: "Chlorination of water for town supply is carried out to",
+    options: [
+      { id: "opt1", text: "make the water colourless" },
+      { id: "opt2", text: "remove germs from the water" },
+      { id: "opt3", text: "make the water tasteful" },
+      { id: "opt4", text: "remove odour from the water" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2012-q16",
+    year: 2012,
+    text: "The solubilities of different solutes in a given solvent can be compared by",
+    options: [
+      { id: "opt1", text: "plotting their solubility curves on separate axes" },
+      { id: "opt2", text: "plotting their solubility curves on the same axes" },
+      { id: "opt3", text: "plotting some of the solubility curves on the x-axis and others on the y-axis" },
+      { id: "opt4", text: "plotting their solubility curves on the x-axis only" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2012-q17",
+    year: 2012,
+    text: "Potassium trioxochlorate (V) has a solubility of 1.5 mol/dm³ at 45°C. On cooling this solution to a temperature of 20°C, the solubility was found to be 0.5 mol/dm³. What mass of KClO₃ was crystallized out? [K = 39, Cl = 35.5, O = 16]",
+    options: [
+      { id: "opt1", text: "1.00g" },
+      { id: "opt2", text: "10.00g" },
+      { id: "opt3", text: "12.25g" },
+      { id: "opt4", text: "122.50g" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2012-q18",
+    year: 2012,
+    text: "Which of the following pollutants is associated with brain damage?",
+    options: [
+      { id: "opt1", text: "Carbon (II) oxide" },
+      { id: "opt2", text: "Radioactive fallout" },
+      { id: "opt3", text: "Biodegradable waste" },
+      { id: "opt4", text: "Sulphur (IV) oxide" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2012-q19",
+    year: 2012,
+    text: "Which of the following will produce a solution with pH less than 7 at equivalent point?",
+    options: [
+      { id: "opt1", text: "HNO₃ + NaOH" },
+      { id: "opt2", text: "H₂SO₄ + KOH" },
+      { id: "opt3", text: "HCl + Mg(OH)₂" },
+      { id: "opt4", text: "HNO₃ + KOH" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2012-q20",
+    year: 2012,
+    text: "The number of hydroxonium ions produced by one molecule of an acid in aqueous solution is its",
+    options: [
+      { id: "opt1", text: "basicity" },
+      { id: "opt2", text: "acid strength" },
+      { id: "opt3", text: "pH" },
+      { id: "opt4", text: "concentration" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2012-q21",
+    year: 2012,
+    text: "During a titration experiment, 0.05 moles of carbon (IV) oxide is liberated. What is the volume of gas liberated?",
+    options: [
+      { id: "opt1", text: "22.40 dm³" },
+      { id: "opt2", text: "11.20 dm³" },
+      { id: "opt3", text: "2.24 dm³" },
+      { id: "opt4", text: "1.12 dm³" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2012-q22",
+    year: 2012,
+    text: "A major factor considered in selecting a suitable method for preparing a simple salt is its",
+    options: [
+      { id: "opt1", text: "Crystalline form" },
+      { id: "opt2", text: "melting point" },
+      { id: "opt3", text: "reactivity with dilute acids" },
+      { id: "opt4", text: "solubility in water" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2012-q23",
+    year: 2012,
+    text: "The oxidation number of boron in NaBH₄ is",
+    options: [
+      { id: "opt1", text: "-3" },
+      { id: "opt2", text: "-1" },
+      { id: "opt3", text: "+1" },
+      { id: "opt4", text: "+3" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2012-q24",
+    year: 2012,
+    text: "2Na₂O₂(s) + 2H₂O(l) → 4NaOH(s) + O₂(s). The substance that is oxidized in the reaction above is",
+    options: [
+      { id: "opt1", text: "2NaO₂(s)" },
+      { id: "opt2", text: "NaOH(aq)" },
+      { id: "opt3", text: "H₂O(l)" },
+      { id: "opt4", text: "O₂(g)" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2012-q25",
+    year: 2012,
+    text: "What number of moles of Cu²⁺ will be deposited by 360 coulombs of electricity? [F = 96500 C mol⁻¹]",
+    options: [
+      { id: "opt1", text: "5.36 × 10⁻⁴ mole" },
+      { id: "opt2", text: "1.87 × 10⁻³ mole" },
+      { id: "opt3", text: "9.35 × 10⁻⁴ mole" },
+      { id: "opt4", text: "3.73 × 10⁻³ mole" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2012-q26",
+    year: 2012,
+    text: "A metal M displaces zinc from ZnCl₂ solution. This shows that",
+    options: [
+      { id: "opt1", text: "electrons flow from zinc to M" },
+      { id: "opt2", text: "M is more electronegative than zinc" },
+      { id: "opt3", text: "M is more electronegative than zinc" },
+      { id: "opt4", text: "zinc is more electronegative than M" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2012-q27",
+    year: 2012,
+    text: "CO(g) + H₂O(g) → CO₂(g) + H₂(g). Calculate the standard heat change of the reaction above, if the standard enthalpies of formation of CO₂(g), H₂O(g) and CO(g) in kJ mol⁻¹ are -394, -242 and -110 respectively.",
+    options: [
+      { id: "opt1", text: "+ 262 kJ mol⁻¹" },
+      { id: "opt2", text: "- 262 kJ mol⁻¹" },
+      { id: "opt3", text: "+ 42 kJ mol⁻¹" },
+      { id: "opt4", text: "- 42 kJ mol⁻¹" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2012-q28",
+    year: 2012,
+    text: "An increase in entropy can best be illustrated by",
+    options: [
+      { id: "opt1", text: "mixing of gases" },
+      { id: "opt2", text: "freezing of water" },
+      { id: "opt3", text: "the condensation of vapour" },
+      { id: "opt4", text: "solidifying candle wax" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2012-q29",
+    year: 2012,
+    text: "The highest rate of production of carbon (IV) oxide can be achieved using",
+    options: [
+      { id: "opt1", text: "0.05 mol⁻³ HCl and 5g powdered CaCO₃" },
+      { id: "opt2", text: "0.05 mol⁻³ HCl and 5g lump CaCO₃" },
+      { id: "opt3", text: "0.10 mol⁻³ HCl and 5g powdered CaCO₃" },
+      { id: "opt4", text: "0.025 mol⁻³ HCl and 5g powdered CaCO₃" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2012-q30",
+    year: 2012,
+    text: "From the reaction 2HCl(aq) + CaCO₃(s) → CaCl₂(s) + CO₂(g) + H₂O(l), which of the curves represents the production of CO₂ gas as dilute HCl is added?",
+    options: [
+      { id: "opt1", text: "L" },
+      { id: "opt2", text: "M" },
+      { id: "opt3", text: "N" },
+      { id: "opt4", text: "P" },
+    ],
+    correctOptionId: "No answer",
+  },
+  {
+    id: "jamb-chem-2012-q31",
+    year: 2012,
+    text: "2CO(g) + O₂(g) ⇌ 2CO₂(g). In the reaction above, high pressure will favour the forward reaction because",
+    options: [
+      { id: "opt1", text: "high pressure favours gas formation" },
+      { id: "opt2", text: "the reaction is in dynamic equilibrium" },
+      { id: "opt3", text: "the reaction is exothermic" },
+      { id: "opt4", text: "the process occurs with a decrease in volume" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2012-q32",
+    year: 2012,
+    text: "A piece of filter paper moistened with lead (II) ethanoate solution turns black when the paper is dropped into a gas likely to be",
+    options: [
+      { id: "opt1", text: "sulphur (VI) oxide" },
+      { id: "opt2", text: "hydrogen chloride" },
+      { id: "opt3", text: "sulphur (VI) oxide" },
+      { id: "opt4", text: "hydrogen sulphide" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2012-q33",
+    year: 2012,
+    text: "Which of the following gases has a characteristic pungent smell, turns red litmus paper blue and forms dense white fumes with hydrogen chloride gas?",
+    options: [
+      { id: "opt1", text: "N₂" },
+      { id: "opt2", text: "N₂O" },
+      { id: "opt3", text: "Cl₂" },
+      { id: "opt4", text: "NH₃" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2012-q34",
+    year: 2012,
+    text: "Commercial bleaching can be carried out using",
+    options: [
+      { id: "opt1", text: "sulphur (IV) oxide and ammonia" },
+      { id: "opt2", text: "hydrogen sulphide and chlorine" },
+      { id: "opt3", text: "chlorine and sulphur (IV) oxide" },
+      { id: "opt4", text: "ammonia and chlorine" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2012-q35",
+    year: 2012,
+    text: "Mineral acids are usually added to commercial hydrogen peroxide to",
+    options: [
+      { id: "opt1", text: "oxidize it" },
+      { id: "opt2", text: "decompose it" },
+      { id: "opt3", text: "minimize its decomposition" },
+      { id: "opt4", text: "reduce it to water and oxygen" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2012-q36",
+    year: 2012,
+    text: "Which of the following compounds will burn with a brick-red colour in a nonluminous Bunsen flame?",
+    options: [
+      { id: "opt1", text: "LiCl" },
+      { id: "opt2", text: "NaCl" },
+      { id: "opt3", text: "CaCl₂" },
+      { id: "opt4", text: "MgCl₂" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2012-q37",
+    year: 2012,
+    text: "The purest form of iron which contains only about 0.1% carbon is",
+    options: [
+      { id: "opt1", text: "pig iron" },
+      { id: "opt2", text: "wrought iron" },
+      { id: "opt3", text: "cast iron" },
+      { id: "opt4", text: "iron pyrite" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2012-q38",
+    year: 2012,
+    text: "A common characteristic between zinc and the other transition elements is the ability to",
+    options: [
+      { id: "opt1", text: "have variable oxidation states" },
+      { id: "opt2", text: "form complex ions" },
+      { id: "opt3", text: "act as a catalyst" },
+      { id: "opt4", text: "form coloured ions" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2012-q39",
+    year: 2012,
+    text: "Which of the following metals is the least reactive?",
+    options: [
+      { id: "opt1", text: "Pb" },
+      { id: "opt2", text: "Sn" },
+      { id: "opt3", text: "Hg" },
+      { id: "opt4", text: "Au" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2012-q40",
+    year: 2012,
+    text: "Geometric isomerism can exist in",
+    options: [
+      { id: "opt1", text: "hex-3-ene" },
+      { id: "opt2", text: "hexane" },
+      { id: "opt3", text: "prop-1-ene" },
+      { id: "opt4", text: "3-methyl but-1-ene" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2012-q41",
+    year: 2012,
+    text: "Alkanals can be distinguished from alkanones by the reaction with",
+    options: [
+      { id: "opt1", text: "Sudan III stain" },
+      { id: "opt2", text: "starch iodide paper" },
+      { id: "opt3", text: "lithium tetrahydrido aluminate (III)" },
+      { id: "opt4", text: "Fehling's solution" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2012-q42",
+    year: 2012,
+    text: "The isomers of C₃H₈O are",
+    options: [
+      { id: "opt1", text: "1-propanol and 2-propanol" },
+      { id: "opt2", text: "1-propanol and 1-propanol" },
+      { id: "opt3", text: "2-propanol and 2-propanone" },
+      { id: "opt4", text: "2-propanol and 1-propanol" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2012-q43",
+    year: 2012,
+    text: "Carbohydrates are large molecules with the molecular formula Cₓ(H₂O)ᵧ. In which of the following pairs is x not equal to y?",
+    options: [
+      { id: "opt1", text: "glucose and starch" },
+      { id: "opt2", text: "maltose and starch" },
+      { id: "opt3", text: "sucrose and fructose" },
+      { id: "opt4", text: "maltose and starch" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2012-q44",
+    year: 2012,
+    text: "A compound contains 40.0% C, 6.7% H and 53.3% O. If the molecular mass of the compound is 180, its molecular formula is [C = 12, H = 1, O = 16]",
+    options: [
+      { id: "opt1", text: "CH₂O" },
+      { id: "opt2", text: "C₃H₆O₃" },
+      { id: "opt3", text: "C₆H₆O₃" },
+      { id: "opt4", text: "C₆H₁₂O₆" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2012-q45",
+    year: 2012,
+    text: "The alkyne that will give a white precipitate with silver trioxonitrate (V) is",
+    options: [
+      { id: "opt1", text: "CH₃CH₂C≡CCH₂CH₃" },
+      { id: "opt2", text: "CH₃C≡CCH₂CH₂CH₃" },
+      { id: "opt3", text: "CH₃CH₂CH₂CH₂C≡CH" },
+      { id: "opt4", text: "CH₃CH₂CH₂C≡CCH₂CH₃" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2012-q46",
+    year: 2012,
+    text: "The saponification of an alkanoate to produce soap and alkanol involves",
+    options: [
+      { id: "opt1", text: "dehydration" },
+      { id: "opt2", text: "esterification" },
+      { id: "opt3", text: "hydrolysis" },
+      { id: "opt4", text: "oxidation" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2012-q47",
+    year: 2012,
+    text: "2-methylpropan-2-ol is an example of a",
+    options: [
+      { id: "opt1", text: "primary alkanol" },
+      { id: "opt2", text: "secondary alkanol" },
+      { id: "opt3", text: "tertiary alkanol" },
+      { id: "opt4", text: "quaternary alkanol" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2012-q48",
+    year: 2012,
+    text: "The final oxidation product of alkanol, alkanal and alkanoes is",
+    options: [
+      { id: "opt1", text: "alkanoic acid" },
+      { id: "opt2", text: "alkanoyl halide" },
+      { id: "opt3", text: "alkanoate" },
+      { id: "opt4", text: "alkanamide" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2012-q49",
+    year: 2012,
+    text: "Ethanol reacts with concentrated tetraoxosulphate (V) acid at a temperature above 170°C to form",
+    options: [
+      { id: "opt1", text: "ethanone" },
+      { id: "opt2", text: "ethene" },
+      { id: "opt3", text: "ethyne" },
+      { id: "opt4", text: "ethanol" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2012-q50",
+    year: 2012,
+    text: "An example of oxidation-reduction enzyme is",
+    options: [
+      { id: "opt1", text: "amylase" },
+      { id: "opt2", text: "protease" },
+      { id: "opt3", text: "lipase" },
+      { id: "opt4", text: "dehydrogenase" },
+    ],
+    correctOptionId: "opt4",
+  }
+];
+
 const englishQuestions2010: Question[] = [
   {
     id: "eng-2010-q1",
@@ -1342,7 +1945,7 @@ const priorityOrder = [
 const allListedSubjects: Subject[] = [
   { id: "mathematics", name: "Mathematics", icon: Calculator, availableYears: [2010], description: "Abstract science of number, quantity, and space, fundamental to all sciences." },
   { id: "english", name: "English Language", icon: Languages, availableYears: [2010], description: "Core subject focusing on grammar, comprehension, literature, and effective communication skills." },
-  { id: "chemistry", name: "Chemistry", icon: FlaskConical, availableYears: [2010, 2011], description: "Scientific discipline involving elements and compounds and their transformations." },
+  { id: "chemistry", name: "Chemistry", icon: FlaskConical, availableYears: [2010, 2011, 2012], description: "Scientific discipline involving elements and compounds and their transformations." },
   { id: "biology", name: "Biology", icon: Leaf, availableYears: [2010, 2011], description: "Study of life and living organisms, their structure, function, growth, and evolution." },
   { id: "physics", name: "Physics", icon: Atom, availableYears: [], description: "Natural science that studies matter, its motion and behavior through space and time." },
   { id: "geography", name: "Geography", icon: Globe2, availableYears: [], description: "Study of the earth's landscapes, environments, and the relationship between people and their environments." },
@@ -1377,8 +1980,19 @@ const otherSubjects = allListedSubjects
 
 export const commonSubjects: Subject[] = [...prioritizedSubjects, ...otherSubjects].map(subject => {
   if (subject.id === 'chemistry') {
-    // Ensure 2011 is in availableYears for Chemistry if not already present
-    const updatedYears = new Set([...subject.availableYears, 2011]);
+    const updatedYears = new Set([...subject.availableYears, 2010, 2011, 2012]);
+    return { ...subject, availableYears: Array.from(updatedYears).sort((a,b) => a - b) };
+  }
+   if (subject.id === 'biology') {
+    const updatedYears = new Set([...subject.availableYears, 2010, 2011]);
+    return { ...subject, availableYears: Array.from(updatedYears).sort((a,b) => a - b) };
+  }
+   if (subject.id === 'english') {
+    const updatedYears = new Set([...subject.availableYears, 2010]);
+    return { ...subject, availableYears: Array.from(updatedYears).sort((a,b) => a - b) };
+  }
+   if (subject.id === 'mathematics') {
+    const updatedYears = new Set([...subject.availableYears, 2010]);
     return { ...subject, availableYears: Array.from(updatedYears).sort((a,b) => a - b) };
   }
   return subject;
@@ -1413,9 +2027,10 @@ export const exams: Exam[] = [
 export const allQuestions: Question[] = [
   ...biologyQuestions2010,
   ...biologyQuestions2011,
-  ...chemistryQuestions2010, // Generic chemistry 2010
-  ...jambChemistry2010,   // JAMB specific chemistry 2010
-  ...jambChemistry2011,   // JAMB specific chemistry 2011
+  ...chemistryQuestions2010, 
+  ...jambChemistry2010,   
+  ...jambChemistry2011,
+  ...jambChemistry2012,   
   ...englishQuestions2010,
   ...mathematicsQuestions2010,
 ];
@@ -1433,6 +2048,7 @@ export function getQuestions(examId: string, subjectId: string, year: number): Q
   // Specific cases should come first
   if (examId === 'jamb' && subjectId === 'chemistry' && year === 2010) return jambChemistry2010;
   if (examId === 'jamb' && subjectId === 'chemistry' && year === 2011) return jambChemistry2011;
+  if (examId === 'jamb' && subjectId === 'chemistry' && year === 2012) return jambChemistry2012;
 
   if (subjectId === 'biology' && year === 2010) return biologyQuestions2010;
   if (subjectId === 'biology' && year === 2011) return biologyQuestions2011;
@@ -1492,4 +2108,6 @@ export function getPastQuestionsForAnalysis(examId: string, subjectId: string): 
     year: q.year,
   }));
 }
+    
+
     
