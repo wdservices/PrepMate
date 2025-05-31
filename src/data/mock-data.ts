@@ -572,6 +572,126 @@ const jambChemistry2010: Question[] = [
     ],
     correctOptionId: "opt4",
   },
+  {
+    id: "jamb-chem-2010-q41",
+    year: 2010,
+    text: "Which of the following is used as fuel in miners' lamp?",
+    options: [
+      { id: "opt1", text: "Ethanal" },
+      { id: "opt2", text: "Ethyne" },
+      { id: "opt3", text: "Ethene" },
+      { id: "opt4", text: "Ethane" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2010-q42",
+    year: 2010,
+    text: "Which of the following organic compounds is very soluble in water?",
+    options: [
+      { id: "opt1", text: "CH₃COOH" },
+      { id: "opt2", text: "C₂H₂" },
+      { id: "opt3", text: "C₂H₄" },
+      { id: "opt4", text: "CH₃COOC₂H₅" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2010-q43",
+    year: 2010,
+    text: "Benzene reacts with hydrogen in the presence of nickel catalyst at 180°C to give",
+    options: [
+      { id: "opt1", text: "xylene" },
+      { id: "opt2", text: "toluene" },
+      { id: "opt3", text: "cyclopentane" },
+      { id: "opt4", text: "cyclohexane" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2010-q44",
+    year: 2010,
+    text: "Which of the following is used to hasten the ripening of fruit?",
+    options: [
+      { id: "opt1", text: "Ethene" },
+      { id: "opt2", text: "Ethanol" },
+      { id: "opt3", text: "Ethyne" },
+      { id: "opt4", text: "Ethane" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2010-q45",
+    year: 2010,
+    text: "The final products of the reaction between methane and chlorine in the presence of ultraviolet light are hydrogen chloride and",
+    options: [
+      { id: "opt1", text: "trichloromethane" },
+      { id: "opt2", text: "dichloromethane" },
+      { id: "opt3", text: "tetrachloromethane" },
+      { id: "opt4", text: "chloromethane" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2010-q46",
+    year: 2010,
+    text: "The correct order of increasing boiling points of the following compounds C₃H₇OH, C₇H₁₆ and C₄H₁₀ is",
+    options: [
+      { id: "opt1", text: "C₃H₇OH → C₄H₁₀ → C₇H₁₆" },
+      { id: "opt2", text: "C₄H₁₀ → C₇H₁₆ → C₃H₇OH" },
+      { id: "opt3", text: "C₇H₁₆ → C₃H₇OH → C₄H₁₀" },
+      { id: "opt4", text: "C₄H₁₀ → C₃H₇OH → C₇H₁₆" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2010-q47",
+    year: 2010,
+    text: "One of the major uses of alkane is",
+    options: [
+      { id: "opt1", text: "as domestic and industrial fuel" },
+      { id: "opt2", text: "in the hydrogenation of oils" },
+      { id: "opt3", text: "in the textile industries" },
+      { id: "opt4", text: "in the production of plastics" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2010-q48",
+    year: 2010,
+    text: "The haloalkanes used in dry-cleaning industries are",
+    options: [
+      { id: "opt1", text: "trichloromethane and tetrachloromethane" },
+      { id: "opt2", text: "chloroethene and dichloroethene" },
+      { id: "opt3", text: "trichloroethene and tetrachloroethene" },
+      { id: "opt4", text: "chloroethane and dichloroethane" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2010-q49",
+    year: 2010,
+    text: "Two hydrocarbons X and Y were treated with bromine water. X decolorized the solution and Y did not. Which class of compound does Y belong?",
+    options: [
+      { id: "opt1", text: "Benzene" },
+      { id: "opt2", text: "Alkynes" },
+      { id: "opt3", text: "Alkenes" },
+      { id: "opt4", text: "Alkanes" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2010-q50",
+    year: 2010,
+    text: "The compound that is used as an anaesthetic is",
+    options: [
+      { id: "opt1", text: "CCl₄" },
+      { id: "opt2", text: "CHCl₃" },
+      { id: "opt3", text: "CH₂Cl₂" },
+      { id: "opt4", text: "CH₃Cl" },
+    ],
+    correctOptionId: "opt2",
+  }
 ];
 
 
@@ -778,3 +898,5 @@ export function getPastQuestionsForAnalysis(examId: string, subjectId: string): 
   }));
 }
 
+
+    
