@@ -332,6 +332,246 @@ const jambChemistry2010: Question[] = [
     ],
     correctOptionId: "opt1",
   },
+  {
+    id: "jamb-chem-2010-q21",
+    year: 2010,
+    text: "Which of the following salts is slightly soluble in water?",
+    options: [
+      { id: "opt1", text: "AgCl" },
+      { id: "opt2", text: "CaSO₄" },
+      { id: "opt3", text: "Na₂CO₃" },
+      { id: "opt4", text: "PbCl₂" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2010-q22",
+    year: 2010,
+    text: "In the reaction 6AgNO₃(aq) + PH₃(g) + 3H₂O(l) → 6Ag(s) + H₃PO₃(aq) + 6HNO₃(aq), the reducing agent is",
+    options: [
+      { id: "opt1", text: "HNO₃(aq)" },
+      { id: "opt2", text: "H₂O(l)" },
+      { id: "opt3", text: "PH₃(g)" },
+      { id: "opt4", text: "AgNO₃(aq)" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2010-q23",
+    year: 2010,
+    text: "The IUPAC nomenclature of the compound LiAlH₄ is",
+    options: [
+      { id: "opt1", text: "lithium tetrahydridoaluminate (III)" },
+      { id: "opt2", text: "aluminium tetrahydrido lithium" },
+      { id: "opt3", text: "tetrahydrido lithium aluminate (III)" },
+      { id: "opt4", text: "lithium aluminium hydride" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2010-q24",
+    year: 2010,
+    text: "Iron can be protected from corrosion by coating the surface with",
+    options: [
+      { id: "opt1", text: "gold" },
+      { id: "opt2", text: "silver" },
+      { id: "opt3", text: "copper" },
+      { id: "opt4", text: "zinc" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2010-q25",
+    year: 2010,
+    text: "What quantity of aluminium is deposited when a current of 10A is passed through a solution of an aluminium salt for 1930s? [Al = 27, F = 96500 C mol⁻¹]",
+    options: [
+      { id: "opt1", text: "0.2 g" },
+      { id: "opt2", text: "1.8 g" },
+      { id: "opt3", text: "5.4 g" },
+      { id: "opt4", text: "14.2 g" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2010-q26",
+    year: 2010,
+    text: "In which of the following is the entropy change positive?",
+    options: [
+      { id: "opt1", text: "Thermal dissociation of ammonium chloride" },
+      { id: "opt2", text: "Reaction between an acid and a base" },
+      { id: "opt3", text: "Addition of concentrated acid to water" },
+      { id: "opt4", text: "Dissolution of sodium metal in water" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2010-q27",
+    year: 2010,
+    text: "If a reaction is exothermic and there is a great disorder, it means that",
+    options: [
+      { id: "opt1", text: "the reaction is static" },
+      { id: "opt2", text: "the reaction is in a state of equilibrium" },
+      { id: "opt3", text: "there will be a large increase in free energy" },
+      { id: "opt4", text: "there will be a large decrease in free energy" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2010-q28",
+    year: 2010,
+    text: "In the preparation of oxygen by heating KClO₃ in the presence of MnO₂, only moderate heat is needed because the catalyst acts by",
+    options: [
+      { id: "opt1", text: "lowering the pressure of the reaction" },
+      { id: "opt2", text: "increasing the surface area of the reactant" },
+      { id: "opt3", text: "increasing the rate of the reaction" },
+      { id: "opt4", text: "lowering the energy barrier of the reaction" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2010-q29",
+    year: 2010,
+    text: "The graph demonstrates the effect of",
+    options: [
+      { id: "opt1", text: "surface area on the rate of reaction" },
+      { id: "opt2", text: "catalyst on the rate of reaction" },
+      { id: "opt3", text: "pressure on the rate reaction" },
+      { id: "opt4", text: "concentration on the rate of reaction" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2010-q30",
+    year: 2010,
+    text: "For the reaction 2H₂(g) + O₂(g) ⇌ 2H₂O(g) ΔH = -ve, what happens to the equilibrium constant if the temperature is increased?",
+    options: [
+      { id: "opt1", text: "it is unaffected" },
+      { id: "opt2", text: "it becomes zero" },
+      { id: "opt3", text: "it decreases" },
+      { id: "opt4", text: "it increases" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2010-q31",
+    year: 2010,
+    text: "The brown ring observed after adding concentrated H₂SO₄ to a solution containing FeSO₄ confirms the presence of",
+    options: [
+      { id: "opt1", text: "CO" },
+      { id: "opt2", text: "Cl⁻" },
+      { id: "opt3", text: "SO₄²⁻" },
+      { id: "opt4", text: "NO₃⁻" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2010-q32",
+    year: 2010,
+    text: "In the diagram, the gas produced is",
+    options: [
+      { id: "opt1", text: "NO" },
+      { id: "opt2", text: "NO₂" },
+      { id: "opt3", text: "N₂O" },
+      { id: "opt4", text: "N₂O₄" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2010-q33",
+    year: 2010,
+    text: "Which of the following is used in rocket fuels?",
+    options: [
+      { id: "opt1", text: "HNO₃" },
+      { id: "opt2", text: "CH₃COOH" },
+      { id: "opt3", text: "H₂SO₄" },
+      { id: "opt4", text: "HCl" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2010-q34",
+    year: 2010,
+    text: "In the diagram, the purpose of the asbestos is to",
+    options: [
+      { id: "opt1", text: "absorb impurities" },
+      { id: "opt2", text: "catalyse the reaction" },
+      { id: "opt3", text: "solidify the gas" },
+      { id: "opt4", text: "dry the gas" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2010-q35",
+    year: 2010,
+    text: "A constituent common to bronze and solder is",
+    options: [
+      { id: "opt1", text: "lead" },
+      { id: "opt2", text: "silver" },
+      { id: "opt3", text: "copper" },
+      { id: "opt4", text: "tin" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2010-q36",
+    year: 2010,
+    text: "When iron is exposed to moist air, it gradually rusts. This is due to the formation of",
+    options: [
+      { id: "opt1", text: "hydrate iron (III) oxide" },
+      { id: "opt2", text: "anhydrous iron (III) oxide" },
+      { id: "opt3", text: "anhydrous iron (II) oxide" },
+      { id: "opt4", text: "hydrate iron (II) oxide" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2010-q37",
+    year: 2010,
+    text: "A compound gives an orange-red colour to non-luminous flame. This compound is likely to contain",
+    options: [
+      { id: "opt1", text: "Na⁺" },
+      { id: "opt2", text: "Ca²⁺" },
+      { id: "opt3", text: "Fe³⁺" },
+      { id: "opt4", text: "Fe²⁺" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2010-q38",
+    year: 2010,
+    text: "Stainless steel is used for making",
+    options: [
+      { id: "opt1", text: "magnets" },
+      { id: "opt2", text: "tools" },
+      { id: "opt3", text: "coins and medals" },
+      { id: "opt4", text: "moving parts of clocks" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2010-q39",
+    year: 2010,
+    text: "The residual solids from the fractional distillation of petroleum are used as",
+    options: [
+      { id: "opt1", text: "coatings of pipes" },
+      { id: "opt2", text: "raw materials for the cracking process" },
+      { id: "opt3", text: "fuel for driving tractors" },
+      { id: "opt4", text: "fuel for jet engines" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2010-q40",
+    year: 2010,
+    text: "The IUPAC nomenclature of the compound CH₃(CH₂)₃CHC₂H₅ is",
+    options: [
+      { id: "opt1", text: "4-ethyloctane" },
+      { id: "opt2", text: "5-ethyloctane" },
+      { id: "opt3", text: "5-propylheptane" },
+      { id: "opt4", text: "3-propylheptane" },
+    ],
+    correctOptionId: "opt4",
+  },
 ];
 
 
@@ -365,6 +605,17 @@ const mathematicsQuestions2010: Question[] = [
   },
 ];
 
+const priorityOrder = [
+  "Mathematics",
+  "English Language",
+  "Chemistry",
+  "Biology",
+  "Physics",
+  "Geography",
+  "Economics",
+  "Further Mathematics",
+  "Christian Religious Studies",
+];
 
 const allListedSubjects: Subject[] = [
   { id: "mathematics", name: "Mathematics", icon: Calculator, availableYears: [2010], description: "Abstract science of number, quantity, and space, fundamental to all sciences." },
@@ -392,17 +643,6 @@ const allListedSubjects: Subject[] = [
   { id: "yoruba", name: "Yoruba Language", icon: MessagesSquare, availableYears: [], description: "Study of the Yoruba language, literature, and culture." },
 ];
 
-const priorityOrder = [
-  "Mathematics",
-  "English Language",
-  "Chemistry",
-  "Biology",
-  "Physics",
-  "Geography",
-  "Economics",
-  "Further Mathematics",
-  "Christian Religious Studies",
-];
 
 // Sort the subjects based on priority
 const prioritizedSubjects = allListedSubjects
