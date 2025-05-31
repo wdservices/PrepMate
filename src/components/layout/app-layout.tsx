@@ -18,7 +18,7 @@ import {
   SidebarSeparator, // Added SidebarSeparator
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
-import { LayoutGrid, BarChart3, Sparkles, BotMessageSquare, BookOpen, UploadCloud, Settings } from 'lucide-react'; // Added UploadCloud, Settings
+import { LayoutGrid, BarChart3, Sparkles, BotMessageSquare, BookOpen, UploadCloud, Settings, Users } from 'lucide-react'; // Added Users icon
 import { usePathname } from 'next/navigation';
 import { exams } from '@/data/mock-data'; // Import exams data
 
@@ -42,6 +42,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
   ];
 
   const adminNavItems = [
+     { href: '/admin', label: 'Admin Dashboard', icon: Users, type: 'admin' as const }, // Changed icon, points to new dashboard
      { href: '/admin/upload-question', label: 'Upload Questions', icon: UploadCloud, type: 'admin' as const },
      // Add more admin links here later if needed
   ];
@@ -99,7 +100,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
                   <SidebarSeparator className="my-2" />
                   <SidebarMenu>
                      {adminNavItems.map((item) => {
-                      const isActive = pathname.startsWith(item.href);
+                      const isActive = pathname === item.href || (item.href === '/admin' && pathname.startsWith('/admin/')); // Make admin dashboard link active for sub-routes too
                       const ItemIcon = item.icon;
                       return (
                         <SidebarMenuItem key={item.href}>
@@ -161,4 +162,3 @@ export function AppLayout({ children }: { children: ReactNode }) {
     </ProtectedRoute>
   );
 }
-
