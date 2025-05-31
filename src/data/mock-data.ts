@@ -63,9 +63,10 @@ const biologyQuestions2011: Question[] = [
   },
 ];
 
+// These are generic 2010 Chemistry questions, not specific to an exam body.
 const chemistryQuestions2010: Question[] = [
   {
-    id: "chem-2010-q1",
+    id: "chem-2010-q1", // Generic ID
     year: 2010,
     text: "What is the chemical symbol for Water?",
     options: [
@@ -77,7 +78,7 @@ const chemistryQuestions2010: Question[] = [
     correctOptionId: "opt2",
   },
   {
-    id: "chem-2010-q2",
+    id: "chem-2010-q2", // Generic ID
     year: 2010,
     text: "An element with atomic number 12 has how many protons?",
     options: [
@@ -89,6 +90,250 @@ const chemistryQuestions2010: Question[] = [
     correctOptionId: "opt2",
   },
 ];
+
+const jambChemistry2010: Question[] = [
+  {
+    id: "jamb-chem-2010-q1",
+    year: 2010,
+    text: "Which chemistry paper type is given to you?",
+    options: [
+      { id: "opt1", text: "Type A" },
+      { id: "opt2", text: "Type B" },
+      { id: "opt3", text: "Type C" },
+      { id: "opt4", text: "Type D" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2010-q2",
+    year: 2010,
+    text: "Which of the following is an example of a mixture?",
+    options: [
+      { id: "opt1", text: "Common salt" },
+      { id: "opt2", text: "Blood" },
+      { id: "opt3", text: "Sand" },
+      { id: "opt4", text: "Washing soda" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2010-q3",
+    year: 2010,
+    text: "Calculate the percentage by mass of nitrogen in calcium trioxonitrate (V) [Ca = 40, N = 14, O = 16]",
+    options: [
+      { id: "opt1", text: "8.5%" },
+      { id: "opt2", text: "13.1%" },
+      { id: "opt3", text: "17.1%" },
+      { id: "opt4", text: "27.6%" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2010-q4",
+    year: 2010,
+    text: "The droplets of water observed around a bottle of milk taken out of the refrigerator is due to the fact that the",
+    options: [
+      { id: "opt1", text: "water vapour in the air around the bottle gains some energy from the bottle" },
+      { id: "opt2", text: "temperature of the milk drops as it loses heat into the surroundings" },
+      { id: "opt3", text: "saturated vapour pressure of the milk is equal to the atmospheric pressure" },
+      { id: "opt4", text: "water vapour in the air around the bottle loses some of its energy to the bottle" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2010-q5",
+    year: 2010,
+    text: "The volume of a given gas is Vcm³ at P mm Hg. What is the new volume of the gas if the pressure is reduced to half at constant temperature?",
+    options: [
+      { id: "opt1", text: "4V cm³" },
+      { id: "opt2", text: "2V cm³" },
+      { id: "opt3", text: "V/2 cm³" },
+      { id: "opt4", text: "V cm³" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2010-q6",
+    year: 2010,
+    text: "Moving from left to right across a period, the general rise in the first ionization energy can be attributed to the",
+    options: [
+      { id: "opt1", text: "decrease in nuclear charge" },
+      { id: "opt2", text: "increase in nuclear charge" },
+      { id: "opt3", text: "decrease in screening effect" },
+      { id: "opt4", text: "increase in screening effect" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2010-q7",
+    year: 2010,
+    text: "How many unpaired electron(s) are there in the nitrogen sub-levels?",
+    options: [
+      { id: "opt1", text: "3" },
+      { id: "opt2", text: "2" },
+      { id: "opt3", text: "1" },
+      { id: "opt4", text: "none" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2010-q8",
+    year: 2010,
+    text: "The stability of the noble gases is due to the fact that they",
+    options: [
+      { id: "opt1", text: "have no electron in their outermost shells" },
+      { id: "opt2", text: "have duplet or octet electron configurations" },
+      { id: "opt3", text: "belong to group zero of the periodic table" },
+      { id: "opt4", text: "are volatile in nature" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2010-q9",
+    year: 2010,
+    text: "The maximum number of electrons in the L shell of an atom is",
+    options: [
+      { id: "opt1", text: "2" },
+      { id: "opt2", text: "8" },
+      { id: "opt3", text: "18" },
+      { id: "opt4", text: "32" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2010-q10",
+    year: 2010,
+    text: "Elements in the same period in the periodic table have the same",
+    options: [
+      { id: "opt1", text: "number of shells" },
+      { id: "opt2", text: "atomic number" },
+      { id: "opt3", text: "chemical properties" },
+      { id: "opt4", text: "physical properties" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2010-q11",
+    year: 2010,
+    text: "The reaction ²₁D + ³₁T → ⁴₂He + ¹₀n + energy illustrates",
+    options: [
+      { id: "opt1", text: "alpha decay" },
+      { id: "opt2", text: "artificial transmutation" },
+      { id: "opt3", text: "nuclear fusion" },
+      { id: "opt4", text: "nuclear fission" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2010-q12",
+    year: 2010,
+    text: "A noble gas with a high power of fog penetration used in aerodrome beacons is",
+    options: [
+      { id: "opt1", text: "krypton" },
+      { id: "opt2", text: "argon" },
+      { id: "opt3", text: "helium" },
+      { id: "opt4", text: "neon" },
+    ],
+    correctOptionId: "opt1",
+  },
+  {
+    id: "jamb-chem-2010-q13",
+    year: 2010,
+    text: "Permanent hardness of water can be removed by",
+    options: [
+      { id: "opt1", text: "filtration" },
+      { id: "opt2", text: "adding slaked lime" },
+      { id: "opt3", text: "adding caustic soda" },
+      { id: "opt4", text: "boiling" },
+    ],
+    correctOptionId: "opt3",
+  },
+  {
+    id: "jamb-chem-2010-q14",
+    year: 2010,
+    text: "Substances employed as drying agents are usually",
+    options: [
+      { id: "opt1", text: "amphoteric" },
+      { id: "opt2", text: "hygroscopic" },
+      { id: "opt3", text: "efflorescent" },
+      { id: "opt4", text: "acidic" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2010-q15",
+    year: 2010,
+    text: "Calculate the solubility in mol dm⁻³ of 40g of CuSO₄ dissolved in 100g of water at 120°C. [Cu = 64, S = 32, O = 16]",
+    options: [
+      { id: "opt1", text: "4.00" },
+      { id: "opt2", text: "2.50" },
+      { id: "opt3", text: "0.40" },
+      { id: "opt4", text: "0.25" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2010-q16",
+    year: 2010,
+    text: "Coffee stains can best be removed by",
+    options: [
+      { id: "opt1", text: "Kerosene" },
+      { id: "opt2", text: "turpentine" },
+      { id: "opt3", text: "a solution of borax in water" },
+      { id: "opt4", text: "ammonia solution" },
+    ],
+    correctOptionId: "opt4",
+  },
+  {
+    id: "jamb-chem-2010-q17",
+    year: 2010,
+    text: "Carbon (II) oxide is considered dangerous if inhaled mainly because it",
+    options: [
+      { id: "opt1", text: "can cause injury to the nervous system" },
+      { id: "opt2", text: "competes with oxygen in the blood" },
+      { id: "opt3", text: "competes with carbon (IV) oxide in the blood" },
+      { id: "opt4", text: "can cause lung cancer" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2010-q18",
+    year: 2010,
+    text: "The acid that is used to remove rust is",
+    options: [
+      { id: "opt1", text: "boric" },
+      { id: "opt2", text: "hydrochloric" },
+      { id: "opt3", text: "trioxonitrate (V)" },
+      { id: "opt4", text: "tetraoxosulphate (VI)" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2010-q19",
+    year: 2010,
+    text: "Calculate the volume of 0.5 mol dm⁻³ H₂SO₄ that is neutralized by 25 cm³ of 0.1 mol dm⁻³ NaOH",
+    options: [
+      { id: "opt1", text: "5.0 cm³" },
+      { id: "opt2", text: "2.5 cm³" },
+      { id: "opt3", text: "0.4 cm³" },
+      { id: "opt4", text: "0.1 cm³" },
+    ],
+    correctOptionId: "opt2",
+  },
+  {
+    id: "jamb-chem-2010-q20",
+    year: 2010,
+    text: "The colour of methyl orange in alkaline medium is",
+    options: [
+      { id: "opt1", text: "yellow" },
+      { id: "opt2", text: "pink" },
+      { id: "opt3", text: "orange" },
+      { id: "opt4", text: "red" },
+    ],
+    correctOptionId: "opt1",
+  },
+];
+
 
 const englishQuestions2010: Question[] = [
   {
@@ -199,7 +444,8 @@ export const exams: Exam[] = [
 export const allQuestions: Question[] = [
   ...biologyQuestions2010,
   ...biologyQuestions2011,
-  ...chemistryQuestions2010,
+  ...chemistryQuestions2010, // Generic chemistry 2010
+  ...jambChemistry2010,   // JAMB specific chemistry 2010
   ...englishQuestions2010,
   ...mathematicsQuestions2010,
 ];
@@ -218,22 +464,33 @@ export function getQuestions(examId: string, subjectId: string, year: number): Q
   // This filtering logic needs to be robust if more questions are added.
   // For now, it uses the specific arrays for known data and then a general filter.
 
+  // Specific cases should come first
+  if (examId === 'jamb' && subjectId === 'chemistry' && year === 2010) return jambChemistry2010;
+
   if (subjectId === 'biology' && year === 2010) return biologyQuestions2010;
   if (subjectId === 'biology' && year === 2011) return biologyQuestions2011;
-  if (subjectId === 'chemistry' && year === 2010) return chemistryQuestions2010;
+  if (subjectId === 'chemistry' && year === 2010) return chemistryQuestions2010; // Generic/non-JAMB chemistry
   if (subjectId === 'english' && year === 2010) return englishQuestions2010;
   if (subjectId === 'mathematics' && year === 2010) return mathematicsQuestions2010;
   
   // Fallback or general logic for other subjects/years if they get added directly to allQuestions
   // This will need to be more sophisticated if subject data grows significantly.
   return allQuestions.filter(q => {
-    const questionSubjectId = q.id.split('-')[0]; // e.g., 'bio' from 'bio-2010-q1'
+    // Attempt to match based on a convention like 'jamb-chem-2010-q1' or 'waec-bio-2011-qX'
+    // This requires question IDs to follow a pattern: <examId>-<subjectIdAbbrev>-<year>-q<num>
+    // Or, more simply, if we don't have specific examId prefixes in all question IDs:
+    const questionSubjectId = q.id.split('-')[0]; // e.g., 'bio' from 'bio-2010-q1', or 'jamb' from 'jamb-chem-2010-q1'
     let matchesSubject = false;
 
-    if (subjectId === 'biology' && questionSubjectId === 'bio') matchesSubject = true;
-    else if (subjectId === 'chemistry' && questionSubjectId === 'chem') matchesSubject = true;
-    else if (subjectId === 'english' && questionSubjectId === 'eng') matchesSubject = true;
-    else if (subjectId === 'mathematics' && questionSubjectId === 'math') matchesSubject = true;
+    // This part needs to be more generic or rely on specific examId in question ID
+    if (subjectId === 'biology' && (q.id.startsWith('bio-') || q.id.includes('-bio-'))) matchesSubject = true;
+    else if (subjectId === 'chemistry' && (q.id.startsWith('chem-') || q.id.includes('-chem-'))) {
+      // If examId is not JAMB, and it's chemistry 2010, it will hit the generic chem-2010 questions
+      // if examId is JAMB, it's already handled by the specific case above.
+      matchesSubject = true; 
+    }
+    else if (subjectId === 'english' && (q.id.startsWith('eng-') || q.id.includes('-eng-'))) matchesSubject = true;
+    else if (subjectId === 'mathematics' && (q.id.startsWith('math-') || q.id.includes('-math-'))) matchesSubject = true;
     // Add more conditions here if you add more subjects with specific id prefixes
 
     return matchesSubject && q.year === year;
@@ -247,7 +504,8 @@ export function getPastQuestionsForAnalysis(examId: string, subjectId: string): 
 
   if (subject) {
     subject.availableYears.forEach(year => {
-      const questionsForYear = getQuestions(examId, subjectId, year);
+      // Pass examId here to get exam-specific questions if available
+      const questionsForYear = getQuestions(examId, subjectId, year); 
       relevantQuestions.push(...questionsForYear);
     });
   }
@@ -255,8 +513,23 @@ export function getPastQuestionsForAnalysis(examId: string, subjectId: string): 
   // If still no questions (e.g. subject has no available years, or no questions for those years)
   // Fallback to broader filter if needed, though ideally availableYears should be accurate.
   if (relevantQuestions.length === 0) {
-    const questionSubjectIdPrefix = subjectId.substring(0,4); // Basic prefix like 'biol', 'chem'
-    relevantQuestions = allQuestions.filter(q => q.id.startsWith(questionSubjectIdPrefix + '-') || q.id.startsWith(subjectId + '-'));
+    // This fallback needs to be aware of examId too if question IDs are exam-specific
+    relevantQuestions = allQuestions.filter(q => {
+      // Example: q.id might be "jamb-chem-2010-q1" or "chem-2010-q1"
+      const idParts = q.id.split('-');
+      let qExamId = null;
+      let qSubjectIdPart = idParts[0]; // Default to first part if not exam-prefixed
+
+      if (exams.some(ex => ex.id === idParts[0])) { // Check if first part is a known exam ID
+        qExamId = idParts[0];
+        qSubjectIdPart = idParts[1]; // e.g., "chem" from "jamb-chem-2010"
+      }
+      
+      const subjectMatches = (subjectId.startsWith(qSubjectIdPart) || qSubjectIdPart.startsWith(subjectId.substring(0,4)));
+      const examMatches = (qExamId === null || qExamId === examId); // If question has no examId, or it matches
+
+      return subjectMatches && examMatches;
+    });
   }
   
   return relevantQuestions.map(q => ({
