@@ -17,35 +17,46 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import { auth as firebaseAuth } from "@/lib/firebase"; // firebaseAuth can now be null
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { Loader2, AlertTriangle } from "lucide-react";
+import { auth as firebaseAuth } from "@/lib/firebase";
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  updateProfile,
+  sendPasswordResetEmail
+} from "firebase/auth";
+import { Loader2, AlertTriangle, Mail } from "lucide-react";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const formSchemaBase = {
   email: z.string().email({ message: "Invalid email address." }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
 };
 
 const signUpSchema = z.object({
   ...formSchemaBase,
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
 });
 
-const loginSchema = z.object(formSchemaBase);
+const loginSchema = z.object({
+  ...formSchemaBase,
+  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+});
+
+const forgotPasswordSchema = z.object(formSchemaBase);
 
 type AuthFormProps = {
-  mode: "login" | "signup";
+  initialMode?: "login" | "signup"; // Renamed from mode to initialMode
 };
 
-export function AuthForm({ mode }: AuthFormProps) {
+export function AuthForm({ initialMode = "login" }: AuthFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthDisabled, setIsAuthDisabled] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "signup" | "forgotPassword">(initialMode);
 
   useEffect(() => {
     if (!firebaseAuth) {
@@ -53,19 +64,35 @@ export function AuthForm({ mode }: AuthFormProps) {
     }
   }, []);
 
-  const currentSchema = mode === "signup" ? signUpSchema : loginSchema;
+  const currentSchema = 
+    authMode === "signup" ? signUpSchema : 
+    authMode === "login" ? loginSchema : 
+    forgotPasswordSchema;
+
   type FormValues = z.infer<typeof currentSchema>;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(currentSchema),
-    defaultValues: mode === "signup" ? { name: "", email: "", password: "" } : { email: "", password: "" },
+    defaultValues: 
+      authMode === "signup" ? { name: "", email: "", password: "" } : 
+      authMode === "login" ? { email: "", password: "" } :
+      { email: ""},
   });
+  
+  useEffect(() => {
+    form.reset(
+      authMode === "signup" ? { name: "", email: "", password: "" } : 
+      authMode === "login" ? { email: "", password: "" } :
+      { email: ""}
+    );
+  }, [authMode, form]);
+
 
   async function onSubmit(values: FormValues) {
     if (!firebaseAuth) {
       toast({
         title: "Authentication Unavailable",
-        description: "Login/Signup is temporarily disabled. Please check Firebase configuration.",
+        description: "Login/Signup/Password Reset is temporarily disabled. Please check Firebase configuration.",
         variant: "destructive",
       });
       return;
@@ -73,23 +100,44 @@ export function AuthForm({ mode }: AuthFormProps) {
 
     setIsLoading(true);
     try {
-      if (mode === "signup") {
-        const userCredential = await createUserWithEmailAndPassword(firebaseAuth, values.email, values.password);
-        if (userCredential.user && 'name' in values && values.name) {
-          await updateProfile(userCredential.user, { displayName: values.name });
+      if (authMode === "signup") {
+        const { name, email, password } = values as z.infer<typeof signUpSchema>;
+        const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+        if (userCredential.user && name) {
+          await updateProfile(userCredential.user, { displayName: name });
         }
         toast({ title: "Account Created", description: `Welcome to ${siteConfig.name}!` });
-      } else {
-        await signInWithEmailAndPassword(firebaseAuth, values.email, values.password);
+        const redirectUrl = searchParams.get('redirect') || '/dashboard';
+        router.push(redirectUrl);
+      } else if (authMode === "login") {
+        const { email, password } = values as z.infer<typeof loginSchema>;
+        await signInWithEmailAndPassword(firebaseAuth, email, password);
         toast({ title: "Logged In", description: "Welcome back!" });
+        const redirectUrl = searchParams.get('redirect') || '/dashboard';
+        router.push(redirectUrl);
+      } else if (authMode === "forgotPassword") {
+        const { email } = values as z.infer<typeof forgotPasswordSchema>;
+        await sendPasswordResetEmail(firebaseAuth, email);
+        toast({ 
+          title: "Password Reset Email Sent", 
+          description: "If an account exists for this email, a password reset link has been sent." 
+        });
+        setAuthMode("login"); // Switch back to login form
       }
-      const redirectUrl = searchParams.get('redirect') || '/dashboard';
-      router.push(redirectUrl);
     } catch (error: any) {
-      console.error(`${mode} failed:`, error);
+      console.error(`${authMode} failed:`, error);
+      let errorMessage = error.message || "An unexpected error occurred.";
+      if (error.code === 'auth/invalid-credential' && authMode === 'login') {
+        errorMessage = "Invalid email or password. Please try again.";
+      } else if (error.code === 'auth/email-already-in-use' && authMode === 'signup') {
+        errorMessage = "This email is already registered. Please try logging in.";
+      }
       toast({
-        title: `${mode === "signup" ? "Sign Up" : "Login"} Failed`,
-        description: error.message || "An unexpected error occurred.",
+        title: 
+          authMode === "signup" ? "Sign Up Failed" :
+          authMode === "login" ? "Login Failed" :
+          "Password Reset Failed",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -97,7 +145,7 @@ export function AuthForm({ mode }: AuthFormProps) {
     }
   }
 
-  if (isAuthDisabled) {
+  if (isAuthDisabled && authMode !== "forgotPassword") { // Allow forgot password even if other auth seems disabled client-side
     return (
       <Alert variant="destructive">
         <AlertTriangle className="h-4 w-4" />
@@ -109,73 +157,122 @@ export function AuthForm({ mode }: AuthFormProps) {
       </Alert>
     );
   }
+  
+  const renderTitleAndDescription = () => {
+    if (authMode === 'login') {
+      return {
+        title: 'Welcome back',
+        description: 'Enter your credentials to access your account.'
+      };
+    }
+    if (authMode === 'signup') {
+      return {
+        title: 'Create an account',
+        description: `Enter your details to get started with ${siteConfig.name}.`
+      };
+    }
+    if (authMode === 'forgotPassword') {
+      return {
+        title: 'Reset Password',
+        description: 'Enter your email address to receive a password reset link.'
+      };
+    }
+    return { title: '', description: ''};
+  };
+
+  const { title, description } = renderTitleAndDescription();
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {mode === "signup" && (
-          <FormField
+    <div>
+        <h1 className="mb-1 text-2xl font-semibold tracking-tight">{title}</h1>
+        <p className="mb-6 text-sm text-muted-foreground">
+            {description}
+        </p>
+        <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {authMode === "signup" && (
+            <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                    <Input placeholder="John Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            )}
+            <FormField
             control={form.control}
-            name="name"
+            name="email"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormItem>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="John Doe" {...field} />
+                    <Input type="email" placeholder="you@example.com" {...field} />
                 </FormControl>
                 <FormMessage />
-              </FormItem>
+                </FormItem>
             )}
-          />
-        )}
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input type="email" placeholder="you@example.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input type="password" placeholder="••••••••" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="w-full" disabled={isLoading || isAuthDisabled}>
-          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {mode === "signup" ? "Create Account" : "Login"}
-        </Button>
-        
-        {mode === "login" && (
-          <p className="text-center text-sm text-muted-foreground">
-            Don&apos;t have an account?{" "}
-            <Link href="/auth/sign-up" className="font-medium text-primary hover:underline">
-              Sign up
-            </Link>
-          </p>
-        )}
-        {mode === "signup" && (
-          <p className="text-center text-sm text-muted-foreground">
-            Already have an account?{" "}
-            <Link href="/auth/login" className="font-medium text-primary hover:underline">
-              Login
-            </Link>
-          </p>
-        )}
-      </form>
-    </Form>
+            />
+            {(authMode === "login" || authMode === "signup") && (
+            <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                    <Input type="password" placeholder="••••••••" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            )}
+            <Button type="submit" className="w-full" disabled={isLoading || isAuthDisabled}>
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {authMode === "signup" ? "Create Account" : 
+             authMode === "login" ? "Login" : 
+             "Send Reset Link"}
+            </Button>
+            
+            {authMode === "login" && (
+            <div className="text-sm text-muted-foreground text-center space-y-2">
+                <p>
+                Don&apos;t have an account?{" "}
+                <Button variant="link" type="button" onClick={() => setAuthMode("signup")} className="p-0 h-auto font-medium text-primary hover:underline">
+                    Sign up
+                </Button>
+                </p>
+                <p>
+                <Button variant="link" type="button" onClick={() => setAuthMode("forgotPassword")} className="p-0 h-auto font-medium text-primary hover:underline">
+                    Forgot Password?
+                </Button>
+                </p>
+            </div>
+            )}
+            {authMode === "signup" && (
+            <p className="text-center text-sm text-muted-foreground">
+                Already have an account?{" "}
+                <Button variant="link" type="button" onClick={() => setAuthMode("login")} className="p-0 h-auto font-medium text-primary hover:underline">
+                Login
+                </Button>
+            </p>
+            )}
+            {authMode === "forgotPassword" && (
+            <p className="text-center text-sm text-muted-foreground">
+                Remember your password?{" "}
+                <Button variant="link" type="button" onClick={() => setAuthMode("login")} className="p-0 h-auto font-medium text-primary hover:underline">
+                Login
+                </Button>
+            </p>
+            )}
+        </form>
+        </Form>
+    </div>
   );
 }

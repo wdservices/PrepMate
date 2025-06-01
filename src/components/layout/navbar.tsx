@@ -2,63 +2,68 @@
 "use client";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // Temporarily disabled
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuLabel,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu"; // Temporarily disabled
-// import { LogOut, Settings as SettingsIcon } from "lucide-react"; // Icons for dropdown, SettingsIcon renamed to avoid conflict
-// import { useAuth } from "@/components/providers/firebase-provider"; // Temporarily disabled
-// import { auth as firebaseAuth } from "@/lib/firebase"; // firebaseAuth can be null
-// import { signOut } from "firebase/auth"; // Temporarily disabled
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LogOut, Settings as SettingsIcon, UserPlus, LogIn } from "lucide-react";
+import { useAuth } from "@/components/providers/firebase-provider"; 
+import { auth as firebaseAuth } from "@/lib/firebase"; 
+import { signOut } from "firebase/auth"; 
 import { useRouter } from "next/navigation";
-// import { siteConfig } from "@/config/site"; // Site name is now in SidebarHeader
-// import Link from "next/link"; // Link for site name removed
-// import { Sparkles } from "lucide-react"; // Sparkles for site name removed
+import Link from "next/link"; 
 
 
 export function Navbar() {
-  // const { user } = useAuth(); // Temporarily disabled
-  const router = useRouter(); // Keep router if needed for other nav items
+  const { user, loading } = useAuth(); 
+  const router = useRouter(); 
 
-  // const handleSignOut = async () => { // Temporarily disabled
-  //   if (firebaseAuth) {
-  //     await signOut(firebaseAuth);
-  //   }
-  //   router.push("/auth/login");
-  // };
+  const handleSignOut = async () => { 
+    if (firebaseAuth) {
+      try {
+        await signOut(firebaseAuth);
+        router.push("/auth/login"); 
+      } catch (error) {
+        console.error("Sign out error:", error);
+        // Optionally, show a toast message for sign-out failure
+      }
+    } else {
+       // Fallback if firebaseAuth is somehow null, though unlikely if user is logged in
+       router.push("/auth/login");
+    }
+  };
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-card shadow-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center">
-          {/* SidebarTrigger for mobile and also for desktop if sidebar is collapsible */}
           <SidebarTrigger /> 
-          {/* Site name/logo has moved to SidebarHeader */}
         </div>
         
         <nav className="flex items-center gap-4">
-          {/* Primary navigation has moved to Sidebar */}
-          {/* Auth-related UI is temporarily removed */}
-          {/* {user ? (
+          {!loading && user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                   <Avatar className="h-10 w-10 border-2 border-primary">
-                    <AvatarImage src={user.photoURL || `https://placehold.co/100x100.png?text=${user.email?.[0]?.toUpperCase() || 'U'}`} alt={user.displayName || user.email || "User"} />
-                    <AvatarFallback>{user.email?.[0]?.toUpperCase() || "U"}</AvatarFallback>
+                    <AvatarImage 
+                      src={user.photoURL || `https://placehold.co/100x100.png?text=${user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}`} 
+                      alt={user.displayName || user.email || "User"} />
+                    <AvatarFallback>{user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || "U"}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{user.displayName || "User"}</p>
-                    <p className="text-xs leading-none text-muted-foreground">
+                    <p className="text-sm font-medium leading-none truncate">{user.displayName || "User"}</p>
+                    <p className="text-xs leading-none text-muted-foreground truncate">
                       {user.email}
                     </p>
                   </div>
@@ -74,7 +79,7 @@ export function Navbar() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
+          ) : !loading && !user ? (
             <div className="flex items-center gap-2">
               <Button variant="outline" asChild>
                 <Link href="/auth/login">
@@ -87,7 +92,10 @@ export function Navbar() {
                 </Link>
               </Button>
             </div>
-          )} */}
+          ) : (
+            // Optional: Show a loading skeleton or nothing while loading
+            <div className="h-10 w-20"></div> // Placeholder to prevent layout shift
+          )}
         </nav>
       </div>
     </header>

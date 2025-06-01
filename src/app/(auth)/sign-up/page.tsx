@@ -7,13 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function SignUpPage() {
-  return (
-    <div>
-      <h1 className="mb-1 text-2xl font-semibold tracking-tight">Create an account</h1>
-      <p className="mb-6 text-sm text-muted-foreground">
-        Enter your details to get started with PrepMate.
-      </p>
-      <AuthForm mode="signup" />
-    </div>
-  );
+  return <AuthForm initialMode="signup" />;
 }
