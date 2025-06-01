@@ -115,7 +115,7 @@ export default function LandingPage() {
               Ace Your Exams with <span className="text-primary block sm:inline">{siteConfig.name}</span>
             </h1>
             <p className="mt-6 max-w-xl mx-auto text-base sm:text-lg text-muted-foreground md:text-xl">
-              {siteConfig.description} Unlock your potential with AI-driven study tools and conquer your exams.
+              {siteConfig.description} Unlock your potential with AI-driven study tools and conquer your exams. Access is free for 24 hours, then a subscription is required.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
               <Button size="lg" asChild className="w-full sm:w-auto shadow-lg hover:shadow-xl transition-shadow duration-300 text-base px-8 py-6">
@@ -127,12 +127,12 @@ export default function LandingPage() {
             </div>
             <div className="mt-12 sm:mt-16 md:mt-20 px-2 sm:px-0">
               <Image 
-                src="https://placehold.co/1200x675.png" 
-                alt="PrepMate Dashboard Preview" 
+                src="/images/prepmate-students-writing-exams.webp" 
+                alt="Students diligently writing exams, focused and using PrepMate" 
                 width={1200} 
                 height={675}
                 className="rounded-xl shadow-2xl mx-auto ring-1 ring-border/30"
-                data-ai-hint="app dashboard interface"
+                data-ai-hint="students exam"
                 priority
               />
             </div>
@@ -251,5 +251,4 @@ function FeatureCard({ icon, title, description }: FeatureCardProps) {
     </div>
   );
 }
-
     
