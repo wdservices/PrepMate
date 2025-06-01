@@ -24,7 +24,7 @@ import {
   updateProfile,
   sendPasswordResetEmail
 } from "firebase/auth";
-import { Loader2, AlertTriangle, Mail } from "lucide-react";
+import { Loader2, AlertTriangle, Mail, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -47,7 +47,7 @@ const loginSchema = z.object({
 const forgotPasswordSchema = z.object(formSchemaBase);
 
 type AuthFormProps = {
-  initialMode?: "login" | "signup"; // Renamed from mode to initialMode
+  initialMode?: "login" | "signup";
 };
 
 export function AuthForm({ initialMode = "login" }: AuthFormProps) {
@@ -57,6 +57,7 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthDisabled, setIsAuthDisabled] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "signup" | "forgotPassword">(initialMode);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (!firebaseAuth) {
@@ -85,6 +86,7 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
       authMode === "login" ? { email: "", password: "" } :
       { email: ""}
     );
+    setShowPassword(false); // Reset password visibility when mode changes
   }, [authMode, form]);
 
 
@@ -108,13 +110,13 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
         }
         toast({ title: "Account Created", description: `Welcome to ${siteConfig.name}!` });
         const redirectUrl = searchParams.get('redirect') || '/dashboard';
-        router.push(redirectUrl);
+        router.replace(redirectUrl); // Use replace for better history management
       } else if (authMode === "login") {
         const { email, password } = values as z.infer<typeof loginSchema>;
         await signInWithEmailAndPassword(firebaseAuth, email, password);
         toast({ title: "Logged In", description: "Welcome back!" });
         const redirectUrl = searchParams.get('redirect') || '/dashboard';
-        router.push(redirectUrl);
+        router.replace(redirectUrl); // Use replace
       } else if (authMode === "forgotPassword") {
         const { email } = values as z.infer<typeof forgotPasswordSchema>;
         await sendPasswordResetEmail(firebaseAuth, email);
@@ -122,7 +124,7 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
           title: "Password Reset Email Sent", 
           description: "If an account exists for this email, a password reset link has been sent." 
         });
-        setAuthMode("login"); // Switch back to login form
+        setAuthMode("login"); 
       }
     } catch (error: any) {
       console.error(`${authMode} failed:`, error);
@@ -145,7 +147,7 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
     }
   }
 
-  if (isAuthDisabled && authMode !== "forgotPassword") { // Allow forgot password even if other auth seems disabled client-side
+  if (isAuthDisabled && authMode !== "forgotPassword") { 
     return (
       <Alert variant="destructive">
         <AlertTriangle className="h-4 w-4" />
@@ -181,6 +183,8 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
   };
 
   const { title, description } = renderTitleAndDescription();
+
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
   return (
     <div>
@@ -225,15 +229,32 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
                 render={({ field }) => (
                 <FormItem>
                     <FormLabel>Password</FormLabel>
-                    <FormControl>
-                    <Input type="password" placeholder="••••••••" {...field} />
-                    </FormControl>
+                    <div className="relative">
+                        <FormControl>
+                        <Input 
+                            type={showPassword ? "text" : "password"} 
+                            placeholder="••••••••" 
+                            {...field} 
+                            className="pr-10" // Add padding for the icon
+                        />
+                        </FormControl>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-1 top-1/2 -translate-y-1/2 h-auto p-1 text-muted-foreground hover:text-foreground"
+                            onClick={togglePasswordVisibility}
+                            aria-label={showPassword ? "Hide password" : "Show password"}
+                        >
+                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </Button>
+                    </div>
                     <FormMessage />
                 </FormItem>
                 )}
             />
             )}
-            <Button type="submit" className="w-full" disabled={isLoading || isAuthDisabled}>
+            <Button type="submit" className="w-full" disabled={isLoading || (isAuthDisabled && authMode !== "forgotPassword")}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {authMode === "signup" ? "Create Account" : 
              authMode === "login" ? "Login" : 
