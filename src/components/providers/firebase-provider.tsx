@@ -32,15 +32,9 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  if (loading && typeof window !== 'undefined' && window.location.pathname.startsWith('/auth')) {
-     // Don't show global loader for auth pages if auth is enabled and loading
-  } else if (loading) {
-    return (
-      <div className="flex h-screen w-screen items-center justify-center bg-background">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-      </div>
-    );
-  }
+  // Removed the loader rendering from here.
+  // Components consuming this context (like HomePage or ProtectedRoute)
+  // will use the 'loading' state to decide if they should render a loader.
 
   return (
     <FirebaseContext.Provider value={{ user, loading }}>
@@ -57,3 +51,4 @@ export const useAuth = () => {
   // If auth was disabled, loading will quickly become false and user will be null.
   return context;
 };
+
