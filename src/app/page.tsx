@@ -126,10 +126,10 @@ export default function LandingPage() {
               </Button>
             </div>
             <div className="mt-12 sm:mt-16 md:mt-20 px-2 sm:px-0">
-              <Image 
-                src="/images/prepmate-students-writing-exams.webp" 
-                alt="Students diligently writing exams, focused and using PrepMate" 
-                width={1200} 
+              <Image
+                src="/images/prepmate- students writing exams.webp"
+                alt="Students diligently writing exams, focused and using PrepMate"
+                width={1200}
                 height={675}
                 className="rounded-xl shadow-2xl mx-auto ring-1 ring-border/30"
                 data-ai-hint="students exam"
@@ -162,7 +162,7 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-        
+
         {/* How It Works Section */}
         <section id="how-it-works" className="py-16 md:py-24 bg-gradient-to-b from-background to-blue-50/20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -202,9 +202,9 @@ export default function LandingPage() {
               Join thousands of students preparing smarter, not just harder. Your 24-hour free trial awaits!
             </p>
             <div className="mt-10">
-              <Button 
-                size="lg" 
-                asChild 
+              <Button
+                size="lg"
+                asChild
                 className="bg-background hover:bg-background/90 text-primary font-semibold px-10 py-3 text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
                 <Link href="/auth/sign-up">
