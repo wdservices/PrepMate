@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { useAuth } from '@/components/providers/firebase-provider';
 import { Button } from '@/components/ui/button';
 import { siteConfig } from '@/config/site';
-import { Loader2, BookOpen, Brain, MessageSquare, LogIn, UserPlus, Sparkles, ArrowRight, CheckCircle, Zap } from 'lucide-react';
+import { Loader2, BookOpen, Brain, MessageSquare, LogIn, UserPlus, Sparkles, ArrowRight, CheckCircle, Zap, Lightbulb } from 'lucide-react';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -64,7 +64,7 @@ export default function LandingPage() {
       step: 3,
       title: "Learn & Understand",
       description: "Utilize AI explanations for answers and chat with the AI tutor for deeper concept clarity.",
-      icon: <Lightbulb className="h-7 w-7 text-secondary" />, // Assuming Lightbulb is a valid icon
+      icon: <Lightbulb className="h-7 w-7 text-secondary" />,
     },
     {
       step: 4,
