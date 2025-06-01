@@ -58,7 +58,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
             <SidebarHeader className="p-3 flex justify-center items-center h-16 border-b border-sidebar-border">
               <Link href="/" className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center">
                 <Sparkles className="h-7 w-7 text-primary flex-shrink-0" />
-                <span className="text-xl font-bold text-foreground group-data-[collapsible=icon]:hidden whitespace-nowrap">
+                <span className="text-xl font-bold text-white group-data-[collapsible=icon]:hidden whitespace-nowrap">
                   {siteConfig.name}
                 </span>
               </Link>
