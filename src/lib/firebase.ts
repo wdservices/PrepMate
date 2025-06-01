@@ -3,46 +3,31 @@ import { initializeApp, getApps, getApp, type FirebaseApp, type FirebaseOptions 
 import { getAuth, type Auth } from "firebase/auth";
 import { getFirestore, type Firestore } from "firebase/firestore";
 
-const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
-const authDomain = process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN;
-const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-const storageBucket = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
-const messagingSenderId = process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID;
-const appId = process.env.NEXT_PUBLIC_FIREBASE_APP_ID;
-
+// Explicitly define what firebaseConfig will look like using process.env
 const firebaseConfig: FirebaseOptions = {
-  apiKey: apiKey,
-  authDomain: authDomain,
-  projectId: projectId,
-  storageBucket: storageBucket,
-  messagingSenderId: messagingSenderId,
-  appId: appId,
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// These are the strictly required Firebase configs for basic initialization.
-// Other services might require their specific variables too.
-const requiredConfigs: Record<string, string | undefined> = {
-  apiKey: apiKey,
-  authDomain: authDomain,
-  projectId: projectId,
-  // Add other critical ones if needed, e.g., appId
-};
+// Keys considered essential for a basic Firebase App initialization, especially for Auth.
+const CRITICAL_CONFIG_KEYS: (keyof FirebaseOptions)[] = ['apiKey', 'authDomain', 'projectId', 'appId'];
 
-let allConfigsPresent = true;
-const missingOrPlaceholderKeys: string[] = [];
+let allCriticalConfigsPresent = true;
+const missingOrPlaceholderCriticalKeys: string[] = [];
 
-for (const [key, value] of Object.entries(requiredConfigs)) {
-  const envVarName = `NEXT_PUBLIC_FIREBASE_${key.replace(/([A-Z])/g, '_$1').toUpperCase()}`;
-  if (!value || value.includes("YOUR_ACTUAL_") || value.includes("_HERE") || value.trim() === "") {
-    allConfigsPresent = false;
-    missingOrPlaceholderKeys.push(envVarName);
-    if (typeof window === 'undefined') {
-      // Server-side logging for missing/placeholder values
-      console.error(`Firebase config error: ${envVarName} is missing or uses a placeholder value in .env`);
-    } else {
-      // Client-side logging for missing/placeholder values
-      console.warn(`Firebase config warning: ${envVarName} is missing or uses a placeholder value. Firebase features requiring this will be disabled.`);
-    }
+for (const key of CRITICAL_CONFIG_KEYS) {
+  const value = firebaseConfig[key];
+  // Construct the expected environment variable name for logging
+  // Simplified key to env var name logic, assuming direct mapping for these specific keys
+  const envVarName = `NEXT_PUBLIC_FIREBASE_${key.replace(/([A-Z])/g, (match) => `_${match}`).toUpperCase()}`;
+
+  if (typeof value !== 'string' || !value || value.includes("YOUR_ACTUAL_") || value.includes("_HERE") || value.trim() === "") {
+    allCriticalConfigsPresent = false;
+    missingOrPlaceholderCriticalKeys.push(envVarName);
   }
 }
 
@@ -50,58 +35,60 @@ let app: FirebaseApp | null = null;
 let auth: Auth | null = null;
 let db: Firestore | null = null;
 
-if (allConfigsPresent) {
+if (allCriticalConfigsPresent) {
   try {
     if (typeof window !== 'undefined') {
-      console.log("Attempting to initialize Firebase with config:", {
-        apiKey: firebaseConfig.apiKey ? '*********** (set)' : 'NOT SET', // Don't log actual key client-side
-        authDomain: firebaseConfig.authDomain,
-        projectId: firebaseConfig.projectId,
-        // Add other keys if useful for debugging, but avoid logging sensitive ones directly
-      });
+      // Client-side: Log only that an attempt is being made.
+      console.log("Attempting to initialize Firebase on the client...");
+    } else {
+      // Server-side or build-time
+      console.log("Attempting to initialize Firebase (server-side/build)...");
     }
     app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
     auth = getAuth(app);
-    db = getFirestore(app);
+    db = getFirestore(app); // Initialize Firestore as well
+
     if (typeof window === 'undefined') {
-      console.log("Firebase SDK initialized successfully on the server with provided configuration.");
+      console.log("Firebase SDK initialized successfully on the server (or during build).");
     } else {
       console.log("Firebase SDK initialized successfully on the client.");
     }
   } catch (error: any) {
+    const errorMsg = `CRITICAL: Firebase SDK initialization failed: ${error.message || error.toString()}`;
+    const configSummaryForLog = {
+        apiKey: firebaseConfig.apiKey ? 'SET' : 'NOT_SET_OR_EMPTY',
+        authDomain: firebaseConfig.authDomain || 'NOT_SET_OR_EMPTY',
+        projectId: firebaseConfig.projectId || 'NOT_SET_OR_EMPTY',
+        appId: firebaseConfig.appId || 'NOT_SET_OR_EMPTY',
+      };
+
     if (typeof window === 'undefined') {
-      console.error("CRITICAL: Firebase SDK server-side initialization failed despite configs appearing present:", error.message);
+      console.error("****************************************************************************************");
+      console.error(errorMsg + " (Server-side or build error)");
+      console.error("Firebase config summary used:", JSON.stringify(configSummaryForLog));
+      console.error("****************************************************************************************");
     } else {
-      console.error("CRITICAL: Firebase SDK client-side initialization failed:", error.message);
+      console.error(errorMsg + " (Client-side error)");
+      console.error("Firebase config summary used:", configSummaryForLog);
     }
     // Ensure services are null if initialization fails
     app = null;
     auth = null;
     db = null;
-    const message = "Firebase SDK initialization failed. Auth and DB features will be disabled. Double-check all Firebase credentials and project setup.";
-    if (typeof window === 'undefined') {
-      console.error(`
-        ****************************************************************************************
-        ${message}
-        ****************************************************************************************
-      `);
-    } else {
-       console.error(message);
-    }
   }
 } else {
-  const message = `One or more required Firebase environment variables are missing or placeholders: ${missingOrPlaceholderKeys.join(', ')}. Firebase SDK will NOT be initialized. Auth and DB features will be disabled.`;
+  const message = `One or more CRITICAL Firebase environment variables are missing or use placeholder values: ${missingOrPlaceholderCriticalKeys.join(', ')}. Critical keys checked: ${CRITICAL_CONFIG_KEYS.join(', ')}. Firebase SDK will NOT be initialized. Auth and DB features will be disabled.`;
   if (typeof window === 'undefined') {
     console.error(`
       ****************************************************************************************
-      CRITICAL: ${message}
-      Please check your .env file and ensure all NEXT_PUBLIC_FIREBASE_... variables are correctly set.
+      CRITICAL: ${message} (Server-side or build)
+      Please check your .env file and ensure all NEXT_PUBLIC_FIREBASE_... variables for these critical keys are correctly set and non-empty.
       ****************************************************************************************
     `);
   } else {
-     console.warn(`FIREBASE WARNING: ${message} Please check your .env file.`);
+     console.warn(`FIREBASE WARNING: ${message} (Client-side) Please check your .env file.`);
   }
-  // app, auth, db remain null by default if allConfigsPresent is false
+  // app, auth, db remain null by default if critical configs are not present
 }
 
 export { app, auth, db };
