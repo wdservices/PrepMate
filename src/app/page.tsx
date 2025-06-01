@@ -10,9 +10,6 @@ import { Button } from '@/components/ui/button';
 import { siteConfig } from '@/config/site';
 import { Loader2, BookOpen, Brain, MessageSquare, LogIn, UserPlus, Sparkles, ArrowRight } from 'lucide-react';
 
-// Client components cannot export metadata directly.
-// For SEO on the landing page, consider a server component wrapper or general metadata in RootLayout.
-
 export default function LandingPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
@@ -32,7 +29,6 @@ export default function LandingPage() {
     );
   }
 
-  // If user is not loading and not logged in, show the landing page.
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       {/* Header */}
@@ -68,12 +64,12 @@ export default function LandingPage() {
               Welcome to <span className="text-primary">{siteConfig.name}</span>
             </h1>
             <p className="mt-6 max-w-3xl mx-auto text-lg text-muted-foreground sm:text-xl md:text-2xl">
-              {siteConfig.description} Ace your JAMB, WAEC, and NECO exams with our AI-powered study tools, comprehensive past questions, and smart analytics.
+              {siteConfig.description} Ace your JAMB, WAEC, and NECO exams with our AI-powered study tools. Explore all features free for 24 hours.
             </p>
             <div className="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
               <Button size="lg" asChild className="w-full sm:w-auto">
                 <Link href="/auth/sign-up">
-                  Get Started Free
+                  Start Your 24-Hour Free Trial
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
@@ -124,27 +120,6 @@ export default function LandingPage() {
                 title="AI Academic Tutor"
                 description="Get instant help with difficult concepts, ask questions, and receive personalized explanations from our AI tutor."
               />
-              <FeatureCard
-                imageSrc="https://placehold.co/600x400.png"
-                imageAlt="Progress Tracking Illustration"
-                dataAiHint="study progress graph"
-                title="Track Your Progress"
-                description="Monitor your performance, review your answers, and see how you improve over time with detailed analytics."
-              />
-               <FeatureCard
-                imageSrc="https://placehold.co/600x400.png"
-                imageAlt="Exam Simulation Interface"
-                dataAiHint="exam interface computer"
-                title="Realistic Exam Simulation"
-                description="Experience exam conditions with timed tests and a familiar interface to build confidence and reduce anxiety."
-              />
-               <FeatureCard
-                imageSrc="https://placehold.co/600x400.png"
-                imageAlt="Personalized Study Plan Example"
-                dataAiHint="study plan checklist"
-                title="Personalized Study Plans"
-                description="Get tailored recommendations and study schedules based on your performance and target exams, optimized by AI."
-              />
             </div>
           </div>
         </section>
@@ -153,15 +128,15 @@ export default function LandingPage() {
         <section className="py-16 md:py-24 bg-gradient-to-t from-background via-secondary/5 to-background">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Ready to Start Your Journey to Success?
+              Ready to Unlock Your Full Potential?
             </h2>
             <p className="mt-4 max-w-xl mx-auto text-lg text-muted-foreground">
-              Join thousands of students already using PrepMate to achieve their academic goals. Don't just study, study smart!
+              Begin your 24-hour free trial today and experience the power of AI-driven exam preparation. After the trial, choose a plan that suits you to continue your journey to success.
             </p>
             <div className="mt-8">
               <Button size="lg" asChild className="bg-primary hover:bg-primary/90 text-primary-foreground px-10 py-6 text-lg">
                 <Link href="/auth/sign-up">
-                  Sign Up Now and Ace Your Exams!
+                  Start 24-Hour Free Trial
                 </Link>
               </Button>
             </div>
