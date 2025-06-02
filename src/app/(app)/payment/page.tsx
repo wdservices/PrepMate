@@ -24,8 +24,8 @@ export default function PaymentPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const examId = searchParams.get('examId'); // Or determine payment type differently
-  const amount = 7500; // NGN - This could be dynamic based on examId or subscription type
+  const examId = searchParams.get('examId');
+  const amount = 1500; // NGN - Corrected price
   const currency = 'NGN';
 
   useEffect(() => {
@@ -35,6 +35,8 @@ export default function PaymentPage() {
   }, [user, authLoading, router, examId]);
 
   const handlePayment = async () => {
+    console.log("[PaymentPage] handlePayment function started."); // Added initial log
+
     if (!user) {
       toast({ title: "Authentication Error", description: "You must be logged in to make a payment.", variant: "destructive" });
       return;
@@ -69,6 +71,9 @@ export default function PaymentPage() {
         console.log("[PaymentPage] Payment link received:", data.paymentLink);
         console.log("[PaymentPage] Attempting to redirect to Flutterwave...");
         window.location.href = data.paymentLink;
+        // Note: setIsLoading(false) might not be reached if redirection is successful and immediate.
+        // If redirection fails or is blocked, the user might be stuck in a loading state.
+        // However, if window.location.href succeeds, the page unloads.
       } else {
         console.error("[PaymentPage] Payment link not found or invalid in API response:", data);
         throw new Error('Payment link not received or invalid from server.');
@@ -79,7 +84,7 @@ export default function PaymentPage() {
       toast({ title: "Payment Error", description: err.message, variant: "destructive" });
       setIsLoading(false); // Ensure loading is stopped on error
     }
-    // setIsLoading(false); // This line is commented out as redirection should happen, or error is handled.
+    // setIsLoading(false); // This line is problematic if redirection happens. Moved to catch.
   };
   
   if (authLoading) {
