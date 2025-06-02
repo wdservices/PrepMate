@@ -3,7 +3,7 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Button } from '@/components/ui/button'; // We'll use this for consistent styling if possible, or a raw button
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Loader2, CreditCard, AlertTriangle } from 'lucide-react';
 import { useAuth } from '@/components/providers/firebase-provider';
@@ -110,3 +110,4 @@ export default function PaymentPage() {
     </div>
   );
 }
+
