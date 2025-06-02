@@ -41,6 +41,7 @@ export default function PaymentPage() {
     }
     setIsLoading(true);
     setError(null);
+    console.log("[PaymentPage] Initiating payment...");
 
     try {
       const response = await fetch('/api/flutterwave/create-payment', {
@@ -51,30 +52,34 @@ export default function PaymentPage() {
           currency,
           customerEmail: user.email,
           customerName: user.displayName || 'PrepMate User',
-          customerPhone: user.phoneNumber || '', // Flutterwave might require this for some payment methods
+          customerPhone: user.phoneNumber || '', 
           examId: examId || 'general_subscription', 
         }),
       });
 
       const data = await response.json();
+      console.log("[PaymentPage] Response from /api/flutterwave/create-payment:", data);
 
       if (!response.ok) {
-        throw new Error(data.error || data.details?.message || 'Failed to initiate payment.');
+        console.error("[PaymentPage] API response not OK. Status:", response.status, "Response data:", data);
+        throw new Error(data.error || data.details?.message || `Failed to initiate payment. Status: ${response.status}`);
       }
 
-      if (data.paymentLink) {
-        // Redirect to Flutterwave payment page
+      if (data.paymentLink && typeof data.paymentLink === 'string') {
+        console.log("[PaymentPage] Payment link received:", data.paymentLink);
+        console.log("[PaymentPage] Attempting to redirect to Flutterwave...");
         window.location.href = data.paymentLink;
       } else {
-        throw new Error('Payment link not received from server.');
+        console.error("[PaymentPage] Payment link not found or invalid in API response:", data);
+        throw new Error('Payment link not received or invalid from server.');
       }
     } catch (err: any) {
-      console.error("Payment initiation failed:", err);
+      console.error("[PaymentPage] Error during payment initiation or redirection:", err);
       setError(err.message || "An unexpected error occurred. Please try again.");
       toast({ title: "Payment Error", description: err.message, variant: "destructive" });
-      setIsLoading(false);
+      setIsLoading(false); // Ensure loading is stopped on error
     }
-    // setIsLoading(false); // Will be false on redirect or error
+    // setIsLoading(false); // This line is commented out as redirection should happen, or error is handled.
   };
   
   if (authLoading) {
