@@ -57,8 +57,8 @@ export default function ExamSubjectsPage() {
     }
 
     // --- Mocked Trial/Subscription Check ---
-    // For testing, let's assume the trial is ACTIVE by default.
-    // To test payment redirection, change the '+' to a '-' in the MOCKED_TRIAL_ENDS_AT line, or manipulate user.trialEndsAt in Firestore.
+    // To test payment redirection, this defaults to an EXPIRED trial if user.trialEndsAt is not set.
+    // To test accessing the page directly (active trial), change the '-' to a '+' in MOCKED_TRIAL_ENDS_AT.
     const now = Date.now();
     console.log("[ExamSubjectsPage] User object from useAuth():", { 
       uid: user.uid, 
@@ -67,9 +67,9 @@ export default function ExamSubjectsPage() {
       isSubscribed: user.isSubscribed 
     });
     
-    // Default to an ACTIVE trial for easier testing of reaching this page.
+    // DEFAULTING TO EXPIRED TRIAL FOR EASIER TESTING OF PAYMENT PAGE REDIRECTION
     const MOCKED_TRIAL_ENDS_AT = user.trialEndsAt === undefined
-                                 ? (now + (24 * 60 * 60 * 1000)) // Trial active for 24h (DEFAULTING TO ACTIVE)
+                                 ? (now - (25 * 60 * 60 * 1000)) // Trial expired 25h ago (DEFAULTING TO EXPIRED)
                                  : user.trialEndsAt;
 
     const MOCKED_IS_SUBSCRIBED = user.isSubscribed === undefined 
