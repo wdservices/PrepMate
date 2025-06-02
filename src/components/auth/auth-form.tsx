@@ -18,9 +18,9 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { auth as firebaseAuth } from "@/lib/firebase";
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   updateProfile,
   sendPasswordResetEmail
 } from "firebase/auth";
@@ -62,31 +62,37 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
   useEffect(() => {
     if (!firebaseAuth) {
       setIsAuthDisabled(true);
+      // Added a more direct toast if firebaseAuth service is null on component mount
+      toast({
+        title: "Authentication Service Not Ready",
+        description: "Firebase authentication is not initialized. Please check console logs from firebase.ts and ensure your Firebase config is correct.",
+        variant: "destructive",
+      });
     }
-  }, []);
+  }, [toast]); // Added toast to dependency array
 
-  const currentSchema = 
-    authMode === "signup" ? signUpSchema : 
-    authMode === "login" ? loginSchema : 
+  const currentSchema =
+    authMode === "signup" ? signUpSchema :
+    authMode === "login" ? loginSchema :
     forgotPasswordSchema;
 
   type FormValues = z.infer<typeof currentSchema>;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(currentSchema),
-    defaultValues: 
-      authMode === "signup" ? { name: "", email: "", password: "" } : 
+    defaultValues:
+      authMode === "signup" ? { name: "", email: "", password: "" } :
       authMode === "login" ? { email: "", password: "" } :
       { email: ""},
   });
-  
+
   useEffect(() => {
     form.reset(
-      authMode === "signup" ? { name: "", email: "", password: "" } : 
+      authMode === "signup" ? { name: "", email: "", password: "" } :
       authMode === "login" ? { email: "", password: "" } :
       { email: ""}
     );
-    setShowPassword(false); // Reset password visibility when mode changes
+    setShowPassword(false);
   }, [authMode, form]);
 
 
@@ -97,7 +103,7 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
         description: "PrepMate's authentication system is not ready. Please check Firebase configuration and ensure all services are running.",
         variant: "destructive",
       });
-      setIsLoading(false); // Ensure loading state is reset
+      setIsLoading(false);
       return;
     }
 
@@ -111,34 +117,41 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
         }
         toast({ title: "Account Created", description: `Welcome to ${siteConfig.name}!` });
         const redirectUrl = searchParams.get('redirect') || '/dashboard';
-        router.replace(redirectUrl); 
+        console.log(`[AuthForm] Signup successful. Attempting to redirect to: ${redirectUrl}`);
+        router.replace(redirectUrl);
       } else if (authMode === "login") {
         const { email, password } = values as z.infer<typeof loginSchema>;
         await signInWithEmailAndPassword(firebaseAuth, email, password);
+        // At this point, onAuthStateChanged in FirebaseProvider should have updated the user context.
         toast({ title: "Logged In", description: "Welcome back!" });
         const redirectUrl = searchParams.get('redirect') || '/dashboard';
-        router.replace(redirectUrl); 
+        console.log(`[AuthForm] Login successful. Calculated redirectUrl: ${redirectUrl}. Attempting redirect...`);
+        router.replace(redirectUrl);
+        console.log(`[AuthForm] router.replace(${redirectUrl}) called.`);
       } else if (authMode === "forgotPassword") {
         const { email } = values as z.infer<typeof forgotPasswordSchema>;
         await sendPasswordResetEmail(firebaseAuth, email);
-        toast({ 
-          title: "Password Reset Email Sent", 
-          description: "If an account exists for this email, a password reset link has been sent." 
+        toast({
+          title: "Password Reset Email Sent",
+          description: "If an account exists for this email, a password reset link has been sent."
         });
-        setAuthMode("login"); 
+        setAuthMode("login");
       }
     } catch (error: any) {
-      console.error(`${authMode} failed:`, error);
+      console.error(`[AuthForm] ${authMode} failed:`, error);
       let errorMessage = error.message || "An unexpected error occurred.";
       if (error.code === 'auth/invalid-credential' && authMode === 'login') {
         errorMessage = "Invalid email or password. Please try again.";
       } else if (error.code === 'auth/email-already-in-use' && authMode === 'signup') {
         errorMessage = "This email is already registered. Please try logging in.";
-      } else if (error.code === 'auth/user-not-found' && authMode === 'login') {
+      } else if (error.code === 'auth/user-not-found' && (authMode === 'login' || authMode === 'forgotPassword')) {
         errorMessage = "No account found with this email. Please sign up or check your email.";
+      } else if (error.code === 'auth/too-many-requests') {
+        errorMessage = "Too many login attempts. Please try again later or reset your password.";
       }
+      // Add other specific Firebase error codes as needed
       toast({
-        title: 
+        title:
           authMode === "signup" ? "Sign Up Failed" :
           authMode === "login" ? "Login Failed" :
           "Password Reset Failed",
@@ -150,18 +163,18 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
     }
   }
 
-  if (isAuthDisabled && authMode !== "forgotPassword") { 
+  if (isAuthDisabled && authMode !== "forgotPassword") {
     return (
       <Alert variant="destructive">
         <AlertTriangle className="h-4 w-4" />
         <AlertTitle>Authentication System Offline</AlertTitle>
         <AlertDescription>
-          The login and sign-up features are temporarily unavailable. This usually means there's an issue with the Firebase configuration or service. Please contact support or try again later.
+          The login and sign-up features are temporarily unavailable. This usually means there's an issue with the Firebase configuration or service. Please check your .env file and Firebase console settings. Reload the page after corrections.
         </AlertDescription>
       </Alert>
     );
   }
-  
+
   const renderTitleAndDescription = () => {
     if (authMode === 'login') {
       return {
@@ -233,11 +246,11 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
                     <FormLabel>Password</FormLabel>
                     <div className="relative">
                         <FormControl>
-                        <Input 
-                            type={showPassword ? "text" : "password"} 
-                            placeholder="••••••••" 
-                            {...field} 
-                            className="pr-10" 
+                        <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="••••••••"
+                            {...field}
+                            className="pr-10"
                         />
                         </FormControl>
                         <Button
@@ -258,11 +271,11 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
             )}
             <Button type="submit" className="w-full" disabled={isLoading || (isAuthDisabled && authMode !== "forgotPassword")}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {authMode === "signup" ? "Create Account" : 
-             authMode === "login" ? "Login" : 
+            {authMode === "signup" ? "Create Account" :
+             authMode === "login" ? "Login" :
              "Send Reset Link"}
             </Button>
-            
+
             {authMode === "login" && (
             <div className="text-sm text-muted-foreground text-center space-y-2">
                 <p>
@@ -299,4 +312,3 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
     </div>
   );
 }
-
