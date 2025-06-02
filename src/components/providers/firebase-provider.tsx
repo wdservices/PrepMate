@@ -25,53 +25,56 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     if (firebaseAuthService) {
       const unsubscribeAuth = onAuthStateChanged(firebaseAuthService, async (firebaseUser) => {
         if (firebaseUser) {
-          // User is signed in, now fetch/listen for profile data from Firestore
           setUserProfileLoading(true);
-          const userRef = doc(db!, "users", firebaseUser.uid); // Assumes 'users' collection
+          if (!db) {
+            console.warn(
+              "FirebaseProvider: Firestore (db) is not initialized. Skipping user profile fetching. User-specific data like trial/subscription status will be unavailable."
+            );
+            setUser(firebaseUser as AppUser); // Set user with basic auth data
+            setUserProfileLoading(false); // Indicate profile loading (attempt) is complete
+            setLoading(false); // Auth loading is also complete
+            return;
+          }
+
+          const userRef = doc(db, "users", firebaseUser.uid);
           
-          // Listen for real-time updates to user profile
           const unsubscribeSnapshot = onSnapshot(userRef, (docSnap) => {
             if (docSnap.exists()) {
               const profileData = docSnap.data();
               setUser({
-                ...firebaseUser, // Base Firebase user properties
+                ...firebaseUser, 
                 trialEndsAt: profileData.trialEndsAt || undefined,
                 isSubscribed: profileData.isSubscribed || false,
                 subscriptionEndsAt: profileData.subscriptionEndsAt || undefined,
-                // Add other profile fields here
               } as AppUser);
             } else {
-              // Profile doesn't exist yet, set with base FirebaseUser and default/initial app-specific values
-              // This might happen on first sign-up before profile is created
               setUser({
                 ...firebaseUser,
-                trialEndsAt: undefined, // Or set a default trial period here if creating profile
+                trialEndsAt: undefined, 
                 isSubscribed: false,
               } as AppUser);
-              console.warn(`User profile not found for UID: ${firebaseUser.uid}. This is expected on first sign-up if profile creation is separate.`);
+              console.warn(`FirebaseProvider: User profile not found in Firestore for UID: ${firebaseUser.uid}. Using basic auth data.`);
             }
             setUserProfileLoading(false);
           }, (error) => {
-            console.error("Error fetching user profile:", error);
+            console.error("FirebaseProvider: Error fetching user profile from Firestore:", error);
             setUser(firebaseUser as AppUser); // Fallback to just auth user data
             setUserProfileLoading(false);
           });
-
-          // It's important to return the snapshot unsubscriber if the auth state changes
-          // However, onAuthStateChanged's unsubscribe already handles cleaning up its own listener.
-          // Managing nested listeners requires careful handling, typically snapshot listener is cleaned up when component unmounts or auth user changes.
-          // For simplicity here, we'll assume the user stays the same or logs out, triggering a new path.
-          // A more robust solution might involve storing the snapshot unsubscriber and calling it if firebaseUser becomes null.
+          // This inner unsubscribe is tricky. Typically, you'd return it from the onAuthStateChanged callback
+          // But onAuthStateChanged itself returns its own unsubscriber.
+          // For simplicity, we'll rely on onAuthStateChanged's cleanup.
+          // If firebaseUser becomes null, a new path is taken.
 
         } else {
-          // User is signed out
           setUser(null);
           setUserProfileLoading(false);
         }
-        setLoading(false); // Auth loading finished
+        setLoading(false); 
       });
       return () => unsubscribeAuth();
     } else {
+      console.warn("FirebaseProvider: Firebase Auth service is not available. Auth features will be disabled.");
       setUser(null);
       setLoading(false);
       setUserProfileLoading(false);
@@ -93,3 +96,4 @@ export const useAuth = () => {
   }
   return context;
 };
+
