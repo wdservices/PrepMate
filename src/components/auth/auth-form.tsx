@@ -93,10 +93,11 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
   async function onSubmit(values: FormValues) {
     if (!firebaseAuth) {
       toast({
-        title: "Authentication Unavailable",
-        description: "Login/Signup/Password Reset is temporarily disabled. Please check Firebase configuration.",
+        title: "Authentication Service Unavailable",
+        description: "PrepMate's authentication system is not ready. Please check Firebase configuration and ensure all services are running.",
         variant: "destructive",
       });
+      setIsLoading(false); // Ensure loading state is reset
       return;
     }
 
@@ -110,13 +111,13 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
         }
         toast({ title: "Account Created", description: `Welcome to ${siteConfig.name}!` });
         const redirectUrl = searchParams.get('redirect') || '/dashboard';
-        router.replace(redirectUrl); // Use replace for better history management
+        router.replace(redirectUrl); 
       } else if (authMode === "login") {
         const { email, password } = values as z.infer<typeof loginSchema>;
         await signInWithEmailAndPassword(firebaseAuth, email, password);
         toast({ title: "Logged In", description: "Welcome back!" });
         const redirectUrl = searchParams.get('redirect') || '/dashboard';
-        router.replace(redirectUrl); // Use replace
+        router.replace(redirectUrl); 
       } else if (authMode === "forgotPassword") {
         const { email } = values as z.infer<typeof forgotPasswordSchema>;
         await sendPasswordResetEmail(firebaseAuth, email);
@@ -133,6 +134,8 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
         errorMessage = "Invalid email or password. Please try again.";
       } else if (error.code === 'auth/email-already-in-use' && authMode === 'signup') {
         errorMessage = "This email is already registered. Please try logging in.";
+      } else if (error.code === 'auth/user-not-found' && authMode === 'login') {
+        errorMessage = "No account found with this email. Please sign up or check your email.";
       }
       toast({
         title: 
@@ -151,10 +154,9 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
     return (
       <Alert variant="destructive">
         <AlertTriangle className="h-4 w-4" />
-        <AlertTitle>Authentication Disabled</AlertTitle>
+        <AlertTitle>Authentication System Offline</AlertTitle>
         <AlertDescription>
-          Login and Sign Up features are temporarily unavailable. Please ensure Firebase is configured correctly.
-          You can still browse other parts of the application.
+          The login and sign-up features are temporarily unavailable. This usually means there's an issue with the Firebase configuration or service. Please contact support or try again later.
         </AlertDescription>
       </Alert>
     );
@@ -235,7 +237,7 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
                             type={showPassword ? "text" : "password"} 
                             placeholder="••••••••" 
                             {...field} 
-                            className="pr-10" // Add padding for the icon
+                            className="pr-10" 
                         />
                         </FormControl>
                         <Button
@@ -297,3 +299,4 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
     </div>
   );
 }
+
