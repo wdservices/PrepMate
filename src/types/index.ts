@@ -1,4 +1,6 @@
 
+import type { User as FirebaseUser } from "firebase/auth";
+
 export interface QuestionOption {
   id: string;
   text: string;
@@ -9,16 +11,16 @@ export interface Question {
   text: string;
   options: QuestionOption[];
   correctOptionId: string;
-  explanationFromAI?: string; // For AI generated explanation after wrong answer
+  explanationFromAI?: string; 
   year: number;
-  imageUrl?: string; // Optional URL for an image associated with the question
+  imageUrl?: string; 
 }
 
 export interface Subject {
   id: string;
   name: string;
   description?: string;
-  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>; // Lucide icon
+  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>; 
   availableYears: number[];
 }
 
@@ -27,7 +29,7 @@ export interface Exam {
   name: string;
   description: string;
   subjects: Subject[];
-  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>; // Lucide icon for the exam itself
+  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }
 
 export interface PastQuestionForAnalysis {
@@ -36,4 +38,12 @@ export interface PastQuestionForAnalysis {
   year: number;
   subject: string;
   exam: string;
+}
+
+// Extended User type for app-specific properties
+export interface AppUser extends FirebaseUser {
+  trialEndsAt?: number; // Timestamp
+  isSubscribed?: boolean;
+  subscriptionEndsAt?: number; // Timestamp
+  // Add other app-specific user properties here if needed
 }
