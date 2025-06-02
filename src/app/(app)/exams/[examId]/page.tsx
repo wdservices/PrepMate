@@ -45,10 +45,22 @@ export default function ExamSubjectsPage() {
     }
 
     if (!user) {
-      console.log("[ExamSubjectsPage] No user, redirecting to login.");
+      console.log("[ExamSubjectsPage] No user detected after initial loads. Redirecting to login.");
       router.replace(`/auth/login?redirect=/exams/${examId}`);
       return;
     }
+
+    // Log user details only if user object exists
+    if (user) {
+        console.log("[ExamSubjectsPage] User object available:", { 
+        uid: user.uid, 
+        email: user.email, 
+        displayName: user.displayName,
+        trialEndsAt: user.trialEndsAt, 
+        isSubscribed: user.isSubscribed 
+        });
+    }
+
 
     if (exam === null) { // Exam not found based on the state set above
       console.log(`[ExamSubjectsPage] Exam with ID ${examId} not found (from state). Redirecting to 404.`);
@@ -57,15 +69,7 @@ export default function ExamSubjectsPage() {
     }
 
     // --- Mocked Trial/Subscription Check ---
-    // To test payment redirection, this defaults to an EXPIRED trial if user.trialEndsAt is not set.
-    // To test accessing the page directly (active trial), change the '-' to a '+' in MOCKED_TRIAL_ENDS_AT.
     const now = Date.now();
-    console.log("[ExamSubjectsPage] User object from useAuth():", { 
-      uid: user.uid, 
-      email: user.email, 
-      trialEndsAt: user.trialEndsAt, 
-      isSubscribed: user.isSubscribed 
-    });
     
     // DEFAULTING TO EXPIRED TRIAL FOR EASIER TESTING OF PAYMENT PAGE REDIRECTION
     const MOCKED_TRIAL_ENDS_AT = user.trialEndsAt === undefined
@@ -78,13 +82,13 @@ export default function ExamSubjectsPage() {
 
     const trialExpired = now > MOCKED_TRIAL_ENDS_AT;
 
-    console.log(`[ExamSubjectsPage] Trial/Subscription Check: Now: ${now}, TrialEndsAt: ${MOCKED_TRIAL_ENDS_AT}, IsSubscribed: ${MOCKED_IS_SUBSCRIBED}, TrialExpired: ${trialExpired}`);
+    console.log(`[ExamSubjectsPage] Trial/Subscription Check: Now: ${now}, MockedTrialEndsAt: ${MOCKED_TRIAL_ENDS_AT}, IsSubscribed: ${MOCKED_IS_SUBSCRIBED}, TrialExpired: ${trialExpired}`);
 
     if (trialExpired && !MOCKED_IS_SUBSCRIBED) {
       console.log("[ExamSubjectsPage] Trial expired and not subscribed. Redirecting to payment.");
       router.replace(`/payment?examId=${examId}&reason=trial_expired_or_not_subscribed`);
     } else {
-      console.log("[ExamSubjectsPage] Access granted (Trial active or Subscribed).");
+      console.log("[ExamSubjectsPage] Access granted (Trial active or Subscribed). Setting isAccessChecked to true.");
       setIsAccessChecked(true); // Access granted or trial active
     }
   }, [user, authLoading, userProfileLoading, exam, examId, router]);
@@ -92,7 +96,11 @@ export default function ExamSubjectsPage() {
 
   // --- Loading States ---
   if (authLoading || userProfileLoading || exam === undefined || !isAccessChecked) {
-    // Display loading indicator until auth, profile, exam data is loaded AND access check is complete
+    console.log(`[ExamSubjectsPage] Page is in LOADING state. Conditions: 
+      authLoading: ${authLoading}, 
+      userProfileLoading: ${userProfileLoading}, 
+      exam === undefined: ${exam === undefined}, 
+      !isAccessChecked: ${!isAccessChecked}`);
     return (
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] text-center p-6">
         <Loader2 className="h-16 w-16 text-primary animate-spin mb-6" />
@@ -105,8 +113,8 @@ export default function ExamSubjectsPage() {
   }
 
   // --- Exam Not Found (after loading and access check) ---
-  // This check is somewhat redundant if the effect above already redirects, but good for robustness
-  if (!exam) {
+  if (!exam) { // This check handles if exam is null after loading attempts
+    console.log("[ExamSubjectsPage] Exam object is null after loading. Displaying Exam Not Found.");
     return (
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] text-center p-6">
         <AlertTriangle className="h-16 w-16 text-destructive mb-6" />
@@ -124,6 +132,7 @@ export default function ExamSubjectsPage() {
   }
 
   // --- Render Exam Subjects ---
+  console.log("[ExamSubjectsPage] Rendering exam subjects content.");
   return (
     <div className="space-y-8">
       <div>
