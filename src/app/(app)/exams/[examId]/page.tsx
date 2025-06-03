@@ -68,10 +68,15 @@ export default function ExamSubjectsPage() {
       return;
     }
 
-    // --- Mocked Trial/Subscription Check ---
+    // --- TEMPORARILY BYPASSING PAYMENT GATEWAY CHECK ---
+    console.log("[ExamSubjectsPage] Payment gateway check is TEMPORARILY BYPASSED for debugging.");
+    setIsAccessChecked(true); 
+    // --- END TEMPORARY BYPASS ---
+
+    /*
+    // --- Original Trial/Subscription Check ---
     const now = Date.now();
     
-    // DEFAULTING TO EXPIRED TRIAL FOR EASIER TESTING OF PAYMENT PAGE REDIRECTION
     const MOCKED_TRIAL_ENDS_AT = user.trialEndsAt === undefined
                                  ? (now - (25 * 60 * 60 * 1000)) // Trial expired 25h ago (DEFAULTING TO EXPIRED)
                                  : user.trialEndsAt;
@@ -91,6 +96,7 @@ export default function ExamSubjectsPage() {
       console.log("[ExamSubjectsPage] Access granted (Trial active or Subscribed). Setting isAccessChecked to true.");
       setIsAccessChecked(true); // Access granted or trial active
     }
+    */
   }, [user, authLoading, userProfileLoading, exam, examId, router]);
 
 
