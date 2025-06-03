@@ -78,12 +78,18 @@ export default function PaymentPage() {
             <input type="hidden" name="meta[source]" value="PrepMate-WebApp" />
             <input type="hidden" name="meta[user_id]" value={user.uid} />
             {examIdQuery && <input type="hidden" name="meta[exam_id]" value={examIdQuery} />}
-            {/* Customizations can be added here if supported by standard form post */}
-            {/* e.g., 
+            {/* 
+              Flutterwave supports customizations via the form POST for some parameters.
+              For full customization (like logo, description directly on their page), 
+              you might need to set these in your Flutterwave dashboard or use their Inline JS SDK.
+              Example of how you might pass customization parameters IF supported by simple POST:
+            */}
+            {/* 
             <input type="hidden" name="customizations[title]" value="PrepMate Subscription" />
             <input type="hidden" name="customizations[description]" value="Access to all exam materials." />
-            <input type="hidden" name="customizations[logo]" value={`${appBaseUrl}/images/prepmate-logo.png`} />
+            <input type="hidden" name="customizations[logo]" value={`${appBaseUrl}/images/prepmate-logo.png`} /> 
             */}
+
 
             <p className="text-xs text-muted-foreground text-center mt-4">
               You will be redirected to Flutterwave's secure payment gateway.
@@ -110,4 +116,3 @@ export default function PaymentPage() {
     </div>
   );
 }
-
