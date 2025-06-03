@@ -12,14 +12,22 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
   const router = useRouter(); 
   const pathname = usePathname();
 
+  console.log(`[ProtectedRoute] Path: ${pathname}, Auth Loading: ${loading}, User: ${user ? user.uid : 'null'}`);
+
   useEffect(() => { 
     if (!loading && !user) {
       const redirectUrl = `/auth/login?redirect=${encodeURIComponent(pathname)}`;
+      console.log(`[ProtectedRoute] Effect: No user & not loading. Redirecting to: ${redirectUrl}`);
       router.push(redirectUrl);
+    } else if (!loading && user) {
+      console.log(`[ProtectedRoute] Effect: User is present and not loading. Access granted for path: ${pathname}`);
+    } else {
+      console.log(`[ProtectedRoute] Effect: Still loading or user state indeterminate. Path: ${pathname}, Auth Loading: ${loading}, User: ${user ? user.uid : 'null'}`);
     }
   }, [user, loading, router, pathname]);
 
   if (loading) { 
+    console.log(`[ProtectedRoute] Render: Auth loading is true. Showing loader for path: ${pathname}`);
     return (
       <div className="flex min-h-[calc(100vh-4rem)] flex-1 items-center justify-center">
         <Loader2 className="h-10 w-10 animate-spin text-primary" />
@@ -28,8 +36,7 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
   }
 
   if (!user) { 
-    // This state might be brief before the useEffect redirect kicks in,
-    // or if the redirect is slow. Showing a loader is a good UX.
+    console.log(`[ProtectedRoute] Render: No user (and not loading). Showing loader (or will be redirected shortly) for path: ${pathname}`);
     return (
        <div className="flex min-h-[calc(100vh-4rem)] flex-1 items-center justify-center">
         <Loader2 className="h-10 w-10 animate-spin text-primary" />
@@ -37,5 +44,6 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
     );
   }
 
+  console.log(`[ProtectedRoute] Render: User is present. Rendering children for path: ${pathname}`);
   return <>{children}</>;
 }

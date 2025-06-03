@@ -62,14 +62,13 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
   useEffect(() => {
     if (!firebaseAuth) {
       setIsAuthDisabled(true);
-      // Added a more direct toast if firebaseAuth service is null on component mount
       toast({
         title: "Authentication Service Not Ready",
         description: "Firebase authentication is not initialized. Please check console logs from firebase.ts and ensure your Firebase config is correct.",
         variant: "destructive",
       });
     }
-  }, [toast]); // Added toast to dependency array
+  }, [toast]);
 
   const currentSchema =
     authMode === "signup" ? signUpSchema :
@@ -108,6 +107,7 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
     }
 
     setIsLoading(true);
+    console.log(`[AuthForm] Starting ${authMode} process...`);
     try {
       if (authMode === "signup") {
         const { name, email, password } = values as z.infer<typeof signUpSchema>;
@@ -119,15 +119,15 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
         const redirectUrl = searchParams.get('redirect') || '/dashboard';
         console.log(`[AuthForm] Signup successful. Attempting to redirect to: ${redirectUrl}`);
         router.replace(redirectUrl);
+        console.log(`[AuthForm] router.replace(${redirectUrl}) called after signup.`);
       } else if (authMode === "login") {
         const { email, password } = values as z.infer<typeof loginSchema>;
         await signInWithEmailAndPassword(firebaseAuth, email, password);
-        // At this point, onAuthStateChanged in FirebaseProvider should have updated the user context.
         toast({ title: "Logged In", description: "Welcome back!" });
         const redirectUrl = searchParams.get('redirect') || '/dashboard';
         console.log(`[AuthForm] Login successful. Calculated redirectUrl: ${redirectUrl}. Attempting redirect...`);
         router.replace(redirectUrl);
-        console.log(`[AuthForm] router.replace(${redirectUrl}) called.`);
+        console.log(`[AuthForm] router.replace(${redirectUrl}) called after login.`);
       } else if (authMode === "forgotPassword") {
         const { email } = values as z.infer<typeof forgotPasswordSchema>;
         await sendPasswordResetEmail(firebaseAuth, email);
@@ -149,7 +149,6 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
       } else if (error.code === 'auth/too-many-requests') {
         errorMessage = "Too many login attempts. Please try again later or reset your password.";
       }
-      // Add other specific Firebase error codes as needed
       toast({
         title:
           authMode === "signup" ? "Sign Up Failed" :
@@ -160,6 +159,7 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
       });
     } finally {
       setIsLoading(false);
+      console.log(`[AuthForm] ${authMode} process finished.`);
     }
   }
 
