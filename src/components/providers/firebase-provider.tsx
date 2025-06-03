@@ -24,15 +24,19 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (firebaseAuthService) {
       const unsubscribeAuth = onAuthStateChanged(firebaseAuthService, async (firebaseUser) => {
+        console.log(`[FirebaseProvider] onAuthStateChanged triggered. firebaseUser: ${firebaseUser ? firebaseUser.uid : 'null'}`);
         if (firebaseUser) {
-          setUserProfileLoading(true);
+          setUserProfileLoading(true); // Set profile loading to true when auth state changes and user exists
+          console.log(`[FirebaseProvider] firebaseUser detected (UID: ${firebaseUser.uid}). Set userProfileLoading to true. Fetching profile...`);
+
           if (!db) {
             console.warn(
-              "FirebaseProvider: Firestore (db) is not initialized. Skipping user profile fetching. User-specific data like trial/subscription status will be unavailable."
+              "[FirebaseProvider] Firestore (db) is not initialized. Skipping user profile fetching. User-specific data like trial/subscription status will be unavailable."
             );
-            setUser(firebaseUser as AppUser); // Set user with basic auth data
-            setUserProfileLoading(false); // Indicate profile loading (attempt) is complete
-            setLoading(false); // Auth loading is also complete
+            setUser(firebaseUser as AppUser); 
+            console.log(`[FirebaseProvider] Firestore (db) not initialized. Set userProfileLoading to false.`);
+            setUserProfileLoading(false); 
+            setLoading(false); 
             return;
           }
 
@@ -41,6 +45,7 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
           const unsubscribeSnapshot = onSnapshot(userRef, (docSnap) => {
             if (docSnap.exists()) {
               const profileData = docSnap.data();
+              console.log(`[FirebaseProvider] Firestore profile data for UID ${firebaseUser.uid} found:`, profileData);
               setUser({
                 ...firebaseUser, 
                 trialEndsAt: profileData.trialEndsAt || undefined,
@@ -53,26 +58,31 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
                 trialEndsAt: undefined, 
                 isSubscribed: false,
               } as AppUser);
-              console.warn(`FirebaseProvider: User profile not found in Firestore for UID: ${firebaseUser.uid}. Using basic auth data.`);
+              console.warn(`[FirebaseProvider] User profile not found in Firestore for UID: ${firebaseUser.uid}. Using basic auth data.`);
             }
+            console.log(`[FirebaseProvider] Firestore profile data processing complete. Set userProfileLoading to false.`);
             setUserProfileLoading(false);
           }, (error) => {
-            console.error("FirebaseProvider: Error fetching user profile from Firestore:", error);
-            setUser(firebaseUser as AppUser); // Fallback to just auth user data
+            console.error("[FirebaseProvider] Error fetching user profile from Firestore:", error);
+            setUser(firebaseUser as AppUser); 
+            console.log(`[FirebaseProvider] Firestore profile data error. Set userProfileLoading to false.`);
             setUserProfileLoading(false);
           });
-          // This inner unsubscribe is tricky. Typically, you'd return it from the onAuthStateChanged callback
-          // But onAuthStateChanged itself returns its own unsubscriber.
-          // For simplicity, we'll rely on onAuthStateChanged's cleanup.
-          // If firebaseUser becomes null, a new path is taken.
+          // Note: unsubscribeSnapshot should ideally be returned and handled if firebaseUser changes/logs out before it fires,
+          // but for this structure, onAuthStateChanged's main unsubscribe handles overall cleanup.
 
         } else {
           setUser(null);
+          console.log(`[FirebaseProvider] No firebaseUser. Set user to null. Set userProfileLoading to false.`);
           setUserProfileLoading(false);
         }
+        console.log(`[FirebaseProvider] Auth state processing finished. Set auth loading (loading) to false.`);
         setLoading(false); 
       });
-      return () => unsubscribeAuth();
+      return () => {
+        console.log("[FirebaseProvider] Unsubscribing from onAuthStateChanged.");
+        unsubscribeAuth();
+      }
     } else {
       console.warn("FirebaseProvider: Firebase Auth service is not available. Auth features will be disabled.");
       setUser(null);
@@ -96,4 +106,3 @@ export const useAuth = () => {
   }
   return context;
 };
-
