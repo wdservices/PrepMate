@@ -26,10 +26,12 @@ export default function DashboardPage() {
       try {
         setIsLoading(true);
         setError(null);
+        console.log("[DashboardPage] Calling getExamsFromFirestore...");
         const firestoreExams = await getExamsFromFirestore();
+        console.log("[DashboardPage] Exams fetched from Firestore:", firestoreExams);
         setExams(firestoreExams);
       } catch (err) {
-        console.error("Failed to fetch exams:", err);
+        console.error("[DashboardPage] Failed to fetch exams:", err);
         setError("Failed to load exams. Please try refreshing the page.");
       } finally {
         setIsLoading(false);
@@ -109,7 +111,7 @@ export default function DashboardPage() {
           <AlertTriangle className="h-16 w-16 text-muted-foreground mb-6" />
           <h2 className="text-2xl font-semibold mb-3 text-muted-foreground">No Exams Found</h2>
           <p className="text-muted-foreground max-w-md">
-            It seems there are no exams configured in the database yet. An administrator may need to add them.
+            It seems there are no exams configured in the database yet. An administrator may need to add them, or check Firestore rules and connectivity.
           </p>
         </div>
       )}

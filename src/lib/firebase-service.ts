@@ -1,6 +1,6 @@
 
 import { db } from '@/lib/firebase';
-import { collection, getDocs, query, orderBy, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, getDoc, where } from 'firebase/firestore';
 import type { FirestoreExamData, FirestoreSubjectData, Question, Subject, Exam } from '@/types';
 
 // Helper to convert Firestore doc data to our Exam type
@@ -16,19 +16,32 @@ const mapToExam = (docId: string, data: any): FirestoreExamData => {
 };
 
 export async function getExamsFromFirestore(): Promise<FirestoreExamData[]> {
+  console.log("[firebase-service] Attempting to fetch exams from Firestore...");
   if (!db) {
-    console.error("Firestore (db) is not initialized. Cannot fetch exams.");
+    console.error("[firebase-service] Firestore (db) is not initialized. Cannot fetch exams.");
     return [];
   }
   try {
     const examsCollection = collection(db, 'exams');
-    // Optionally, order by an 'order' field if you add one to your documents
-    const examsQuery = query(examsCollection, orderBy('order', 'asc')); // or orderBy('name', 'asc')
+    const examsQuery = query(examsCollection, orderBy('order', 'asc'));
+    console.log("[firebase-service] Executing exams query...");
     const querySnapshot = await getDocs(examsQuery);
-    const examsList = querySnapshot.docs.map(doc => mapToExam(doc.id, doc.data()));
+    
+    if (querySnapshot.empty) {
+      console.warn("[firebase-service] No documents found in 'exams' collection.");
+    } else {
+      console.log(`[firebase-service] Found ${querySnapshot.size} documents in 'exams' collection.`);
+    }
+
+    const examsList = querySnapshot.docs.map(doc => {
+      console.log(`[firebase-service] Mapping document ID: ${doc.id}, Data:`, doc.data());
+      return mapToExam(doc.id, doc.data());
+    });
+    
+    console.log("[firebase-service] Successfully fetched and mapped exams:", examsList);
     return examsList;
   } catch (error) {
-    console.error("Error fetching exams from Firestore:", error);
+    console.error("[firebase-service] Error fetching exams from Firestore:", error);
     return []; // Return empty array on error
   }
 }
