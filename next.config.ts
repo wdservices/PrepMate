@@ -1,6 +1,8 @@
 
 import type {NextConfig} from 'next';
 
+console.log("Attempting to load next.config.js...");
+
 const nextConfig: NextConfig = {
   /* config options here */
   typescript: {
@@ -25,5 +27,7 @@ const nextConfig: NextConfig = {
     ],
   },
 };
+
+console.log("Successfully loaded next.config.js.");
 
 export default nextConfig;
