@@ -21,7 +21,8 @@ export interface Subject {
   id: string;
   name: string;
   description?: string;
-  iconName?: string; // Changed from icon
+  icon?: LucideIcon; // For mock data, used by dashboard
+  iconName?: string; // For Firestore data, used by other pages
   availableYears: number[];
 }
 
@@ -29,19 +30,19 @@ export interface Exam {
   id: string;
   name: string;
   description: string;
-  subjects: Subject[]; // This will likely be fetched separately or structured differently in Firestore
-  iconName?: string; // Changed from icon
-  // Firestore specific fields if needed, e.g., order
+  subjects: Subject[]; 
+  icon?: LucideIcon; // For mock data, used by dashboard
+  iconName?: string; // For Firestore data
   order?: number;
 }
 
+// Types for data fetched from Firestore
 export interface FirestoreExamData {
   id: string; // Document ID
   name: string;
   description: string;
   iconName?: string;
   order?: number;
-  // Subjects will be a subcollection, so not directly in this type for top-level exam doc
 }
 
 export interface FirestoreSubjectData {
@@ -51,6 +52,7 @@ export interface FirestoreSubjectData {
   iconName?: string;
   availableYears: number[];
 }
+// Question type is reused for Firestore as it fits well.
 
 
 export interface PastQuestionForAnalysis {
@@ -68,3 +70,4 @@ export interface AppUser extends FirebaseUser {
   subscriptionEndsAt?: number; // Timestamp
   // Add other app-specific user properties here if needed
 }
+

@@ -1,43 +1,26 @@
 
-"use client"; // Make this a client component for data fetching
+"use client"; 
 
 import { useState, useEffect } from 'react';
-import type { Metadata } from 'next'; // Metadata export not used in client components
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import { ArrowRight, BookOpen, Loader2, AlertTriangle } from 'lucide-react';
-import { getExamsFromFirestore } from '@/lib/firebase-service'; // Import Firestore service
-import type { FirestoreExamData } from '@/types'; // Use the Firestore specific type for fetched data
-import { getIconByName } from '@/lib/icon-map'; // Import icon mapper
-
-// Metadata should be handled by parent layout or generateMetadata if this were a server component
-// export const metadata: Metadata = {
-//   title: 'Dashboard',
-// };
+import { exams as mockExams } from '@/data/mock-data'; // Import mock exams
+import type { Exam } from '@/types'; 
+// Removed Firestore service import as we are using mock data here
 
 export default function DashboardPage() {
-  const [exams, setExams] = useState<FirestoreExamData[]>([]);
+  const [exams, setExams] = useState<Exam[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchExams() {
-      try {
-        setIsLoading(true);
-        setError(null);
-        console.log("[DashboardPage] Calling getExamsFromFirestore...");
-        const firestoreExams = await getExamsFromFirestore();
-        console.log("[DashboardPage] Exams fetched from Firestore:", firestoreExams);
-        setExams(firestoreExams);
-      } catch (err) {
-        console.error("[DashboardPage] Failed to fetch exams:", err);
-        setError("Failed to load exams. Please try refreshing the page.");
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchExams();
+    // Using mock data directly
+    console.log("[DashboardPage] Using mock exams data:", mockExams);
+    setExams(mockExams.sort((a, b) => (a.order || 0) - (b.order || 0)));
+    setIsLoading(false);
+    // setError can still be used if there's a different kind of loading error, but less likely with mock data.
   }, []);
 
   if (isLoading) {
@@ -79,12 +62,12 @@ export default function DashboardPage() {
       {exams.length > 0 ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {exams.map((exam) => {
-            const ExamIcon = getIconByName(exam.iconName); // Get icon component using the name
+            const ExamIcon = exam.icon || BookOpen; // Use direct icon from mock data
             return (
               <Card key={exam.id} className="flex flex-col overflow-hidden rounded-xl shadow-lg transition-shadow duration-300 ease-in-out hover:shadow-xl">
                 <CardHeader className="p-5 border-b">
                   <div className="flex items-center space-x-3">
-                    {ExamIcon && <ExamIcon className="h-10 w-10 text-primary" />}
+                    <ExamIcon className="h-10 w-10 text-primary" />
                     <CardTitle className="text-2xl font-semibold text-primary">{exam.name}</CardTitle>
                   </div>
                 </CardHeader>
@@ -111,7 +94,7 @@ export default function DashboardPage() {
           <AlertTriangle className="h-16 w-16 text-muted-foreground mb-6" />
           <h2 className="text-2xl font-semibold mb-3 text-muted-foreground">No Exams Found</h2>
           <p className="text-muted-foreground max-w-md">
-            It seems there are no exams configured in the database yet. An administrator may need to add them, or check Firestore rules and connectivity.
+            It seems there are no exams configured in the mock data file. An administrator may need to add them.
           </p>
         </div>
       )}
