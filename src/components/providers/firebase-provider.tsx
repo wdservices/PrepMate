@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import type { User as FirebaseUser } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth as firebaseAuthService, db } from "@/lib/firebase"; 
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, enableNetwork, disableNetwork, terminate } from "firebase/firestore"; // Added enableNetwork, disableNetwork, terminate
 import type { AppUser } from "@/types";
 
 interface FirebaseContextProps {
@@ -22,85 +22,97 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   const [userProfileLoading, setUserProfileLoading] = useState(true); // Firestore profile loading
 
   useEffect(() => {
+    console.log("[FirebaseProvider] useEffect triggered. Browser online:", navigator.onLine);
+
     if (!firebaseAuthService) {
-      console.warn("FirebaseProvider: Firebase Auth service is not available. Auth features will be disabled.");
+      console.warn("[FirebaseProvider] Firebase Auth service is not available. Auth features will be disabled.");
       setLoading(false);
       setUserProfileLoading(false);
       return; 
     }
-    // Initial check for db, mainly for logging. The critical check is within onAuthStateChanged.
     if (!db) { 
-        console.error("FirebaseProvider: CRITICAL - Firestore (db) service is not initialized (checked at provider mount). Firestore operations will fail. Check firebase.ts and your Firebase project setup.");
+        console.error("[FirebaseProvider] CRITICAL - Firestore (db) service is not initialized. Firestore operations will fail. Check firebase.ts and your Firebase project setup.");
+        setLoading(false);
+        setUserProfileLoading(false);
+        return;
+    } else {
+      console.log("[FirebaseProvider] Firestore (db) service appears available. Attempting to enable network.");
+      enableNetwork(db)
+        .then(() => {
+          console.log("[FirebaseProvider] Firestore network explicitly enabled.");
+        })
+        .catch((error) => {
+          console.error("[FirebaseProvider] Error explicitly enabling Firestore network:", error);
+        });
     }
-
-    console.log(`[FirebaseProvider] useEffect initialized. Auth service available. DB service ${db ? 'available' : 'NOT available (at mount)'}.`);
+    
+    console.log(`[FirebaseProvider] Initializing auth state listener. DB service ${db ? 'available' : 'NOT available'}.`);
 
     const unsubscribeAuth = onAuthStateChanged(firebaseAuthService, async (firebaseUser) => {
-      console.log(`[FirebaseProvider] onAuthStateChanged triggered. firebaseUser: ${firebaseUser ? firebaseUser.uid : 'null'}`);
+      console.log(`[FirebaseProvider] onAuthStateChanged. User: ${firebaseUser ? firebaseUser.uid : 'null'}. Browser online: ${navigator.onLine}`);
       
       if (firebaseUser) {
-        setUserProfileLoading(true); // Assume we will try to load profile
-        console.log(`[FirebaseProvider] firebaseUser detected (UID: ${firebaseUser.uid}). Set userProfileLoading to true. Attempting profile fetch...`);
+        setUserProfileLoading(true);
+        console.log(`[FirebaseProvider] User detected (UID: ${firebaseUser.uid}). Trying to fetch profile. Firestore db object present: ${!!db}`);
 
-        if (!db) { // Critical check: if db service isn't up, can't fetch profile
-          console.warn(
-            `[FirebaseProvider] Firestore (db) is not initialized inside onAuthStateChanged for UID: ${firebaseUser.uid}. Skipping user profile fetching. User-specific data like trial/subscription status will be unavailable.`
-          );
-          setUser(firebaseUser as AppUser); // Use basic FirebaseUser info
-          console.log(`[FirebaseProvider] Firestore (db) not initialized. Set userProfileLoading to false (path A).`);
+        if (!db) {
+          console.warn(`[FirebaseProvider] Firestore (db) is null inside onAuthStateChanged for UID: ${firebaseUser.uid}. Skipping profile fetch.`);
+          setUser(firebaseUser as AppUser);
           setUserProfileLoading(false); 
-          // setLoading(false) will be called at the end of onAuthStateChanged
         } else {
-          // Firestore (db) is available, proceed with profile fetching
           const userRef = doc(db, "users", firebaseUser.uid);
+          console.log(`[FirebaseProvider] Setting up Firestore onSnapshot listener for user profile: users/${firebaseUser.uid}`);
           
-          // Setting up snapshot listener for real-time profile updates
-          const unsubscribeSnapshot = onSnapshot(userRef, (docSnap) => {
-            if (docSnap.exists()) {
-              const profileData = docSnap.data();
-              console.log(`[FirebaseProvider] Firestore profile data for UID ${firebaseUser.uid} found:`, profileData);
-              setUser({
-                ...firebaseUser, 
-                trialEndsAt: profileData.trialEndsAt || undefined,
-                isSubscribed: profileData.isSubscribed || false,
-                subscriptionEndsAt: profileData.subscriptionEndsAt || undefined,
-              } as AppUser);
-            } else {
-              // Profile doesn't exist in Firestore, use basic auth data
-              setUser({
-                ...firebaseUser,
-                trialEndsAt: undefined, 
-                isSubscribed: false,
-              } as AppUser);
-              console.warn(`[FirebaseProvider] User profile not found in Firestore for UID: ${firebaseUser.uid}. Using basic auth data.`);
+          const unsubscribeSnapshot = onSnapshot(userRef, 
+            (docSnap) => {
+              console.log(`[FirebaseProvider] onSnapshot for users/${firebaseUser.uid} triggered. Exists: ${docSnap.exists()}`);
+              if (docSnap.exists()) {
+                const profileData = docSnap.data();
+                console.log(`[FirebaseProvider] Firestore profile data for UID ${firebaseUser.uid} found:`, profileData);
+                setUser({
+                  ...firebaseUser, 
+                  trialEndsAt: profileData.trialEndsAt || undefined,
+                  isSubscribed: profileData.isSubscribed || false,
+                  subscriptionEndsAt: profileData.subscriptionEndsAt || undefined,
+                } as AppUser);
+              } else {
+                setUser({ ...firebaseUser, trialEndsAt: undefined, isSubscribed: false } as AppUser);
+                console.warn(`[FirebaseProvider] User profile NOT FOUND in Firestore for UID: ${firebaseUser.uid}. Using basic auth data.`);
+              }
+              setUserProfileLoading(false);
+            }, 
+            (error) => {
+              console.error(`[FirebaseProvider] Error in onSnapshot for users/${firebaseUser.uid}:`, error);
+              setUser(firebaseUser as AppUser); 
+              setUserProfileLoading(false);
             }
-            console.log(`[FirebaseProvider] Firestore profile data processing complete for UID ${firebaseUser.uid}. Set userProfileLoading to false (path B).`);
-            setUserProfileLoading(false);
-          }, (error) => {
-            console.error(`[FirebaseProvider] Error fetching user profile from Firestore for UID ${firebaseUser.uid}:`, error);
-            setUser(firebaseUser as AppUser); // Fallback to basic auth user info on error
-            console.log(`[FirebaseProvider] Firestore profile data error for UID ${firebaseUser.uid}. Set userProfileLoading to false (path C).`);
-            setUserProfileLoading(false);
-          });
-          // This unsubscribeSnapshot can be returned by useEffect if firebaseUser changes,
-          // but onAuthStateChanged's main unsubscribe handles overall cleanup.
+          );
+          // This inner unsubscribe will be called if the auth state changes again or on component unmount
+          return () => {
+            console.log(`[FirebaseProvider] Unsubscribing from Firestore onSnapshot for UID: ${firebaseUser.uid}`);
+            unsubscribeSnapshot();
+          };
         }
       } else {
-        // No firebaseUser (logged out)
         setUser(null);
-        console.log(`[FirebaseProvider] No firebaseUser. Set user to null. Set userProfileLoading to false (path D).`);
-        setUserProfileLoading(false); // No profile to load if no user
+        setUserProfileLoading(false);
+        console.log(`[FirebaseProvider] No user. Set user to null, userProfileLoading to false.`);
       }
-      
-      console.log(`[FirebaseProvider] Auth state processing finished for current change. Set auth loading (loading) to false.`);
-      setLoading(false); // Auth state processing is complete for this event
+      setLoading(false);
+      console.log(`[FirebaseProvider] Auth state processing finished. Auth loading: ${false}, Profile loading: ${userProfileLoading}`);
     });
 
-    // Cleanup subscription on component unmount
     return () => {
-      console.log("[FirebaseProvider] Unsubscribing from onAuthStateChanged.");
+      console.log("[FirebaseProvider] Cleaning up. Unsubscribing from onAuthStateChanged.");
       unsubscribeAuth();
-    }
+      // Optionally, you might want to disable network or terminate Firestore if the provider unmounts,
+      // though this is usually not necessary for typical web app lifecycles.
+      // if (db) {
+      //   console.log("[FirebaseProvider] Attempting to disable Firestore network on cleanup.");
+      //   disableNetwork(db).catch(err => console.error("Error disabling network", err));
+      //   // terminate(db).catch(err => console.error("Error terminating Firestore", err)); // Use with caution
+      // }
+    };
   }, []);
 
 
