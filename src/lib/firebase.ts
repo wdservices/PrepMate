@@ -15,6 +15,7 @@ const firebaseConfig: FirebaseOptions = {
 
 // Keys considered essential for a basic Firebase App initialization, especially for Auth.
 const CRITICAL_CONFIG_KEYS: (keyof FirebaseOptions)[] = ['apiKey', 'authDomain', 'projectId', 'appId'];
+const FIREBASE_DATABASE_ID = "prepmatedataupload"; // Explicitly define the database ID
 
 let allCriticalConfigsPresent = true;
 const missingOrPlaceholderCriticalKeys: string[] = [];
@@ -40,9 +41,11 @@ let db: Firestore | null = null;
 if (typeof window !== 'undefined') {
   console.log("Firebase Initialization Check (Client-side):");
   console.log("  Attempting to use environment variables for Firebase config.");
-  console.log("  Critical Keys Present & Valid:", presentCriticalKeys);
+  console.log("  Target Firebase Project ID from .env:", firebaseConfig.projectId);
+  console.log("  Target Firestore Database ID:", FIREBASE_DATABASE_ID);
+  console.log("  Critical Config Keys Present & Valid in .env:", presentCriticalKeys);
   if (missingOrPlaceholderCriticalKeys.length > 0) {
-    console.error("  CRITICAL Missing/Placeholder Firebase Config Keys:", missingOrPlaceholderCriticalKeys);
+    console.error("  CRITICAL Missing/Placeholder Firebase Config Keys in .env:", missingOrPlaceholderCriticalKeys);
   }
 }
 
@@ -56,12 +59,13 @@ if (allCriticalConfigsPresent) {
     }
     app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
     auth = getAuth(app);
-    db = getFirestore(app);
+    // Explicitly connect to the named database instance
+    db = getFirestore(app, FIREBASE_DATABASE_ID); 
 
     if (typeof window === 'undefined') {
-      console.log("Firebase SDK initialized successfully on the server (or during build). Auth and DB services should be available.");
+      console.log(`Firebase SDK initialized successfully on the server (or during build). Auth and DB (ID: ${FIREBASE_DATABASE_ID}) services should be available for project ${firebaseConfig.projectId}.`);
     } else {
-      console.log("Firebase SDK initialized successfully on the client. Auth and DB services should be available.");
+      console.log(`Firebase SDK initialized successfully on the client. Auth and DB (ID: ${FIREBASE_DATABASE_ID}) services should be available for project ${firebaseConfig.projectId}.`);
     }
   } catch (error: any) {
     const errorMsg = `CRITICAL: Firebase SDK initialization FAILED: ${error.message || error.toString()}`;
@@ -70,6 +74,7 @@ if (allCriticalConfigsPresent) {
         authDomain: firebaseConfig.authDomain && !firebaseConfig.authDomain.includes("YOUR_ACTUAL_") ? 'SET_OK' : 'NOT_SET_OR_EMPTY_OR_PLACEHOLDER',
         projectId: firebaseConfig.projectId && !firebaseConfig.projectId.includes("YOUR_ACTUAL_") ? 'SET_OK' : 'NOT_SET_OR_EMPTY_OR_PLACEHOLDER',
         appId: firebaseConfig.appId && !firebaseConfig.appId.includes("YOUR_ACTUAL_") ? 'SET_OK' : 'NOT_SET_OR_EMPTY_OR_PLACEHOLDER',
+        databaseId: FIREBASE_DATABASE_ID,
       };
 
     if (typeof window === 'undefined') {
