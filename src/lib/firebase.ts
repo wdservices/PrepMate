@@ -13,11 +13,9 @@ const firebaseConfig: FirebaseOptions = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Keys considered essential for a basic Firebase App initialization, especially for Auth.
 const CRITICAL_CONFIG_KEYS: (keyof FirebaseOptions)[] = ['apiKey', 'authDomain', 'projectId', 'appId'];
-// For this reversion, we will connect to the (default) database.
-// If you intend to use a named database for 'prepmate-c1loy', specify its ID here.
-const FIREBASE_DATABASE_ID = "(default)"; 
+// This is the named database ID you confirmed for the 'prepmate-nrnik' project
+const FIREBASE_DATABASE_ID = "prepmatedataupload"; 
 
 let allCriticalConfigsPresent = true;
 const missingOrPlaceholderCriticalKeys: string[] = [];
@@ -25,11 +23,10 @@ const presentCriticalKeys: Record<string, string> = {};
 
 for (const key of CRITICAL_CONFIG_KEYS) {
   const value = firebaseConfig[key];
-  // Construct the expected environment variable name for logging
   const envVarName = `NEXT_PUBLIC_FIREBASE_${key.replace(/([A-Z])/g, (match) => `_${match}`).toUpperCase()}`;
 
   if (typeof value === 'string' && value && !value.includes("YOUR_ACTUAL_") && !value.includes("_HERE") && value.trim() !== "") {
-    presentCriticalKeys[envVarName] = value; // Store the value if present and valid
+    presentCriticalKeys[envVarName] = value;
   } else {
     allCriticalConfigsPresent = false;
     missingOrPlaceholderCriticalKeys.push(`${envVarName} (Value: ${value === undefined ? 'undefined' : `"${value}"`})`);
@@ -44,34 +41,29 @@ if (typeof window !== 'undefined') {
   console.log("Firebase Initialization Check (Client-side):");
   console.log("  Attempting to use environment variables for Firebase config.");
   console.log("  Target Firebase Project ID from .env:", firebaseConfig.projectId);
-  if (FIREBASE_DATABASE_ID === "(default)") {
-    console.log("  Target Firestore Database ID: (default)");
-  } else {
-    console.log("  Target Firestore Database ID:", FIREBASE_DATABASE_ID);
-  }
+  console.log("  Target Firestore Database ID:", FIREBASE_DATABASE_ID);
   console.log("  Critical Config Keys Present & Valid in .env:", presentCriticalKeys);
   if (missingOrPlaceholderCriticalKeys.length > 0) {
     console.error("  CRITICAL Missing/Placeholder Firebase Config Keys in .env:", missingOrPlaceholderCriticalKeys);
   }
 }
 
-
 if (allCriticalConfigsPresent) {
   try {
     if (typeof window === 'undefined') {
-      console.log("Attempting to initialize Firebase (server-side/build)...");
+      // console.log("Attempting to initialize Firebase (server-side/build)...");
     } else {
-      console.log("Attempting to initialize Firebase on the client...");
+      // console.log("Attempting to initialize Firebase on the client...");
     }
     app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
     auth = getAuth(app);
-    // Connect to the (default) database instance, or a named one if FIREBASE_DATABASE_ID is set to something else.
+    
     if (FIREBASE_DATABASE_ID && FIREBASE_DATABASE_ID !== "(default)") {
         db = getFirestore(app, FIREBASE_DATABASE_ID);
-        console.log(`Firebase SDK initialized. Using NAMED Firestore database: ${FIREBASE_DATABASE_ID} for project ${firebaseConfig.projectId}.`);
+        console.log(`Firebase SDK initialized. Using NAMED Firestore database: '${FIREBASE_DATABASE_ID}' for project '${firebaseConfig.projectId}'.`);
     } else {
-        db = getFirestore(app); // Connects to the (default) database
-        console.log(`Firebase SDK initialized. Using DEFAULT Firestore database for project ${firebaseConfig.projectId}.`);
+        db = getFirestore(app); 
+        console.log(`Firebase SDK initialized. Using DEFAULT Firestore database for project '${firebaseConfig.projectId}'.`);
     }
 
     if (typeof window === 'undefined') {
@@ -119,7 +111,6 @@ if (allCriticalConfigsPresent) {
      Critical keys checked: ${CRITICAL_CONFIG_KEYS.join(', ')}.
      Please check your .env file. Auth and DB services will be unavailable.`);
   }
-  // app, auth, db remain null by default if critical configs are not present
 }
 
 export { app, auth, db };
