@@ -1,4 +1,3 @@
-// This file is no longer needed as its content has been moved to 
-// src/components/admin/question-upload-form.tsx and integrated into
-// src/app/(app)/admin/page.tsx.
-// It can be safely deleted.
+
+// This file is not used as its functionality has been integrated into the main Admin Dashboard page.
+// It has been removed as per the user's request to clean up unwanted scripts after Firestore deletion.

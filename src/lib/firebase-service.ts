@@ -3,8 +3,11 @@ import { db } from '@/lib/firebase';
 import { collection, getDocs, query, orderBy, doc, getDoc, where } from 'firebase/firestore';
 import type { FirestoreExamData, FirestoreSubjectData, Question } from '@/types';
 
+const FIRESTORE_DELETED_WARNING = "[firebase-service] Firestore database is presumed deleted. This function will likely return no data or an error.";
+
 // Fetches top-level exam documents
 export async function getExamsFromFirestore(): Promise<FirestoreExamData[]> {
+  console.warn(FIRESTORE_DELETED_WARNING);
   console.log("[firebase-service] Attempting to fetch exams from Firestore...");
   if (!db) {
     console.error("[firebase-service] Firestore (db) is not initialized. Cannot fetch exams.");
@@ -12,7 +15,7 @@ export async function getExamsFromFirestore(): Promise<FirestoreExamData[]> {
   }
   try {
     const examsCollection = collection(db, 'exams');
-    const examsQuery = query(examsCollection, orderBy('order', 'asc')); // Assuming 'order' field exists
+    const examsQuery = query(examsCollection, orderBy('order', 'asc')); 
     console.log("[firebase-service] Executing exams query...");
     const querySnapshot = await getDocs(examsQuery);
     
@@ -44,6 +47,7 @@ export async function getExamsFromFirestore(): Promise<FirestoreExamData[]> {
 
 // Fetches a single exam document by ID
 export async function getExamByIdFromFirestore(examId: string): Promise<FirestoreExamData | null> {
+  console.warn(FIRESTORE_DELETED_WARNING);
   console.log(`[firebase-service] Attempting to fetch exam by ID: ${examId}`);
   if (!db) {
     console.error("[firebase-service] Firestore (db) is not initialized. Cannot fetch exam.");
@@ -85,6 +89,7 @@ const mapToSubject = (docId: string, data: any): FirestoreSubjectData => {
 };
 
 export async function getSubjectsForExamFromFirestore(examId: string): Promise<FirestoreSubjectData[]> {
+  console.warn(FIRESTORE_DELETED_WARNING);
   console.log(`[firebase-service] Attempting to fetch subjects for exam ID: ${examId}`);
   if (!db) {
     console.error("[firebase-service] Firestore (db) is not initialized. Cannot fetch subjects.");
@@ -92,7 +97,7 @@ export async function getSubjectsForExamFromFirestore(examId: string): Promise<F
   }
   try {
     const subjectsCollectionRef = collection(db, `exams/${examId}/subjects`);
-    const subjectsQuery = query(subjectsCollectionRef, orderBy('name', 'asc')); // Or some other order field
+    const subjectsQuery = query(subjectsCollectionRef, orderBy('name', 'asc'));
     const querySnapshot = await getDocs(subjectsQuery);
 
     if (querySnapshot.empty) {
@@ -116,6 +121,7 @@ export async function getSubjectsForExamFromFirestore(examId: string): Promise<F
 
 // Fetches a single subject document by exam ID and subject ID
 export async function getSubjectByIdFromFirestore(examId: string, subjectId: string): Promise<FirestoreSubjectData | null> {
+  console.warn(FIRESTORE_DELETED_WARNING);
   console.log(`[firebase-service] Attempting to fetch subject ID: ${subjectId} for exam ID: ${examId}`);
   if (!db) {
     console.error("[firebase-service] Firestore (db) is not initialized. Cannot fetch subject.");
@@ -152,6 +158,7 @@ const mapToQuestion = (docId: string, data: any): Question => {
 };
 
 export async function getQuestionsForSubjectYearFromFirestore(examId: string, subjectId: string, year: number): Promise<Question[]> {
+  console.warn(FIRESTORE_DELETED_WARNING);
   console.log(`[firebase-service] Attempting to fetch questions for exam: ${examId}, subject: ${subjectId}, year: ${year}`);
    if (!db) {
     console.error("[firebase-service] Firestore (db) is not initialized. Cannot fetch questions.");

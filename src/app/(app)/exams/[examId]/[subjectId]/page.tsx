@@ -1,19 +1,14 @@
 
-"use client"; // Needs to be client component for hooks like useParams
+"use client"; 
 
 import Link from 'next/link';
-import { useParams, notFound, useRouter } from 'next/navigation'; // Using useRouter for potential redirects
+import { useParams, notFound, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CalendarDays, ChevronLeft, Loader2, AlertTriangle } from 'lucide-react';
-import { getSubjectByIdFromFirestore, getExamByIdFromFirestore } from '@/lib/firebase-service';
-import type { FirestoreSubjectData, FirestoreExamData } from '@/types';
-// import type { Metadata } from 'next'; // Metadata generation moved to dynamic function
-
-// Dynamic metadata generation is not directly supported in client components in the same way.
-// We can set document.title in useEffect.
-// For full SSR metadata, this page would need to be a Server Component or use generateMetadata from parent.
+import { getExamById, getSubjectById } from '@/data/mock-data'; // Use mock data functions
+import type { Exam, Subject as AppSubject } from '@/types'; // Renamed Subject to AppSubject
 
 export default function SubjectYearsPage() {
   const params = useParams();
@@ -21,13 +16,13 @@ export default function SubjectYearsPage() {
   const examId = params.examId as string;
   const subjectId = params.subjectId as string;
 
-  const [exam, setExam] = useState<FirestoreExamData | null>(null);
-  const [subject, setSubject] = useState<FirestoreSubjectData | null>(null);
+  const [exam, setExam] = useState<Exam | null>(null); // Use Exam type
+  const [subject, setSubject] = useState<AppSubject | null>(null); // Use AppSubject type
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function loadData() {
+    function loadData() {
       if (!examId || !subjectId) {
         setError("Exam ID or Subject ID is missing.");
         setIsLoading(false);
@@ -36,23 +31,21 @@ export default function SubjectYearsPage() {
       setIsLoading(true);
       setError(null);
       try {
-        console.log(`[SubjectYearsPage] Fetching exam (${examId}) and subject (${subjectId}) details...`);
-        const [examData, subjectData] = await Promise.all([
-          getExamByIdFromFirestore(examId),
-          getSubjectByIdFromFirestore(examId, subjectId)
-        ]);
+        console.log(`[SubjectYearsPage] Fetching exam (${examId}) and subject (${subjectId}) details from mock data...`);
+        const examData = getExamById(examId);
+        const subjectData = examData ? getSubjectById(examId, subjectId) : null; // getSubjectById might need exam context if it filters from exam.subjects
 
         if (!examData) {
-          console.warn(`[SubjectYearsPage] Exam with ID ${examId} not found.`);
-          setError(`Exam "${examId}" not found.`);
+          console.warn(`[SubjectYearsPage] Exam with ID ${examId} not found in mock data.`);
+          setError(`Exam "${examId}" not found in mock data.`);
         }
         if (!subjectData) {
-          console.warn(`[SubjectYearsPage] Subject with ID ${subjectId} for exam ${examId} not found.`);
-          setError(prevError => prevError ? `${prevError} Subject "${subjectId}" not found.` : `Subject "${subjectId}" not found.`);
+          console.warn(`[SubjectYearsPage] Subject with ID ${subjectId} for exam ${examId} not found in mock data.`);
+          setError(prevError => prevError ? `${prevError} Subject "${subjectId}" not found in mock data.` : `Subject "${subjectId}" not found in mock data.`);
         }
         
-        setExam(examData);
-        setSubject(subjectData);
+        setExam(examData || null);
+        setSubject(subjectData || null);
 
         if (examData && subjectData) {
           document.title = `Years for ${subjectData.name} - ${examData.name} | PrepMate`;
@@ -63,8 +56,8 @@ export default function SubjectYearsPage() {
         }
 
       } catch (err: any) {
-        console.error("[SubjectYearsPage] Error loading exam or subject data:", err);
-        setError("Failed to load page data. Please try again.");
+        console.error("[SubjectYearsPage] Error loading exam or subject data from mock data:", err);
+        setError("Failed to load page data from mock data. Please try again.");
       } finally {
         setIsLoading(false);
       }
@@ -77,7 +70,7 @@ export default function SubjectYearsPage() {
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] text-center p-6">
         <Loader2 className="h-16 w-16 text-primary animate-spin mb-6" />
         <h2 className="text-3xl font-semibold mb-3">Loading Available Years...</h2>
-        <p className="text-muted-foreground max-w-md">Fetching details for the selected subject.</p>
+        <p className="text-muted-foreground max-w-md">Fetching details for the selected subject from mock data.</p>
       </div>
     );
   }
@@ -99,9 +92,7 @@ export default function SubjectYearsPage() {
   }
   
   if (!exam || !subject) {
-    // This case should ideally be covered by the error state after loading,
-    // but as a fallback if error isn't set but data is null.
-    return notFound(); // Use Next.js notFound for clearer 404.
+    return notFound(); 
   }
 
   return (
@@ -116,7 +107,7 @@ export default function SubjectYearsPage() {
           {subject.name} - {exam.name}
         </h1>
         <p className="mt-2 text-lg text-muted-foreground">
-          Select a year to view past questions.
+          Select a year to view past questions (from mock data).
         </p>
       </div>
 
@@ -143,8 +134,8 @@ export default function SubjectYearsPage() {
       ) : (
          <div className="text-center py-10 bg-card rounded-lg shadow">
           <CalendarDays className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
-          <p className="text-xl text-muted-foreground">No past questions available for {subject.name} yet.</p>
-          <p className="text-sm text-muted-foreground mt-2">Available years may not be configured for this subject in Firestore.</p>
+          <p className="text-xl text-muted-foreground">No past questions available for {subject.name} yet in mock data.</p>
+          <p className="text-sm text-muted-foreground mt-2">Available years may not be configured for this subject in the mock data file.</p>
         </div>
       )}
     </div>

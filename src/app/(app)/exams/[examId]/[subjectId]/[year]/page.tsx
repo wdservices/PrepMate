@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { QuestionDisplay } from "@/components/questions/question-display";
 import { AiAssistantButton } from "@/components/ai/ai-assistant-button";
 import { AiAssistantChat } from "@/components/ai/ai-assistant-chat";
-import { getQuestionsForSubjectYearFromFirestore, getSubjectByIdFromFirestore, getExamByIdFromFirestore } from '@/lib/firebase-service';
-import type { Question, FirestoreSubjectData, FirestoreExamData } from "@/types";
+import { getQuestions, getExamById, getSubjectById } from '@/data/mock-data'; // Use mock data functions
+import type { Question, Subject as AppSubject, Exam } from "@/types"; // Renamed Subject to AppSubject
 import { ChevronLeft, AlertTriangle, Home, ListChecks, Loader2 } from 'lucide-react';
 
 export default function SubjectYearQuestionsPage() {
@@ -21,8 +21,8 @@ export default function SubjectYearQuestionsPage() {
   const yearString = params.year as string;
   
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [exam, setExam] = useState<FirestoreExamData | null>(null);
-  const [subject, setSubject] = useState<FirestoreSubjectData | null>(null);
+  const [exam, setExam] = useState<Exam | null>(null); // Use Exam type
+  const [subject, setSubject] = useState<AppSubject | null>(null); // Use AppSubject type
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isLoadingPage, setIsLoadingPage] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +30,7 @@ export default function SubjectYearQuestionsPage() {
 
 
   useEffect(() => {
-    async function loadData() {
+    function loadData() {
       if (!examId || !subjectId || !yearString || isNaN(year)) {
         setError("Invalid exam, subject, or year parameters.");
         setIsLoadingPage(false);
@@ -39,15 +39,13 @@ export default function SubjectYearQuestionsPage() {
       setIsLoadingPage(true);
       setError(null);
       try {
-        console.log(`[SubjectYearQuestionsPage] Fetching data for Exam: ${examId}, Subject: ${subjectId}, Year: ${year}`);
-        const [examData, subjectData, questionsData] = await Promise.all([
-          getExamByIdFromFirestore(examId),
-          getSubjectByIdFromFirestore(examId, subjectId),
-          getQuestionsForSubjectYearFromFirestore(examId, subjectId, year)
-        ]);
+        console.log(`[SubjectYearQuestionsPage] Fetching data for Exam: ${examId}, Subject: ${subjectId}, Year: ${year} from mock data`);
+        const examData = getExamById(examId);
+        const subjectData = examData ? getSubjectById(examId, subjectId) : null;
+        const questionsData = getQuestions(examId, subjectId, year);
 
-        if (!examData) setError(prev => prev ? `${prev} Exam not found.` : "Exam not found.");
-        if (!subjectData) setError(prev => prev ? `${prev} Subject not found.` : "Subject not found.");
+        if (!examData) setError(prev => prev ? `${prev} Exam not found in mock data.` : "Exam not found in mock data.");
+        if (!subjectData) setError(prev => prev ? `${prev} Subject not found in mock data.` : "Subject not found in mock data.");
         
         setExam(examData);
         setSubject(subjectData);
@@ -60,8 +58,8 @@ export default function SubjectYearQuestionsPage() {
         }
 
       } catch (err: any) {
-        console.error("[SubjectYearQuestionsPage] Error loading page data:", err);
-        setError("Failed to load questions or page details. Please try again.");
+        console.error("[SubjectYearQuestionsPage] Error loading page data from mock data:", err);
+        setError("Failed to load questions or page details from mock data. Please try again.");
       } finally {
         setIsLoadingPage(false);
       }
@@ -76,7 +74,7 @@ export default function SubjectYearQuestionsPage() {
         <Loader2 className="h-16 w-16 text-primary animate-spin mb-6" />
         <h2 className="text-3xl font-semibold mb-3">Loading Questions...</h2>
         <p className="text-muted-foreground max-w-md">
-          Please wait while we fetch the questions for {subject?.name || 'this subject'} ({yearString || 'selected year'}).
+          Please wait while we fetch the questions for {subject?.name || 'this subject'} ({yearString || 'selected year'}) from mock data.
         </p>
       </div>
     );
@@ -103,13 +101,12 @@ export default function SubjectYearQuestionsPage() {
   }
 
   if (!exam || !subject) {
-    // This should be caught by the error state after loading, but as a fallback
     return (
      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] text-center p-6">
        <AlertTriangle className="h-16 w-16 text-destructive mb-6" />
        <h2 className="text-3xl font-semibold mb-3">Exam or Subject Details Missing</h2>
        <p className="text-muted-foreground mb-6 max-w-md">
-         Could not load necessary exam or subject information.
+         Could not load necessary exam or subject information from mock data.
        </p>
        <Button asChild>
            <Link href="/dashboard"> Return to Dashboard</Link>
@@ -119,14 +116,13 @@ export default function SubjectYearQuestionsPage() {
  }
 
 
-  if (questions.length === 0) { // Check after loading and no error
+  if (questions.length === 0) { 
     return (
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] text-center p-6">
         <AlertTriangle className="h-16 w-16 text-muted-foreground mb-6" />
         <h2 className="text-3xl font-semibold mb-3">No Questions Found</h2>
         <p className="text-muted-foreground mb-6 max-w-md">
-          We couldn't find any questions for {subject.name} ({yearString}) for the {exam.name} exam in our database.
-          This might be an issue with our data or this year might not be available yet.
+          We couldn't find any questions for {subject.name} ({yearString}) for the {exam.name} exam in our mock data.
         </p>
         <div className="flex gap-4 mt-6">
           <Button variant="outline" onClick={() => router.back()}>
@@ -155,7 +151,7 @@ export default function SubjectYearQuestionsPage() {
           {subject.name} - {exam.name} ({yearString})
         </h1>
         <p className="text-lg text-muted-foreground ml-12">
-          Showing all {questions.length} questions for this selection. Answer them in any order.
+          Showing all {questions.length} questions for this selection (from mock data). Answer them in any order.
         </p>
       </div>
 
@@ -164,7 +160,7 @@ export default function SubjectYearQuestionsPage() {
           <QuestionDisplay
             key={question.id}
             question={question}
-            subjectName={subject!.name} // Subject is guaranteed to be non-null here
+            subjectName={subject!.name} 
             questionNumber={index + 1} 
           />
         ))}
@@ -174,8 +170,8 @@ export default function SubjectYearQuestionsPage() {
       <AiAssistantChat
         isOpen={isChatOpen}
         onOpenChange={setIsChatOpen}
-        currentQuestionContext={null} // Can be enhanced to pass current question
-        subjectName={subject!.name} // Subject is guaranteed to be non-null here
+        currentQuestionContext={null} 
+        subjectName={subject!.name} 
       />
     </div>
   );
