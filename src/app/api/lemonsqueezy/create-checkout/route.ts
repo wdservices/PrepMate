@@ -8,6 +8,7 @@ export async function POST(request: NextRequest) {
     const { 
       storeId, 
       variantId,
+      customPrice, // New: optional custom price in smallest currency unit (e.g., cents)
       customerName, // Optional: pass if available
       customerEmail, // Optional: pass if available
       redirectUrl // Optional: custom redirect URL after payment
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest) {
         type: "checkouts",
         attributes: {
           checkout_options: {
-            embed: false, // Set to true if you want to embed the checkout
+            embed: false,
             // media: true,
             // logo: true,
             // desc: true,
@@ -43,21 +44,8 @@ export async function POST(request: NextRequest) {
             // dark: false,
             // subscription_preview: true,
           },
-          checkout_data: {
-            // email: customerEmail || undefined, // Optional: Prefill email
-            // name: customerName || undefined, // Optional: Prefill name
-            // custom: {
-            //   user_id: "YOUR_USER_ID", // Example custom data
-            // },
-          },
-          // product_options: {
-          //  enabled_variants: [parseInt(variantId)], // If you only want to show specific variants
-          //  redirect_url: redirectUrl || `${process.env.NEXT_PUBLIC_APP_URL}/payment-status/lemonsqueezy`, // Your success URL
-          //  receipt_link_url: `${process.env.NEXT_PUBLIC_APP_URL}/orders/{ORDER_ID}`,
-          //  receipt_button_text: "Go to your account",
-          //  receipt_thank_you_note: "Thank you for your purchase!",
-          // },
-          // expires_at: null, // Set an expiry date for the checkout link if needed
+          // checkout_data will be built conditionally below
+          // product_options will be built conditionally below
         },
         relationships: {
           store: {
@@ -76,17 +64,40 @@ export async function POST(request: NextRequest) {
       },
     };
     
+    if (customPrice && typeof customPrice === 'number' && customPrice > 0) {
+      payload.data.attributes.custom_price = customPrice;
+      console.log(`[API /lemonsqueezy/create-checkout] Using custom price: ${customPrice}`);
+    }
+
+    // Initialize checkout_data and product_options if they will be populated
+    let checkoutDataExists = false;
+    let productOptionsExists = false;
+
+    if (customerEmail || customerName) {
+      payload.data.attributes.checkout_data = {};
+      checkoutDataExists = true;
+    }
     if (redirectUrl) {
-        if (!payload.data.attributes.product_options) payload.data.attributes.product_options = {};
+      payload.data.attributes.product_options = {};
+      productOptionsExists = true;
+    }
+
+    if (redirectUrl) {
         payload.data.attributes.product_options.redirect_url = redirectUrl;
     }
     if (customerEmail) {
-        if (!payload.data.attributes.checkout_data) payload.data.attributes.checkout_data = {};
         payload.data.attributes.checkout_data.email = customerEmail;
     }
-     if (customerName) {
-        if (!payload.data.attributes.checkout_data) payload.data.attributes.checkout_data = {};
+    if (customerName) {
         payload.data.attributes.checkout_data.name = customerName;
+    }
+    
+    // Clean up empty objects if not populated
+    if (checkoutDataExists && Object.keys(payload.data.attributes.checkout_data).length === 0) {
+        delete payload.data.attributes.checkout_data;
+    }
+    if (productOptionsExists && Object.keys(payload.data.attributes.product_options).length === 0) {
+        delete payload.data.attributes.product_options;
     }
 
 
