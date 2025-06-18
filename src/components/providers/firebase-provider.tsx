@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import type { User as FirebaseUser } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth as firebaseAuthService, db as dbFromFirebaseTs } from "@/lib/firebase"; 
-import { doc, getDoc, onSnapshot, enableNetwork, disableNetwork, terminate, getFirestore, Firestore } from "firebase/firestore";
+// Removed Firestore specific imports like doc, getDoc, onSnapshot, enableNetwork, disableNetwork, terminate, getFirestore, Firestore
 import type { AppUser } from "@/types";
 
 interface FirebaseContextProps {
@@ -20,13 +20,12 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AppUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [userProfileLoading, setUserProfileLoading] = useState(true); 
-  const [localDbInstance, setLocalDbInstance] = useState<Firestore | null>(dbFromFirebaseTs);
-
+  // const [localDbInstance, setLocalDbInstance] = useState<Firestore | null>(dbFromFirebaseTs); // Firestore instance no longer actively managed here
 
   useEffect(() => {
     console.log("[FirebaseProvider] useEffect triggered. Browser online:", navigator.onLine);
-    console.log("[FirebaseProvider] Initial db object from firebase.ts:", dbFromFirebaseTs ? "dbFromFirebaseTs object exists" : "dbFromFirebaseTs object is NULL");
     console.log("[FirebaseProvider] Initial auth service from firebase.ts:", firebaseAuthService ? "auth service exists" : "auth service is NULL");
+    console.log("[FirebaseProvider] Firestore (db) from firebase.ts is expected to be non-functional as DB is deleted.");
 
     if (!firebaseAuthService) {
       console.error("[FirebaseProvider] CRITICAL: Firebase Auth service is NOT available. Auth features will be disabled.");
@@ -34,46 +33,9 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
       setUserProfileLoading(false);
       return;
     }
-
-    let currentDb = dbFromFirebaseTs;
-    if (!currentDb) {
-        console.warn("[FirebaseProvider] dbFromFirebaseTs is NULL. Attempting to get a fresh Firestore instance via getFirestore().");
-        try {
-            currentDb = getFirestore(); 
-            if (currentDb) {
-                console.log("[FirebaseProvider] Successfully got a fresh Firestore instance. This will be used for network operations if Firestore is re-enabled.");
-                setLocalDbInstance(currentDb); 
-            } else {
-                console.error("[FirebaseProvider] getFirestore() also returned null. Firestore is not available.");
-            }
-        } catch(e) {
-            console.error("[FirebaseProvider] Error calling getFirestore():", e);
-            currentDb = null; 
-        }
-    } else {
-      setLocalDbInstance(currentDb);
-    }
     
-    // Attempt to enable network only if db instance is valid
-    // This might still log errors if Firestore backend is deleted, but won't prevent Auth.
-    if (currentDb) {
-      console.log("[FirebaseProvider] Valid db instance present. Attempting to enable Firestore network (may fail if DB deleted)...");
-      enableNetwork(currentDb)
-        .then(() => {
-          console.log("[FirebaseProvider] Firestore network explicitly enabled (or was already enabled).");
-        })
-        .catch((error) => {
-          console.warn("[FirebaseProvider] Warning: Error explicitly enabling Firestore network (this is expected if DB was deleted):", error.code, error.message);
-          if (error.code === 'failed-precondition' && error.message.includes("Failed to obtain exclusive WebAssembly build lock")) {
-            console.warn("[FirebaseProvider] Firestore 'failed-precondition' (WebAssembly lock) often means multiple Firestore instances are conflicting or SDK is not fully loaded.");
-          } else if (error.code === 'unimplemented') {
-            console.warn("[FirebaseProvider] Firestore 'unimplemented' error likely means the Firestore database doesn't exist or isn't configured for this project ID.");
-          }
-        });
-    } else {
-      console.warn("[FirebaseProvider] No valid Firestore 'db' instance available. Firestore operations will fail (expected if DB deleted).");
-    }
-
+    // Firestore network management (enableNetwork, disableNetwork) removed as Firestore is deleted.
+    // If dbFromFirebaseTs was valid, it would still exist, but operations on it would fail.
 
     console.log("[FirebaseProvider] Initializing onAuthStateChanged listener...");
     const unsubscribeAuth = onAuthStateChanged(firebaseAuthService, async (firebaseUser) => {
@@ -107,14 +69,8 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     return () => {
       console.log("[FirebaseProvider] Cleaning up: Unsubscribing from onAuthStateChanged.");
       unsubscribeAuth();
-      const dbToDisable = localDbInstance || dbFromFirebaseTs;
-      if (dbToDisable) {
-        disableNetwork(dbToDisable)
-          .then(() => console.log("[FirebaseProvider] Firestore network explicitly disabled on cleanup (attempted)."))
-          .catch(err => console.warn("[FirebaseProvider] Warning: Error disabling Firestore network on cleanup (expected if DB was deleted):", err.code, err.message));
-      } else {
-         console.warn("[FirebaseProvider] No valid db instance was available during cleanup to attempt disabling network.");
-      }
+      // No Firestore network disable needed.
+      console.warn("[FirebaseProvider] Firestore network disable call skipped as Firestore is deleted.");
     };
   }, []); 
 
@@ -133,3 +89,4 @@ export const useAuth = () => {
   }
   return context;
 };
+
