@@ -46,6 +46,11 @@ const loginSchema = z.object({
 
 const forgotPasswordSchema = z.object(formSchemaBase);
 
+// Use a single, comprehensive type for the form values based on the sign-up schema,
+// which includes all possible fields. This ensures all fields are controlled from the start.
+type FormValues = z.infer<typeof signUpSchema>;
+
+
 type AuthFormProps = {
   initialMode?: "login" | "signup";
 };
@@ -75,22 +80,23 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
     authMode === "login" ? loginSchema :
     forgotPasswordSchema;
 
-  type FormValues = z.infer<typeof currentSchema>;
-
   const form = useForm<FormValues>({
     resolver: zodResolver(currentSchema),
-    defaultValues:
-      authMode === "signup" ? { name: "", email: "", password: "" } :
-      authMode === "login" ? { email: "", password: "" } :
-      { email: ""},
+    // Initialize all possible form fields with a default value to make them controlled.
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
   });
 
+  // Reset the form when the auth mode changes to clear previous inputs.
   useEffect(() => {
-    form.reset(
-      authMode === "signup" ? { name: "", email: "", password: "" } :
-      authMode === "login" ? { email: "", password: "" } :
-      { email: ""}
-    );
+    form.reset({
+      name: "",
+      email: "",
+      password: "",
+    });
     setShowPassword(false);
   }, [authMode, form]);
 
