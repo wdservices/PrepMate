@@ -148,11 +148,11 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
       let errorMessage = error.message || "An unexpected error occurred.";
       if (error.code === 'auth/network-request-failed') {
         errorMessage = "A network error occurred. Please check your internet connection and ensure this app's domain is authorized in your Firebase project settings.";
-      } else if (error.code === 'auth/invalid-credential') {
+      } else if (error.code === 'auth/invalid-credential' && authMode === 'login') {
         errorMessage = "Invalid email or password. Please try again.";
-      } else if (error.code === 'auth/email-already-in-use') {
+      } else if (error.code === 'auth/email-already-in-use' && authMode === 'signup') {
         errorMessage = "This email is already registered. Please try logging in.";
-      } else if (error.code === 'auth/user-not-found') {
+      } else if (error.code === 'auth/user-not-found' && (authMode === 'login' || authMode === 'forgotPassword')) {
         errorMessage = "No account found with this email. Please sign up or check your email.";
       } else if (error.code === 'auth/too-many-requests') {
         errorMessage = "Too many login attempts. Please try again later or reset your password.";
