@@ -21,7 +21,7 @@ const firebaseConfig: FirebaseOptions = {
 // Initialize Firebase
 let app: FirebaseApp | null = null;
 let auth: Auth | null = null;
-let db: Firestore | null = null; // db is kept for type consistency but operations will fail
+let db: Firestore | null = null; 
 
 try {
     // Basic check to ensure config is not empty
