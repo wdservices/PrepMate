@@ -4,8 +4,7 @@ import type { ReactNode } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import type { User as FirebaseUser } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth as firebaseAuthService, db as dbFromFirebaseTs } from "@/lib/firebase"; 
-// Removed Firestore specific imports like doc, getDoc, onSnapshot, enableNetwork, disableNetwork, terminate, getFirestore, Firestore
+import { auth as firebaseAuthService } from "@/lib/firebase"; 
 import type { AppUser } from "@/types";
 
 interface FirebaseContextProps {
@@ -20,12 +19,10 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AppUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [userProfileLoading, setUserProfileLoading] = useState(true); 
-  // const [localDbInstance, setLocalDbInstance] = useState<Firestore | null>(dbFromFirebaseTs); // Firestore instance no longer actively managed here
 
   useEffect(() => {
     console.log("[FirebaseProvider] useEffect triggered. Browser online:", navigator.onLine);
     console.log("[FirebaseProvider] Initial auth service from firebase.ts:", firebaseAuthService ? "auth service exists" : "auth service is NULL");
-    console.log("[FirebaseProvider] Firestore (db) from firebase.ts is expected to be non-functional as DB is deleted.");
 
     if (!firebaseAuthService) {
       console.error("[FirebaseProvider] CRITICAL: Firebase Auth service is NOT available. Auth features will be disabled.");
@@ -33,9 +30,6 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
       setUserProfileLoading(false);
       return;
     }
-    
-    // Firestore network management (enableNetwork, disableNetwork) removed as Firestore is deleted.
-    // If dbFromFirebaseTs was valid, it would still exist, but operations on it would fail.
 
     console.log("[FirebaseProvider] Initializing onAuthStateChanged listener...");
     const unsubscribeAuth = onAuthStateChanged(firebaseAuthService, async (firebaseUser) => {
@@ -69,8 +63,6 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     return () => {
       console.log("[FirebaseProvider] Cleaning up: Unsubscribing from onAuthStateChanged.");
       unsubscribeAuth();
-      // No Firestore network disable needed.
-      console.warn("[FirebaseProvider] Firestore network disable call skipped as Firestore is deleted.");
     };
   }, []); 
 
@@ -89,4 +81,3 @@ export const useAuth = () => {
   }
   return context;
 };
-

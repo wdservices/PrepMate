@@ -2,31 +2,30 @@
 import { initializeApp, getApps, getApp, type FirebaseApp, type FirebaseOptions } from "firebase/app";
 import { getAuth, type Auth } from "firebase/auth";
 
-// Your web app's Firebase configuration is read from environment variables
+// IMPORTANT: The Firebase configuration is hardcoded here to resolve a persistent
+// "auth/api-key-not-valid" error that can occur if environment variables (.env)
+// are not loaded correctly in some development environments.
+// For production, it is highly recommended to move this configuration back into
+// environment variables (e.g., process.env.NEXT_PUBLIC_FIREBASE_API_KEY).
 const firebaseConfig: FirebaseOptions = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  apiKey: "AIzaSyBCWamjKQNslH08io4ovsWykHpYVljwHo8",
+  authDomain: "prepmate-6eb9d.firebaseapp.com",
+  projectId: "prepmate-6eb9d",
+  storageBucket: "prepmate-6eb9d.firebasestorage.app",
+  messagingSenderId: "322875549685",
+  appId: "1:322875549685:web:8b6e70dc551992c753a2bc"
 };
 
 
 // Initialize Firebase
 let app: FirebaseApp | null = null;
 let auth: Auth | null = null;
+// Firestore (db) has been removed as it is no longer used in this project.
 
 try {
-    // Check if all necessary environment variables are set
-    const areAllConfigsPresent = 
-        firebaseConfig.apiKey &&
-        firebaseConfig.authDomain &&
-        firebaseConfig.projectId &&
-        firebaseConfig.appId;
-    
-    if (!areAllConfigsPresent) {
-        throw new Error("One or more critical Firebase environment variables are missing. Check your .env file.");
+    // Basic check to ensure config is not empty
+    if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+        throw new Error("Firebase configuration is missing critical values (apiKey, projectId).");
     }
     
     app = getApps().length ? getApp() : initializeApp(firebaseConfig);
@@ -42,4 +41,5 @@ try {
     auth = null;
 }
 
+// Only exporting app and auth, as db is not used.
 export { app, auth };
