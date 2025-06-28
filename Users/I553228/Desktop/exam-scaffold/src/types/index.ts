@@ -1,4 +1,3 @@
-
 import type { User as FirebaseUser } from "firebase/auth";
 import type { LucideIcon } from "lucide-react";
 import type { Timestamp } from "firebase/firestore";
