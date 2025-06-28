@@ -1,7 +1,7 @@
 
 import { db } from '@/lib/firebase';
 import { 
-  collection, getDocs, query, orderBy, doc, getDoc, where, addDoc, serverTimestamp, setDoc, Timestamp
+  collection, getDocs, query, orderBy, doc, getDoc, where, addDoc, serverTimestamp, setDoc, Timestamp, updateDoc, arrayUnion
 } from 'firebase/firestore';
 import type { FirestoreExamData, FirestoreSubjectData, Question, AppUser } from '@/types';
 
@@ -128,7 +128,8 @@ export async function getQuestionsForSubjectYearFromFirestore(examId: string, su
 }
 
 /**
- * Adds a new question to the specified subject's question collection in Firestore.
+ * Adds a new question to the specified subject's question collection in Firestore
+ * and automatically updates the subject's 'availableYears' array.
  * @param examId The ID of the exam (e.g., 'jamb').
  * @param subjectId The ID of the subject (e.g., 'chemistry').
  * @param questionData The question object to add.
@@ -138,16 +139,27 @@ export async function addQuestionToFirestore(examId: string, subjectId: string, 
     if (!db) {
         throw new Error("Firestore is not initialized.");
     }
+    const questionsCollectionRef = collection(db, `exams/${examId}/subjects/${subjectId}/questions`);
+    const subjectDocRef = doc(db, `exams/${examId}/subjects`, subjectId);
+
     try {
-        const questionsCollectionRef = collection(db, `exams/${examId}/subjects/${subjectId}/questions`);
+        // Step 1: Add the new question document
         const docRef = await addDoc(questionsCollectionRef, {
             ...questionData,
             createdAt: serverTimestamp() // Add a timestamp for tracking
         });
         console.log(`[firebase-service] Question added successfully with ID: ${docRef.id} to ${examId}/${subjectId}`);
+
+        // Step 2: Atomically add the new year to the 'availableYears' array in the subject document.
+        // arrayUnion ensures the year is only added if it's not already present, preventing duplicates.
+        await updateDoc(subjectDocRef, {
+            availableYears: arrayUnion(questionData.year)
+        });
+        console.log(`[firebase-service] Updated availableYears for subject ${subjectId} with year ${questionData.year}.`);
+
         return docRef.id;
     } catch (error) {
-        console.error("[firebase-service] Error adding question to Firestore:", error);
-        throw new Error("Failed to upload question to the database.");
+        console.error("[firebase-service] Error adding question and updating subject:", error);
+        throw new Error("Failed to upload question and update subject years in the database.");
     }
 }
