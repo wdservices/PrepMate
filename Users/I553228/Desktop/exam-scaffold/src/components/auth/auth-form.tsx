@@ -147,7 +147,7 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
       console.error(`[AuthForm] ${authMode} failed:`, error);
       let errorMessage = error.message || "An unexpected error occurred.";
       if (error.code === 'auth/api-key-not-valid') {
-        errorMessage = "The Firebase API Key is invalid. Please check your .env file and ensure it matches the key from your Firebase project console.";
+        errorMessage = "The Firebase API Key is invalid. The configuration is likely incorrect. The developer needs to check the Firebase console settings.";
       } else if (error.code === 'auth/network-request-failed') {
         errorMessage = "A network error occurred. Please check your internet connection and ensure this app's domain is authorized in your Firebase project settings.";
       } else if (error.code === 'auth/invalid-credential' && authMode === 'login') {
