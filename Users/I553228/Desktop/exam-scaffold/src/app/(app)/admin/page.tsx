@@ -3,9 +3,8 @@ import type { Metadata } from 'next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Users, BarChart3, Eye, Clock, Activity, UploadCloud, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { Users, BarChart3, Eye, Clock, Activity, UploadCloud } from 'lucide-react';
+import { QuestionUploadForm } from '@/components/admin/question-upload-form';
 
 export const metadata: Metadata = {
   title: 'Admin Dashboard',
@@ -97,27 +96,6 @@ export default function AdminDashboardPage() {
         </Card>
       </div>
 
-       {/* Content Management Card */}
-      <Card className="shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-xl">Content Management</CardTitle>
-          <CardDescription>Add new questions to the Firestore database.</CardDescription>
-        </CardHeader>
-        <CardContent>
-            <p>Use the question upload page to add new content to your exams.</p>
-        </CardContent>
-        <CardFooter>
-            <Button asChild>
-                <Link href="/admin/upload-question">
-                    <UploadCloud className="mr-2 h-5 w-5" />
-                    Go to Question Upload Page
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-            </Button>
-        </CardFooter>
-      </Card>
-
-
       {/* Recent Users Table */}
       <Card className="shadow-xl">
         <CardHeader>
@@ -156,6 +134,10 @@ export default function AdminDashboardPage() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Question Upload Form */}
+      <QuestionUploadForm />
+
     </div>
   );
 }

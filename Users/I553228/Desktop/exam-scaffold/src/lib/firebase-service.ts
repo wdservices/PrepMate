@@ -163,3 +163,17 @@ export async function addQuestionToFirestore(examId: string, subjectId: string, 
         throw new Error("Failed to upload question and update subject years in the database.");
     }
 }
+
+/**
+ * Fetches all questions for a given subject across all years.
+ * Useful for AI analysis tasks.
+ * @param examId The ID of the exam.
+ * @param subjectId The ID of the subject.
+ * @returns A promise that resolves to an array of all questions for that subject.
+ */
+export async function getAllQuestionsForSubject(examId: string, subjectId: string): Promise<Question[]> {
+  if (!db) throw new Error("Firestore is not initialized.");
+  const questionsCollectionRef = collection(db, `exams/${examId}/subjects/${subjectId}/questions`);
+  const querySnapshot = await getDocs(questionsCollectionRef);
+  return querySnapshot.docs.map(doc => mapToQuestion(doc.id, doc.data()));
+}
