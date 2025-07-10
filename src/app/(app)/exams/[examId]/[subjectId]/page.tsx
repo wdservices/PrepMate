@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CalendarDays, ChevronLeft, Loader2, AlertTriangle } from 'lucide-react';
-import { getExamById, getSubjectById } from '@/data/mock-data'; // Use mock data functions
+import { getExamById, getSubjectById } from '@/data/mock-data-jamb'; // Use mock data functions
 import type { Exam, Subject as AppSubject } from '@/types'; // Renamed Subject to AppSubject
 
 export default function SubjectYearsPage() {

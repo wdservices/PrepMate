@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronLeft, Loader2, AlertTriangle } from 'lucide-react';
-import { getExamById, getSubjectById } from '@/data/mock-data'; // Use mock data functions
+import { getExamById, getSubjectById } from '@/data/mock-data-jamb'; // Use mock data functions
 import type { Exam, Subject as AppSubject } from '@/types'; // Renamed Subject to AppSubject to avoid conflict
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/components/providers/firebase-provider';

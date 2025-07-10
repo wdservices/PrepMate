@@ -20,7 +20,7 @@ import {
 import Link from 'next/link';
 import { LayoutGrid, BarChart3, Sparkles, BotMessageSquare, BookOpen, Settings, Users } from 'lucide-react'; 
 import { usePathname } from 'next/navigation';
-import { exams } from '@/data/mock-data'; 
+import { exams } from '@/data/mock-data-jamb'; 
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import { ArrowRight, BookOpen, Loader2, AlertTriangle } from 'lucide-react';
-import { exams as mockExams } from '@/data/mock-data'; // Import mock exams
+import { exams as mockExams } from '@/data/mock-data-jamb'; // Import mock exams
 import type { Exam } from '@/types'; 
 // Removed Firestore service import as we are using mock data here
 

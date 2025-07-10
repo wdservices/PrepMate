@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { QuestionDisplay } from "@/components/questions/question-display";
 import { AiAssistantButton } from "@/components/ai/ai-assistant-button";
 import { AiAssistantChat } from "@/components/ai/ai-assistant-chat";
-import { getQuestions, getExamById, getSubjectById } from '@/data/mock-data'; // Use mock data functions
+import { getQuestions, getExamById, getSubjectById } from '@/data/mock-data-jamb'; // Use mock data functions
 import type { Question, Subject as AppSubject, Exam } from "@/types"; // Renamed Subject to AppSubject
 import { ChevronLeft, AlertTriangle, Home, ListChecks, Loader2 } from 'lucide-react';
 

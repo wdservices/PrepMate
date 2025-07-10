@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { UploadCloud, AlertTriangle, ImagePlus, Copy } from 'lucide-react';
-import { exams } from '@/data/mock-data';
+import { exams } from '@/data/mock-data-jamb';
 import type { Question, QuestionOption } from '@/types';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
@@ -97,7 +97,7 @@ export function QuestionUploadForm() {
     const jsonOutput = JSON.stringify(questionData, null, 2);
     setGeneratedJson(jsonOutput);
 
-    console.log("--- COPY AND PASTE THIS JSON INTO src/data/mock-data.ts ---");
+    console.log("--- COPY AND PASTE THIS JSON INTO src/data/mock-data-jamb.ts ---");
     console.log(`// For Exam: ${selectedExam?.name}, Subject: ${selectedExam?.subjects.find(s => s.id === subjectId)?.name}, Year: ${year}`);
     console.log(jsonOutput + ','); // Add comma for easy pasting into an array
     console.log("--------------------------------------------------------------");
@@ -108,7 +108,7 @@ export function QuestionUploadForm() {
 
     toast({
       title: "Question JSON Generated!",
-      description: "The question JSON has been logged to the console and is shown below. Copy it to add to your mock-data.ts file.",
+      description: "The question JSON has been logged to the console and is shown below. Copy it to add to your mock-data-jamb.ts file.",
       duration: 10000,
     });
 
@@ -140,7 +140,7 @@ export function QuestionUploadForm() {
             Generate Question for Mock Data
         </CardTitle>
         <CardDescription>
-          Fill in the details to generate a JSON object for a new past question. You can then copy this JSON and manually add it to the <code>src/data/mock-data.ts</code> file.
+          Fill in the details to generate a JSON object for a new past question. You can then copy this JSON and manually add it to the <code>src/data/mock-data-jamb.ts</code> file.
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
@@ -264,7 +264,7 @@ export function QuestionUploadForm() {
                 Click the "Copy JSON" button below (if it appears) or copy the JSON string directly from the console. 
                 A comma will be automatically appended for easy pasting into an array.
             </li>
-            <li>Open the file: <code>src/data/mock-data.ts</code>.</li>
+            <li>Open the file: <code>src/data/mock-data-jamb.ts</code>.</li>
             <li>
               Locate the correct array for the exam, subject, and year (e.g., <code>jambChemistry2010</code>, <code>waecBiology2011</code>). You might need to create the array if it doesn't exist (e.g., <code>const necoPhysics2020: Question[] = [];</code>).
             </li>
@@ -275,7 +275,7 @@ export function QuestionUploadForm() {
                     <li>Ensure the <code>imageUrl</code> property in the pasted JSON correctly points to this image (e.g., <code>"/images/{imageFile ? imageFile.name : 'your-image.png'}"</code>).</li>
                 </ul>
             </li>
-            <li>Save the <code>mock-data.ts</code> file. Your application should hot-reload, and the new question will be available if you navigate to the correct exam/subject/year.</li>
+            <li>Save the <code>mock-data-jamb.ts</code> file. Your application should hot-reload, and the new question will be available if you navigate to the correct exam/subject/year.</li>
           </ol>
         </AlertDescription>
       </Alert>
@@ -284,7 +284,7 @@ export function QuestionUploadForm() {
         <Card className="m-6 mt-0 shadow-md">
             <CardHeader>
                 <CardTitle className="text-lg">Generated Question JSON</CardTitle>
-                <CardDescription>Copy the JSON below to add to your <code>mock-data.ts</code> file.</CardDescription>
+                <CardDescription>Copy the JSON below to add to your <code>mock-data-jamb.ts</code> file.</CardDescription>
             </CardHeader>
             <CardContent>
                 <pre className="p-4 bg-muted rounded-md text-sm overflow-x-auto whitespace-pre-wrap">

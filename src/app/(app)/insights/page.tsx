@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2, AlertTriangle, Brain, ListChecks, HelpCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { analyzeQuestionFrequency, type AnalysisOutput, type FrequentQuestionDetail } from "@/ai/flows/predictive-analysis";
-import { exams, getPastQuestionsForAnalysis } from "@/data/mock-data";
+import { exams, getPastQuestionsForAnalysis } from "@/data/mock-data-jamb";
 import type { Exam, Subject } from "@/types";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
