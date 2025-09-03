@@ -20,10 +20,28 @@ import {
 import Link from 'next/link';
 import { LayoutGrid, BarChart3, Sparkles, BotMessageSquare, BookOpen, Settings, Users } from 'lucide-react'; 
 import { usePathname } from 'next/navigation';
-import { exams } from '@/data/mock-data-jamb'; 
+import { examService, type Exam } from '@/lib/firestore-service';
+import { useState, useEffect } from 'react'; 
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const [exams, setExams] = useState<Exam[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadExams = async () => {
+      try {
+        const examsList = await examService.getAllExams();
+        setExams(examsList);
+      } catch (error) {
+        console.error('Failed to load exams:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadExams();
+  }, []);
 
   const mainNavItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid, type: 'static' as const },

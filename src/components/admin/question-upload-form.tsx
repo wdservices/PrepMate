@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState, type FormEvent, type ChangeEvent } from 'react';
+import { useState, useEffect, type FormEvent, type ChangeEvent } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { UploadCloud, AlertTriangle, ImagePlus, Copy } from 'lucide-react';
-import { exams } from '@/data/mock-data-jamb';
+import { examService, type Exam } from '@/lib/firestore-service';
 import type { Question, QuestionOption } from '@/types';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
@@ -27,11 +26,45 @@ export function QuestionUploadForm() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [generatedJson, setGeneratedJson] = useState<string | null>(null);
+  const [exams, setExams] = useState<Exam[]>([]);
+  const [subjects, setSubjects] = useState<any[]>([]);
 
   const { toast } = useToast();
 
+  // Load exams from Firestore
+  useEffect(() => {
+    const loadExams = async () => {
+      try {
+        const examsData = await examService.getAllExams();
+        setExams(examsData);
+      } catch (error) {
+        console.error('Error loading exams:', error);
+      }
+    };
+    loadExams();
+  }, []);
+
+  // Load subjects when exam is selected
+  useEffect(() => {
+    const loadSubjects = async () => {
+      if (examId) {
+        try {
+          const { subjectService } = await import('@/lib/firestore-service');
+          const subjectsData = await subjectService.getSubjectsByExam(examId);
+          setSubjects(subjectsData);
+        } catch (error) {
+          console.error('Error loading subjects:', error);
+          setSubjects([]);
+        }
+      } else {
+        setSubjects([]);
+      }
+    };
+    loadSubjects();
+  }, [examId]);
+
   const selectedExam = exams.find(e => e.id === examId);
-  const subjectsForSelectedExam = selectedExam ? selectedExam.subjects : [];
+  const subjectsForSelectedExam = subjects;
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -98,7 +131,8 @@ export function QuestionUploadForm() {
     setGeneratedJson(jsonOutput);
 
     console.log("--- COPY AND PASTE THIS JSON INTO src/data/mock-data-jamb.ts ---");
-    console.log(`// For Exam: ${selectedExam?.name}, Subject: ${selectedExam?.subjects.find(s => s.id === subjectId)?.name}, Year: ${year}`);
+    const selectedSubject = subjects.find(s => s.id === subjectId);
+    console.log(`// For Exam: ${selectedExam?.name}, Subject: ${selectedSubject?.name}, Year: ${year}`);
     console.log(jsonOutput + ','); // Add comma for easy pasting into an array
     console.log("--------------------------------------------------------------");
     if (imageFile) {

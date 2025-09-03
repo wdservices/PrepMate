@@ -1,14 +1,13 @@
-
 "use client";
 
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, ChevronLeft, Loader2, AlertTriangle } from 'lucide-react';
-import { getExamById, getSubjectById } from '@/data/mock-data-jamb'; // Use mock data functions
-import type { Exam, Subject as AppSubject } from '@/types'; // Renamed Subject to AppSubject to avoid conflict
+import { Button } from '@/components/ui/button';
+import { BookOpen, ChevronLeft, Loader2, AlertTriangle, ArrowRight } from 'lucide-react';
+import { examService } from '@/lib/firestore-service';
+import type { Exam, Subject } from '@/types';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAuth } from '@/components/providers/firebase-provider';
 import { getIconByName } from '@/lib/icon-map';
@@ -20,14 +19,14 @@ export default function ExamSubjectsPage() {
 
   const examId = params.examId as string;
   
-  const [exam, setExam] = useState<Exam | null>(null); // Use Exam type from mock-data
-  const [subjects, setSubjects] = useState<AppSubject[]>([]); // Use AppSubject type
+  const [exam, setExam] = useState<Exam | null>(null); 
+  const [subjects, setSubjects] = useState<Subject[]>([]); 
   const [isLoadingPage, setIsLoadingPage] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAccessChecked, setIsAccessChecked] = useState(false); 
 
   useEffect(() => {
-    function loadExamAndSubjects() {
+    async function loadExamAndSubjects() {
       if (!examId) {
         setError("Exam ID is missing.");
         setIsLoadingPage(false);
@@ -36,21 +35,22 @@ export default function ExamSubjectsPage() {
       setIsLoadingPage(true);
       setError(null);
       try {
-        console.log(`[ExamSubjectsPage] Fetching exam details for ID: ${examId} from mock data`);
-        const examData = getExamById(examId); 
+        console.log(`[ExamSubjectsPage] Fetching exam details for ID: ${examId} from Firestore`);
+        const examData = await examService.getExamById(examId); 
         if (!examData) {
-          console.warn(`[ExamSubjectsPage] Exam with ID ${examId} not found in mock data.`);
-          setError("Exam not found in available mock data.");
+          console.warn(`[ExamSubjectsPage] Exam with ID ${examId} not found in Firestore.`);
+          setError("Exam not found.");
           setExam(null);
         } else {
-          setExam(examData);
+          setExam(examData as any);
           document.title = `${examData.name} Subjects | PrepMate`;
-          console.log(`[ExamSubjectsPage] Fetching subjects for exam: ${examData.name} (ID: ${examId}) from mock data`);
-          setSubjects(examData.subjects || []); // Subjects are part of the Exam type in mock-data
+          console.log(`[ExamSubjectsPage] Fetching subjects for exam: ${examData.name} (ID: ${examId}) from Firestore`);
+          const subjectsData = await examService.getSubjectsByExam(examId);
+          setSubjects(subjectsData as any);
         }
       } catch (err: any) {
-        console.error("[ExamSubjectsPage] Error loading exam or subjects from mock data:", err);
-        setError("Failed to load exam details or subjects from mock data.");
+        console.error("[ExamSubjectsPage] Error loading exam or subjects:", err);
+        setError("Failed to load exam details or subjects.");
         setExam(null);
       } finally {
         setIsLoadingPage(false);
@@ -121,7 +121,7 @@ export default function ExamSubjectsPage() {
         <AlertTriangle className="h-16 w-16 text-destructive mb-6" />
         <h2 className="text-3xl font-semibold mb-3">Exam Not Found</h2>
         <p className="text-muted-foreground mb-6 max-w-md">
-          The exam you are looking for (ID: {examId}) could not be found in the mock data.
+          The exam you are looking for (ID: {examId}) could not be found.
         </p>
         <Button asChild>
           <Link href="/dashboard">
@@ -175,7 +175,7 @@ export default function ExamSubjectsPage() {
                     <CardFooter className="p-5 pt-0 border-t">
                     <Button asChild className="w-full" size="lg" variant="default">
                         <Link href={`/exams/${exam.id}/${subject.id}`}>
-                        View Years ({subject.availableYears.length})
+                        View Years ({subject.availableYears?.length || 0})
                         <ArrowRight className="ml-2 h-5 w-5" />
                         </Link>
                     </Button>
@@ -188,8 +188,8 @@ export default function ExamSubjectsPage() {
       ) : (
         <div className="text-center py-10 bg-card rounded-lg shadow-md">
             <AlertTriangle className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-            <p className="text-xl text-muted-foreground">No subjects available for {exam.name} in mock data.</p>
-            <p className="text-sm text-muted-foreground mt-2">Please check back later or add subjects for this exam in the mock data file.</p>
+            <p className="text-xl text-muted-foreground">No subjects available for {exam.name}.</p>
+            <p className="text-sm text-muted-foreground mt-2">Subjects will appear here once they are added to the database.</p>
         </div>
       )}
     </div>

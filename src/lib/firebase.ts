@@ -2,6 +2,8 @@
 import { initializeApp, getApps, getApp, type FirebaseApp, type FirebaseOptions } from "firebase/app";
 import { getAuth, type Auth } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
+import { getFirestore, type Firestore } from "firebase/firestore";
+import { getStorage, type FirebaseStorage } from "firebase/storage";
 
 // IMPORTANT: The Firebase configuration is hardcoded here to resolve a persistent
 // "auth/api-key-not-valid" error that can occur if environment variables (.env)
@@ -22,7 +24,8 @@ const firebaseConfig: FirebaseOptions = {
 let app: FirebaseApp | null = null;
 let auth: Auth | null = null;
 let functions = null;
-// Firestore (db) has been removed as it is no longer used in this project.
+let db: Firestore | null = null;
+let storage: FirebaseStorage | null = null;
 
 try {
     // Basic check to ensure config is not empty
@@ -33,6 +36,8 @@ try {
     app = getApps().length ? getApp() : initializeApp(firebaseConfig);
     auth = getAuth(app);
     functions = getFunctions(app);
+    db = getFirestore(app);
+    storage = getStorage(app);
 
     if(typeof window !== 'undefined'){
         console.log(`Firebase SDK initialized successfully for project: ${firebaseConfig.projectId}`);
@@ -43,7 +48,9 @@ try {
     app = null;
     auth = null;
     functions = null;
+    db = null;
+    storage = null;
 }
 
-// Only exporting app and auth, as db is not used.
-export { app, auth, functions };
+// Export Firebase services
+export { app, auth, functions, db, storage };

@@ -11,10 +11,15 @@ export interface Question {
   id: string;
   text: string;
   options: QuestionOption[];
-  correctOptionId: string;
+  correctOptionId?: string; // Made optional for backward compatibility
+  answer?: string; // Added to match Firestore data
   explanationFromAI?: string;
-  year: number;
+  year?: number; // Made optional as it's not always available
   imageUrl?: string;
+  subjectId?: string; // Added for easier reference
+  examId?: string; // Added for easier reference
+  createdAt?: any; // Firestore timestamp
+  updatedAt?: any; // Firestore timestamp
 }
 
 export interface Subject {

@@ -11,10 +11,16 @@ import { aiQuestionAssistant } from "@/ai/flows/ai-question-assistant";
 import type { Question } from "@/types";
 import { cn } from "@/lib/utils";
 
+type ExtendedQuestion = Question & {
+  userAnswer?: string | null;
+  isCorrect?: boolean;
+  correctAnswer?: string | number | null;
+};
+
 type AiAssistantChatProps = {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  currentQuestionContext: Question | null;
+  currentQuestionContext: ExtendedQuestion | null;
   subjectName: string;
 };
 
@@ -35,20 +41,52 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
   useEffect(() => {
     if (isOpen) {
       let initialMessageText = "";
+      let initialMessages: ChatMessage[] = [];
+      
+      // Add welcome message
+      initialMessages.push({
+        id: "initial-ai-prompt",
+        sender: "ai",
+        text: `Hi! I'm your AI Tutor. I'm here to help you with your ${subjectName} questions.`,
+        timestamp: new Date()
+      });
+      
+      // Add context about the current question if available
       if (currentQuestionContext) {
-        initialMessageText = `Hi! I'm your AI Tutor. I can help with the current ${subjectName} question: "${currentQuestionContext.text.substring(0,70)}...", or you can ask me any other academic question.`;
-      } else {
-        initialMessageText = `Hi! I'm your AI Tutor. How can I help you with your academic questions today?`;
-      }
-      setMessages([
-        { 
-          id: "initial-ai-prompt", 
-          sender: "ai", 
-          text: initialMessageText,
-          timestamp: new Date() 
+        const questionText = currentQuestionContext.text.substring(0, 200) + 
+                           (currentQuestionContext.text.length > 200 ? '...' : '');
+        
+        // Add the question as context
+        initialMessages.push({
+          id: `question-${currentQuestionContext.id}`,
+          sender: "ai",
+          text: `I see you're working on this question:
+          
+"${questionText}"
+          
+I can help explain concepts related to this question. What would you like to know?`,
+          timestamp: new Date()
+        });
+        
+        // If we have user's answer status, provide feedback
+        if (currentQuestionContext.isCorrect !== undefined) {
+          const isCorrect = currentQuestionContext.isCorrect;
+          const correctAnswer = currentQuestionContext.correctAnswer || 'the correct option';
+          const feedback = isCorrect 
+            ? "Great job! You got it right! 🎉"
+            : `The correct answer is ${correctAnswer}. Would you like me to explain why?`;
+            
+          initialMessages.push({
+            id: `feedback-${currentQuestionContext.id}`,
+            sender: "ai",
+            text: feedback,
+            timestamp: new Date()
+          });
         }
-      ]);
-      setUserInput(""); 
+      }
+      
+      setMessages(initialMessages);
+      setUserInput("");
     }
   }, [isOpen, currentQuestionContext, subjectName]);
   
@@ -69,15 +107,42 @@ export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, 
       text: trimmedInput,
       timestamp: new Date(),
     };
+    
+    // Add user message to chat
     setMessages((prev) => [...prev, userMessage]);
     setUserInput("");
     setIsLoading(true);
 
     try {
+      // Format options for better AI understanding
+      const formatOptions = (opts: any) => {
+        if (!opts) return '';
+        if (Array.isArray(opts)) {
+          return opts.map((opt, i) => 
+            `${String.fromCharCode(65 + i)}. ${typeof opt === 'string' ? opt : opt.text}`
+          ).join('\n');
+        }
+        return '';
+      };
+
+      // Prepare the question context
+      const questionContext = currentQuestionContext ? {
+        subject: subjectName,
+        question: currentQuestionContext.text,
+        options: formatOptions(currentQuestionContext.options),
+        correctAnswer: currentQuestionContext.correctAnswer || 
+                      (currentQuestionContext as any).correctOptionId || 
+                      'Not specified',
+        userAnswer: (currentQuestionContext as any).userAnswer || 'Not answered',
+        isCorrect: (currentQuestionContext as any).isCorrect || false,
+        explanation: currentQuestionContext.explanation || 'No explanation available'
+      } : null;
+
+      // Call the AI with the full context
       const response = await aiQuestionAssistant({
         subject: subjectName,
-        question: currentQuestionContext?.text || "No specific question being viewed.",
-        studentQuery: userMessage.text,
+        question: questionContext ? JSON.stringify(questionContext, null, 2) : "No question context",
+        studentQuery: trimmedInput,
       });
 
       const aiMessage: ChatMessage = {

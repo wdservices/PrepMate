@@ -1,103 +1,101 @@
+"use client";
 
-"use client"; 
-
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from '@/components/ui/button';
-import { ArrowRight, BookOpen, Loader2, AlertTriangle } from 'lucide-react';
-import { exams as mockExams } from '@/data/mock-data-jamb'; // Import mock exams
-import type { Exam } from '@/types'; 
-// Removed Firestore service import as we are using mock data here
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { ExamCard } from '@/components/ui/exam-card';
+import { examService } from '@/lib/firestore-service';
+import { Exam } from '@/lib/firestore-service';
+import { Loader2 } from 'lucide-react';
 
 export default function DashboardPage() {
   const [exams, setExams] = useState<Exam[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    // Using mock data directly
-    console.log("[DashboardPage] Using mock exams data:", mockExams);
-    setExams(mockExams.sort((a, b) => (a.order || 0) - (b.order || 0)));
-    setIsLoading(false);
-    // setError can still be used if there's a different kind of loading error, but less likely with mock data.
+    const loadExams = async () => {
+      try {
+        console.log('[Dashboard] Fetching exams...');
+        const examsList = await examService.getAllExams();
+        console.log('[Dashboard] Fetched exams:', examsList);
+        setExams(examsList);
+        setError(null);
+      } catch (err) {
+        console.error('[Dashboard] Error loading exams:', err);
+        setError('Failed to load exams. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadExams();
   }, []);
 
-  if (isLoading) {
+  const handleExamClick = (examId: string) => {
+    router.push(`/exams/${examId}/subjects`);
+  };
+
+  if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] text-center p-6">
-        <Loader2 className="h-16 w-16 text-primary animate-spin mb-6" />
-        <h2 className="text-3xl font-semibold mb-3">Loading Exams...</h2>
-        <p className="text-muted-foreground max-w-md">
-          Please wait while we fetch the available exams.
-        </p>
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="mt-4 text-muted-foreground">Loading exams...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] text-center p-6">
-        <AlertTriangle className="h-16 w-16 text-destructive mb-6" />
-        <h2 className="text-3xl font-semibold mb-3 text-destructive">Error Loading Exams</h2>
-        <p className="text-muted-foreground mb-6 max-w-md">{error}</p>
-        <Button onClick={() => window.location.reload()} variant="outline">
-          Try Again
-        </Button>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-4">
+        <div className="bg-destructive/10 text-destructive p-4 rounded-lg max-w-md">
+          <h3 className="font-medium">Error loading exams</h3>
+          <p className="text-sm mt-1">{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="mt-3 px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/90 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (exams.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-4">
+        <div className="bg-muted p-6 rounded-lg max-w-md">
+          <h3 className="font-medium">No exams available</h3>
+          <p className="text-muted-foreground text-sm mt-1">
+            There are no exams available at the moment. Please check back later.
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-          Welcome to PrepMate
-        </h1>
-        <p className="mt-4 text-lg text-muted-foreground sm:text-xl">
-          Your AI-powered guide to acing your exams. Select an exam to get started.
+    <div className="container py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold tracking-tight">Available Exams</h1>
+        <p className="text-muted-foreground mt-2">
+          Select an exam to get started with your preparation
         </p>
       </div>
 
-      {exams.length > 0 ? (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {exams.map((exam) => {
-            const ExamIcon = exam.icon || BookOpen; // Use direct icon from mock data
-            return (
-              <Card key={exam.id} className="flex flex-col overflow-hidden rounded-xl shadow-lg transition-shadow duration-300 ease-in-out hover:shadow-xl">
-                <CardHeader className="p-5 border-b">
-                  <div className="flex items-center space-x-3">
-                    <ExamIcon className="h-10 w-10 text-primary" />
-                    <CardTitle className="text-2xl font-semibold text-primary">{exam.name}</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent className="flex-grow p-6">
-                  <CardDescription className="mt-2 text-base text-muted-foreground">
-                    {exam.description}
-                  </CardDescription>
-                </CardContent>
-                <CardFooter className="p-6 pt-0">
-                  <Button asChild className="w-full" size="lg">
-                    <Link href={`/exams/${exam.id}`}>
-                      <BookOpen className="mr-2 h-5 w-5" />
-                      View Subjects
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            );
-          })}
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-20rem)] text-center p-6 bg-card rounded-xl shadow-md">
-          <AlertTriangle className="h-16 w-16 text-muted-foreground mb-6" />
-          <h2 className="text-2xl font-semibold mb-3 text-muted-foreground">No Exams Found</h2>
-          <p className="text-muted-foreground max-w-md">
-            It seems there are no exams configured in the mock data file. An administrator may need to add them.
-          </p>
-        </div>
-      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {exams.map((exam) => (
+          <ExamCard
+            key={exam.id}
+            id={exam.id}
+            title={exam.name}
+            description={exam.description || 'Click to view subjects'}
+            iconName={exam.iconName || 'BookOpen'}
+            onClick={() => handleExamClick(exam.id)}
+          />
+        ))}
+      </div>
     </div>
   );
 }

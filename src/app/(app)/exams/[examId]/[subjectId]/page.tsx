@@ -1,4 +1,3 @@
-
 "use client"; 
 
 import Link from 'next/link';
@@ -7,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CalendarDays, ChevronLeft, Loader2, AlertTriangle } from 'lucide-react';
-import { getExamById, getSubjectById } from '@/data/mock-data-jamb'; // Use mock data functions
+import { examService } from '@/lib/firestore-service';
 import type { Exam, Subject as AppSubject } from '@/types'; // Renamed Subject to AppSubject
 
 export default function SubjectYearsPage() {
@@ -22,30 +21,38 @@ export default function SubjectYearsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    function loadData() {
+    async function loadData() {
       if (!examId || !subjectId) {
         setError("Exam ID or Subject ID is missing.");
         setIsLoading(false);
         return;
       }
+      
+      // If the subjectId is 'subjects', redirect to the exam page
+      if (subjectId === 'subjects') {
+        console.log(`[SubjectYearsPage] Redirecting from /exams/${examId}/subjects to /exams/${examId}`);
+        router.push(`/exams/${examId}`);
+        return;
+      }
+      
       setIsLoading(true);
       setError(null);
       try {
-        console.log(`[SubjectYearsPage] Fetching exam (${examId}) and subject (${subjectId}) details from mock data...`);
-        const examData = getExamById(examId);
-        const subjectData = examData ? getSubjectById(examId, subjectId) : null; // getSubjectById might need exam context if it filters from exam.subjects
+        console.log(`[SubjectYearsPage] Fetching exam (${examId}) and subject (${subjectId}) details from Firestore...`);
+        const examData = await examService.getExamById(examId);
+        const subjectData = examData ? await examService.getSubjectById(examId, subjectId) : null;
 
         if (!examData) {
-          console.warn(`[SubjectYearsPage] Exam with ID ${examId} not found in mock data.`);
-          setError(`Exam "${examId}" not found in mock data.`);
+          console.warn(`[SubjectYearsPage] Exam with ID ${examId} not found in Firestore.`);
+          setError(`Exam "${examId}" not found.`);
         }
         if (!subjectData) {
-          console.warn(`[SubjectYearsPage] Subject with ID ${subjectId} for exam ${examId} not found in mock data.`);
-          setError(prevError => prevError ? `${prevError} Subject "${subjectId}" not found in mock data.` : `Subject "${subjectId}" not found in mock data.`);
+          console.warn(`[SubjectYearsPage] Subject with ID ${subjectId} for exam ${examId} not found in Firestore.`);
+          setError(prevError => prevError ? `${prevError} Subject not found.` : `Subject not found.`);
         }
         
-        setExam(examData || null);
-        setSubject(subjectData || null);
+        setExam(examData as any || null);
+        setSubject(subjectData as any || null);
 
         if (examData && subjectData) {
           document.title = `Years for ${subjectData.name} - ${examData.name} | PrepMate`;
@@ -56,8 +63,8 @@ export default function SubjectYearsPage() {
         }
 
       } catch (err: any) {
-        console.error("[SubjectYearsPage] Error loading exam or subject data from mock data:", err);
-        setError("Failed to load page data from mock data. Please try again.");
+        console.error("[SubjectYearsPage] Error loading exam or subject data:", err);
+        setError("Failed to load page data. Please try again.");
       } finally {
         setIsLoading(false);
       }
@@ -70,7 +77,7 @@ export default function SubjectYearsPage() {
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] text-center p-6">
         <Loader2 className="h-16 w-16 text-primary animate-spin mb-6" />
         <h2 className="text-3xl font-semibold mb-3">Loading Available Years...</h2>
-        <p className="text-muted-foreground max-w-md">Fetching details for the selected subject from mock data.</p>
+        <p className="text-muted-foreground max-w-md">Loading subject details...</p>
       </div>
     );
   }
@@ -107,7 +114,7 @@ export default function SubjectYearsPage() {
           {subject.name} - {exam.name}
         </h1>
         <p className="mt-2 text-lg text-muted-foreground">
-          Select a year to view past questions (from mock data).
+          Select a year to view past questions.
         </p>
       </div>
 
@@ -134,8 +141,8 @@ export default function SubjectYearsPage() {
       ) : (
          <div className="text-center py-10 bg-card rounded-lg shadow">
           <CalendarDays className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
-          <p className="text-xl text-muted-foreground">No past questions available for {subject.name} yet in mock data.</p>
-          <p className="text-sm text-muted-foreground mt-2">Available years may not be configured for this subject in the mock data file.</p>
+          <p className="text-xl text-muted-foreground">No past questions available for {subject.name} yet.</p>
+          <p className="text-sm text-muted-foreground mt-2">Questions will appear here once they are added to the database.</p>
         </div>
       )}
     </div>

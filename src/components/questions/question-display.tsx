@@ -37,7 +37,49 @@ export function QuestionDisplay({ question, subjectName, questionNumber }: Quest
     setIsLoadingAi(false);
   }, [question.id]);
 
-  const handleSubmit = async () => {
+  const handleOptionSelect = (optionId: string) => {
+    setSelectedOptionId(optionId);
+    const correct = optionId === question.answer;  // Changed from question.correctOptionId to question.answer
+    setIsCorrect(correct);
+    setIsSubmitted(true);
+    
+    // Show feedback immediately
+    toast({
+      title: correct ? "Correct! 🎉" : "Incorrect",
+      description: correct 
+        ? "Great job! Your answer is correct." 
+        : `The correct answer is: ${question.options.find(opt => opt.id === question.answer)?.text}`,
+      variant: correct ? "default" : "destructive",
+    });
+
+    // Load AI explanation
+    setIsLoadingAi(true);
+    setAiExplanation(undefined);
+
+    const studentAnswerText = question.options.find(opt => opt.id === optionId)?.text || "Not found";
+    const correctAnswerText = question.options.find(opt => opt.id === question.answer)?.text || "Not found";
+    
+    aiExplainAnswer({
+      question: question.text,
+      correctAnswerText: correctAnswerText,
+      isCorrect: correct,
+      studentAnswerTextIfIncorrect: correct ? undefined : studentAnswerText,
+      subject: subjectName,
+    })
+    .then(evaluation => {
+      setAiExplanation(evaluation.explanation);
+    })
+    .catch(error => {
+      console.error("Error fetching AI explanation:", error);
+      setAiExplanation("Could not load explanation at this time. Please try asking the AI Tutor for help.");
+    })
+    .finally(() => {
+      setIsLoadingAi(false);
+    });
+  };
+
+  // Keep handleSubmit for backward compatibility
+  const handleSubmit = () => {
     if (!selectedOptionId) {
       toast({
         title: "No Answer Selected",
@@ -46,35 +88,9 @@ export function QuestionDisplay({ question, subjectName, questionNumber }: Quest
       });
       return;
     }
-
-    setIsSubmitted(true);
-    const correct = selectedOptionId === question.correctOptionId;
-    setIsCorrect(correct);
-    setIsLoadingAi(true);
-    setAiExplanation(undefined); 
-
-    try {
-      const studentAnswerText = question.options.find(opt => opt.id === selectedOptionId)?.text || "Not found";
-      const correctAnswerText = question.options.find(opt => opt.id === question.correctOptionId)?.text || "Not found";
-      
-      const evaluation = await aiExplainAnswer({
-        question: question.text,
-        correctAnswerText: correctAnswerText,
-        isCorrect: correct,
-        studentAnswerTextIfIncorrect: correct ? undefined : studentAnswerText,
-        subject: subjectName,
-      });
-      setAiExplanation(evaluation.explanation);
-    } catch (error) {
-      console.error("Error fetching AI explanation:", error);
-      setAiExplanation("Could not load explanation at this time. Please try asking the AI Tutor for help.");
-      toast({
-        title: "Explanation Error",
-        description: "Failed to get AI explanation.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoadingAi(false);
+    // Just trigger the selection logic if not already submitted
+    if (!isSubmitted) {
+      handleOptionSelect(selectedOptionId);
     }
   };
 
@@ -101,29 +117,24 @@ export function QuestionDisplay({ question, subjectName, questionNumber }: Quest
       <CardContent className="pt-6 pb-4 space-y-4 bg-background/30">
         <RadioGroup
           value={selectedOptionId}
-          onValueChange={setSelectedOptionId}
+          onValueChange={(value) => !isSubmitted && handleOptionSelect(value)}
           disabled={isSubmitted}
           className="space-y-3"
         >
           {question.options.map((option) => {
             const isSelected = option.id === selectedOptionId;
-            const isActualCorrect = option.id === question.correctOptionId;
+            const isActualCorrect = option.id === question.answer;
             
             let optionStyle = "border-border hover:bg-muted/50 bg-card";
             let icon = null;
 
-            if (isSubmitted) {
-              if (isSelected) {
-                if (isCorrect) {
-                  optionStyle = "bg-green-100 border-green-500 text-green-800 font-medium";
-                  icon = <CheckCircle className="h-5 w-5 text-green-600" />;
-                } else {
-                  optionStyle = "bg-red-100 border-red-500 text-red-800 font-medium";
-                  icon = <XCircle className="h-5 w-5 text-red-600" />;
-                }
-              } else if (isActualCorrect) {
-                // Style for the correct answer when an incorrect one was chosen by user
-                optionStyle = "border-green-500 ring-1 ring-green-400 bg-green-50 text-green-700";
+            if (isSelected) {
+              if (isActualCorrect) {
+                // Always highlight the correct answer in green
+                icon = <CheckCircle className="h-5 w-5 text-green-600" />;
+              } else {
+                // Show X for wrong selected answer
+                icon = <XCircle className="h-5 w-5 text-red-500" />;
               }
             }
 
@@ -135,19 +146,23 @@ export function QuestionDisplay({ question, subjectName, questionNumber }: Quest
                   // Apply active styling only if not submitted
                   !isSubmitted && "data-[state=checked]:bg-primary/10 data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground",
                   optionStyle,
-                  !isSubmitted && "cursor-pointer hover:shadow-md" 
+                  !isSubmitted && "cursor-pointer hover:shadow-md",
+                  // Show green for correct answer when any option is selected
+                  isSubmitted && option.id === question.answer && "bg-green-50 border-green-500 text-green-800 font-medium",
+                  // Show red for wrong selected answer
+                  isSubmitted && selectedOptionId === option.id && option.id !== question.answer && "bg-red-50 border-red-300 text-red-800"
                 )}
-                onClick={() => !isSubmitted && setSelectedOptionId(option.id)} // Allow clicking the whole div to select
+                onClick={() => !isSubmitted && handleOptionSelect(option.id)}
               >
                 <RadioGroupItem 
                   value={option.id} 
                   id={`${question.id}-${option.id}`}
-                  checked={selectedOptionId === option.id} // Ensure item is checked based on state
+                  checked={selectedOptionId === option.id}
                   className={cn(
                     "border-muted-foreground data-[state=checked]:border-primary data-[state=checked]:text-primary",
-                    // Specific styling for submitted answers
-                    isSubmitted && isSelected && isCorrect && "border-green-700 text-green-700",
-                    isSubmitted && isSelected && !isCorrect && "border-red-700 text-red-700",
+                    // Styling for correct/incorrect answers when submitted
+                    isSubmitted && isActualCorrect && "border-green-700 text-green-700",
+                    isSubmitted && isSelected && !isActualCorrect && "border-red-700 text-red-700",
                   )}
                   aria-labelledby={`${question.id}-${option.id}-label`}
                 />
@@ -161,27 +176,48 @@ export function QuestionDisplay({ question, subjectName, questionNumber }: Quest
         </RadioGroup>
 
         {isSubmitted && !isLoadingAi && typeof isCorrect === 'boolean' && (
-          <Alert variant={isCorrect ? "default" : "destructive"} className={cn("mt-4", isCorrect ? "bg-green-50 border-green-400 text-green-700" : "bg-red-50 border-red-400 text-red-700")}>
-            {isCorrect ? <CheckCircle className="h-5 w-5" /> : <XCircle className="h-5 w-5" />}
-            <AlertTitle className="font-semibold">
-              {isCorrect ? "Your Answer: Correct!" : "Your Answer: Incorrect!"}
-            </AlertTitle>
-          </Alert>
+          <div className="space-y-4 mt-4">
+            <Alert variant={isCorrect ? "default" : "destructive"} className={cn("border-l-4", isCorrect ? "border-green-500 bg-green-50 text-green-800" : "border-red-500 bg-red-50 text-red-800")}>
+              <div className="flex items-center">
+                {isCorrect ? (
+                  <CheckCircle className="h-5 w-5 mr-2 text-green-600" />
+                ) : (
+                  <XCircle className="h-5 w-5 mr-2 text-red-600" />
+                )}
+                <div>
+                  <AlertTitle className="font-semibold">
+                    {isCorrect ? "Correct! 🎉" : "Incorrect"}
+                  </AlertTitle>
+                  <AlertDescription className="mt-1">
+                    {isCorrect 
+                      ? "Great job! Your answer is correct."
+                      : `The correct answer is: ${question.options.find(opt => opt.id === question.answer)?.text}`}
+                  </AlertDescription>
+                </div>
+              </div>
+            </Alert>
+
+            {aiExplanation && (
+              <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-center font-semibold text-blue-700 mb-2 text-md">
+                  <Lightbulb className="h-5 w-5 mr-2 text-blue-600"/> 
+                  <span>AI Explanation</span>
+                </div>
+                <p className="text-sm text-blue-800 whitespace-pre-line leading-relaxed">
+                  {aiExplanation}
+                </p>
+              </div>
+            )}
+          </div>
         )}
 
         {isSubmitted && isLoadingAi && (
-          <div className="mt-4 p-3 bg-muted/50 rounded-md border flex items-center justify-center space-x-2">
-            <Loader2 className="h-5 w-5 animate-spin text-primary" />
-            <span className="text-muted-foreground">Loading AI explanation...</span>
-          </div>
-        )}
-        
-        {isSubmitted && !isLoadingAi && aiExplanation && (
-          <div className="mt-4 p-4 bg-card rounded-lg border border-border shadow-sm">
-            <div className="flex items-center font-semibold text-primary mb-2 text-md">
-              <Lightbulb className="h-5 w-5 mr-2 stroke-current"/> AI Explanation
+          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-center justify-center space-x-2 text-blue-700">
+              <Loader2 className="h-5 w-5 animate-spin" />
+              <span className="font-medium">Generating AI explanation...</span>
             </div>
-            <p className="text-sm text-foreground whitespace-pre-line leading-relaxed">{aiExplanation}</p>
+            <p className="mt-2 text-sm text-blue-600 text-center">This may take a few moments</p>
           </div>
         )}
 

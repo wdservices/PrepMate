@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -9,10 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2, AlertTriangle, Brain, ListChecks, HelpCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { analyzeQuestionFrequency, type AnalysisOutput, type FrequentQuestionDetail } from "@/ai/flows/predictive-analysis";
-import { exams, getPastQuestionsForAnalysis } from "@/data/mock-data-jamb";
-import type { Exam, Subject } from "@/types";
+import { examService } from '@/lib/firestore-service';
+import type { Exam, Subject, Question } from "@/lib/firestore-service";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-
 
 export default function SmartAnalysisPage() { 
   const [selectedExamId, setSelectedExamId] = useState<string>("");
@@ -20,212 +18,265 @@ export default function SmartAnalysisPage() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [exams, setExams] = useState<Exam[]>([]);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
   const { toast } = useToast();
 
-  const selectedExam = exams.find(e => e.id === selectedExamId);
-  const subjectsForSelectedExam = selectedExam ? selectedExam.subjects : [];
+  useEffect(() => {
+    const loadExams = async () => {
+      try {
+        console.log('[Insights] Fetching exams...');
+        const examsList = await examService.getAllExams();
+        console.log('[Insights] Fetched exams:', examsList);
+        setExams(examsList);
+        setError(null);
+      } catch (err) {
+        console.error('[Insights] Failed to load exams:', err);
+        setError('Failed to load exams. Please try again.');
+        toast({
+          title: "Error",
+          description: "Failed to load exams. Please try again.",
+          variant: "destructive",
+        });
+      }
+    };
+    loadExams();
+  }, []);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    const loadSubjects = async () => {
+      if (!selectedExamId) {
+        setSubjects([]);
+        return;
+      }
+      
+      try {
+        console.log(`[Insights] Fetching subjects for exam ${selectedExamId}...`);
+        const subjectsList = await examService.getSubjectsByExam(selectedExamId);
+        console.log(`[Insights] Fetched ${subjectsList.length} subjects for exam ${selectedExamId}:`, subjectsList);
+        setSubjects(subjectsList);
+        setSelectedSubjectId(""); // Reset subject selection when exam changes
+        setError(null);
+      } catch (err) {
+        console.error(`[Insights] Failed to load subjects for exam ${selectedExamId}:`, err);
+        setSubjects([]);
+        setError('Failed to load subjects. Please try again.');
+        toast({
+          title: "Error",
+          description: "Failed to load subjects. Please try again.",
+          variant: "destructive",
+        });
+      }
+    };
+    
+    loadSubjects();
+  }, [selectedExamId]);
+
+  const handleAnalysis = async (e: FormEvent) => {
     e.preventDefault();
-    if (!selectedExamId || !selectedSubjectId) {
-      toast({ title: "Selection Missing", description: "Please select an exam and a subject.", variant: "destructive" });
-      return;
-    }
+    if (!selectedExamId || !selectedSubjectId) return;
 
     setIsLoading(true);
     setError(null);
     setAnalysisResult(null);
 
     try {
-      const exam = exams.find(e => e.id === selectedExamId);
-      const subject = exam?.subjects.find(s => s.id === selectedSubjectId);
-
-      if (!exam || !subject) {
-        throw new Error("Selected exam or subject not found.");
-      }
+      // Get questions for the selected subject
+      const questions = await examService.getQuestionsBySubject(selectedExamId, selectedSubjectId);
       
-      const pastQuestionsWithYears = getPastQuestionsForAnalysis(exam.id, subject.id);
-      if (pastQuestionsWithYears.length === 0) {
-        toast({ title: "No Data", description: `No past questions found for ${subject.name} in ${exam.name} to analyze.`, variant: "default" });
-        setIsLoading(false);
-        return;
+      if (questions.length === 0) {
+        throw new Error('No questions found for the selected subject');
       }
 
-      const result = await analyzeQuestionFrequency({
-        examName: exam.name,
-        subject: subject.name,
-        pastQuestions: pastQuestionsWithYears, // Pass data in the new format
-      });
+      // Format questions for analysis
+      const formattedQuestions = questions.map(q => ({
+        id: q.id,
+        text: q.text,
+        options: q.options.map(opt => opt.text),
+        correctAnswer: q.correctOptionId,
+        year: q.year
+      }));
+
+      // Run analysis
+      const result = analyzeQuestionFrequency(formattedQuestions);
       setAnalysisResult(result);
-    } catch (err: any) {
-      console.error("Analysis failed:", err);
-      setError(err.message || "Failed to generate smart analysis. Please try again.");
-      toast({ title: "Analysis Failed", description: err.message || "An unexpected error occurred.", variant: "destructive" });
+      
+      toast({
+        title: "Analysis Complete",
+        description: "Question frequency analysis has been generated.",
+      });
+    } catch (err) {
+      console.error('Analysis failed:', err);
+      setError(err instanceof Error ? err.message : 'Failed to perform analysis');
+      toast({
+        title: "Analysis Failed",
+        description: error || "An unknown error occurred during analysis.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
   };
-  
-  const renderFrequentQuestionList = (questions: FrequentQuestionDetail[]) => (
-    <Card className="shadow-sm border-none bg-transparent">
-      <CardContent className="pt-2">
-        {questions.length > 0 ? (
-          <ul className="space-y-3">
-            {questions.map((q, index) => (
-              <li key={index} className="text-sm p-3 border rounded-md shadow-sm bg-card hover:shadow-md transition-shadow">
-                <p className="font-medium text-foreground leading-relaxed">{q.questionText}</p>
-                <p className="text-xs text-muted-foreground mt-1.5">
-                  <span className="font-semibold">Appeared in:</span> {q.appearedInYears.join(', ')}
-                </p>
-                {q.topic && (
-                    <p className="text-xs text-primary/90 mt-1"><span className="font-semibold">Topic:</span> {q.topic}</p>
-                )}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-muted-foreground text-sm">No specific frequent questions identified with year data.</p>
-        )}
-      </CardContent>
-    </Card>
-  );
-
-  const renderPredictedQuestionList = (questions: string[]) => (
-    <Card className="shadow-sm border-none bg-transparent">
-      <CardContent className="pt-2">
-        {questions.length > 0 ? (
-          <ul className="space-y-2">
-            {questions.map((q, index) => (
-              <li key={index} className="text-sm p-2.5 border-b last:border-b-0 bg-card rounded-md shadow-sm">
-                {q}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-muted-foreground text-sm">No specific predictions identified for this category.</p>
-        )}
-      </CardContent>
-    </Card>
-  );
-
 
   return (
-    <div className="space-y-8">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl flex items-center justify-center">
-          <Brain className="mr-3 h-10 w-10 text-primary" /> Smart Analysis
-        </h1>
-        <p className="mt-4 text-lg text-muted-foreground sm:text-xl max-w-2xl mx-auto">
-          Leverage AI to discover frequently asked questions, the years they appeared, and predict potential topics for your upcoming exams.
+    <div className="container py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold tracking-tight">Smart Analysis</h1>
+        <p className="text-muted-foreground mt-2">
+          Get insights into question patterns and frequencies
         </p>
       </div>
 
-      <Card className="shadow-lg rounded-xl">
+      <Card className="mb-8">
         <CardHeader>
-          <CardTitle>Select Exam and Subject</CardTitle>
-          <CardDescription>Choose an exam and subject to generate smart analysis.</CardDescription>
+          <CardTitle>Analysis Parameters</CardTitle>
+          <CardDescription>
+            Select an exam and subject to analyze question patterns
+          </CardDescription>
         </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div>
-                <Label htmlFor="exam" className="text-base">Exam</Label>
-                <Select value={selectedExamId} onValueChange={(value) => { setSelectedExamId(value); setSelectedSubjectId(""); setAnalysisResult(null); }}>
-                  <SelectTrigger id="exam" className="mt-1">
+        <CardContent>
+          <form onSubmit={handleAnalysis} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="exam">Select Exam</Label>
+                <Select 
+                  value={selectedExamId} 
+                  onValueChange={setSelectedExamId}
+                  disabled={isLoading}
+                >
+                  <SelectTrigger id="exam">
                     <SelectValue placeholder="Select an exam" />
                   </SelectTrigger>
                   <SelectContent>
                     {exams.map((exam) => (
-                      <SelectItem key={exam.id} value={exam.id}>{exam.name}</SelectItem>
+                      <SelectItem key={exam.id} value={exam.id}>
+                        {exam.name}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <Label htmlFor="subject" className="text-base">Subject</Label>
-                <Select value={selectedSubjectId} onValueChange={(value) => { setSelectedSubjectId(value); setAnalysisResult(null); }} disabled={!selectedExamId}>
-                  <SelectTrigger id="subject" className="mt-1">
-                    <SelectValue placeholder="Select a subject" />
+
+              <div className="space-y-2">
+                <Label htmlFor="subject">Select Subject</Label>
+                <Select 
+                  value={selectedSubjectId} 
+                  onValueChange={setSelectedSubjectId}
+                  disabled={!selectedExamId || isLoading}
+                >
+                  <SelectTrigger id="subject">
+                    <SelectValue placeholder={selectedExamId ? "Select a subject" : "Select an exam first"} />
                   </SelectTrigger>
                   <SelectContent>
-                    {subjectsForSelectedExam.map((subject) => (
-                      <SelectItem key={subject.id} value={subject.id}>{subject.name}</SelectItem>
+                    {subjects.map((subject) => (
+                      <SelectItem key={subject.id} value={subject.id}>
+                        {subject.name}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
             </div>
-          </CardContent>
-          <CardFooter>
-            <Button type="submit" disabled={isLoading || !selectedExamId || !selectedSubjectId} className="w-full sm:w-auto" size="lg">
-              {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Brain className="mr-2 h-5 w-5" />}
-              Generate Smart Analysis
-            </Button>
-          </CardFooter>
-        </form>
+
+            <div className="flex justify-end">
+              <Button 
+                type="submit" 
+                disabled={!selectedExamId || !selectedSubjectId || isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Analyzing...
+                  </>
+                ) : (
+                  <>
+                    <Brain className="mr-2 h-4 w-4" />
+                    Analyze Questions
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
       </Card>
 
-      {isLoading && (
-        <div className="flex justify-center items-center py-10">
-          <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          <p className="ml-4 text-lg text-muted-foreground">Generating smart analysis, please wait...</p>
+      {error && (
+        <div className="bg-destructive/10 text-destructive p-4 rounded-lg mb-8 flex items-start space-x-3">
+          <AlertTriangle className="h-5 w-5 mt-0.5 flex-shrink-0" />
+          <div>
+            <h3 className="font-medium">Error</h3>
+            <p className="text-sm">{error}</p>
+          </div>
         </div>
       )}
 
-      {error && (
-        <Card className="border-destructive bg-destructive/10 rounded-xl">
-            <CardHeader className="flex flex-row items-center gap-3">
-                <AlertTriangle className="h-8 w-8 text-destructive" />
-                <CardTitle className="text-destructive">Analysis Error</CardTitle>
+      {analysisResult && (
+        <div className="space-y-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>Analysis Results</CardTitle>
+              <CardDescription>
+                Question frequency analysis for {subjects.find(s => s.id === selectedSubjectId)?.name}
+              </CardDescription>
             </CardHeader>
             <CardContent>
-                <p className="text-destructive-foreground">{error}</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-muted p-4 rounded-lg">
+                  <p className="text-sm text-muted-foreground">Total Questions</p>
+                  <p className="text-2xl font-bold">{analysisResult.totalQuestions}</p>
+                </div>
+                <div className="bg-muted p-4 rounded-lg">
+                  <p className="text-sm text-muted-foreground">Unique Questions</p>
+                  <p className="text-2xl font-bold">{analysisResult.uniqueQuestions}</p>
+                </div>
+                <div className="bg-muted p-4 rounded-lg">
+                  <p className="text-sm text-muted-foreground">Most Frequent Year</p>
+                  <p className="text-2xl font-bold">{analysisResult.mostFrequentYear || 'N/A'}</p>
+                </div>
+              </div>
             </CardContent>
-        </Card>
-      )}
+          </Card>
 
-      {analysisResult && !isLoading && (
-        <Card className="shadow-xl rounded-xl">
-          <CardHeader className="bg-primary/5 border-b">
-            <CardTitle className="text-2xl text-primary">Smart Analysis Results for {selectedExam?.name} - {selectedExam?.subjects.find(s => s.id === selectedSubjectId)?.name}</CardTitle>
-          </CardHeader>
-          <CardContent className="pt-6 space-y-6">
-            <Card className="rounded-lg">
-                <CardHeader className="bg-muted/30 border-b">
-                    <CardTitle className="text-xl">Analysis Summary</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-4">
-                    <p className="text-base whitespace-pre-line leading-relaxed">{analysisResult.analysisSummary}</p>
-                </CardContent>
+          {analysisResult.frequentQuestions.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Frequently Asked Questions</CardTitle>
+                <CardDescription>
+                  Questions that appear most frequently across exams
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Accordion type="single" collapsible className="w-full">
+                  {analysisResult.frequentQuestions.map((item, index) => (
+                    <AccordionItem key={index} value={`item-${index}`}>
+                      <AccordionTrigger className="text-left">
+                        <div className="flex items-center space-x-3">
+                          <span className="font-medium">{item.questionText}</span>
+                          <span className="text-sm text-muted-foreground">
+                            (Appears {item.frequency} times)
+                          </span>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="space-y-2 pl-1">
+                          <p className="text-sm">
+                            <span className="font-medium">Correct Answer:</span>{' '}
+                            {item.correctAnswer}
+                          </p>
+                          <p className="text-sm">
+                            <span className="font-medium">Appears in years:</span>{' '}
+                            {item.years.join(', ')}
+                          </p>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </CardContent>
             </Card>
-            
-            <Accordion type="single" collapsible className="w-full" defaultValue="frequent">
-              <AccordionItem value="frequent" className="border rounded-lg overflow-hidden">
-                <AccordionTrigger className="text-xl font-semibold hover:no-underline px-4 py-3 bg-muted/40 hover:bg-muted/60">
-                  <div className="flex items-center">
-                    <ListChecks className="mr-3 h-6 w-6 text-primary" /> Frequently Asked Questions
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="p-1 pt-3 bg-background">
-                  {renderFrequentQuestionList(analysisResult.frequentQuestions)}
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="predicted" className="border rounded-lg overflow-hidden mt-4">
-                <AccordionTrigger className="text-xl font-semibold hover:no-underline px-4 py-3 bg-muted/40 hover:bg-muted/60">
-                   <div className="flex items-center">
-                    <HelpCircle className="mr-3 h-6 w-6 text-primary" /> Predicted Likely Questions/Topics
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="p-1 pt-3 bg-background">
-                  {renderPredictedQuestionList(analysisResult.predictedQuestions)}
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-
-          </CardContent>
-        </Card>
+          )}
+        </div>
       )}
     </div>
   );
 }
-
