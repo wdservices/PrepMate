@@ -6,10 +6,13 @@ import {
   query, 
   orderBy,
   where,
+  addDoc,
+  limit,
   type DocumentData,
   type QueryDocumentSnapshot
 } from 'firebase/firestore';
-import { db } from './firebase';
+import { getFirestoreDb } from './firebase';
+import { AdminStats, RecentUserActivity, RevenueStats, Payment } from '../types';
 
 // Types matching our Firestore structure
 export interface Exam {
@@ -45,6 +48,7 @@ export interface Question {
 export const examService = {
   // Get all exams
   async getAllExams(): Promise<Exam[]> {
+    const db = getFirestoreDb();
     if (!db) {
       console.error('Firestore not initialized - db is null');
       throw new Error('Firestore not initialized');
@@ -90,6 +94,7 @@ export const examService = {
 
   // Get a single exam by ID
   async getExamById(examId: string): Promise<Exam | null> {
+    const db = getFirestoreDb();
     if (!db) throw new Error('Firestore not initialized');
     
     try {
@@ -117,6 +122,9 @@ export const examService = {
       throw new Error('Exam ID is required');
     }
     
+    const db = getFirestoreDb();
+    if (!db) throw new Error('Firestore not initialized');
+
     try {
       // Convert examId to lowercase to match Firestore document ID
       const normalizedExamId = examId.toLowerCase();
@@ -188,6 +196,7 @@ export const examService = {
 
   // Get a single subject by ID
   async getSubjectById(examId: string, subjectId: string): Promise<Subject | null> {
+    const db = getFirestoreDb();
     if (!db) throw new Error('Firestore not initialized');
     
     try {
@@ -223,6 +232,7 @@ export const examService = {
     subjectId: string, 
     year?: number
   ): Promise<Question[]> {
+    const db = getFirestoreDb();
     if (!db) throw new Error('Firestore not initialized');
     
     try {
@@ -251,6 +261,7 @@ export const examService = {
     subjectId: string, 
     questionId: string
   ): Promise<Question | null> {
+    const db = getFirestoreDb();
     if (!db) throw new Error('Firestore not initialized');
     
     try {
@@ -268,4 +279,126 @@ export const examService = {
       throw error;
     }
   }
+};
+
+export const questionService = {
+  async addQuestion(examId: string, subjectId: string, question: Question): Promise<void> {
+    const db = getFirestoreDb();
+    if (!db) {
+      console.error('Firestore not initialized - db is null');
+      throw new Error('Firestore not initialized');
+    }
+    try {
+      const questionsRef = collection(db, 'exams', examId, 'subjects', subjectId, 'questions');
+      await addDoc(questionsRef, question);
+      console.log("Question added successfully!");
+    } catch (error) {
+      console.error("Error adding question:", error);
+      throw error;
+    }
+  }
+};
+
+export const adminService = {
+  async getAdminStats(): Promise<AdminStats> {
+    const db = getFirestoreDb();
+    if (!db) {
+      console.error('Firestore not initialized - db is null');
+      throw new Error('Firestore not initialized');
+    }
+    try {
+      const docRef = doc(db, "admin", "stats");
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        return docSnap.data() as AdminStats;
+      } else {
+        console.warn("No admin stats document found!");
+        return {
+          todaysUsers: 0,
+          monthlyUsers: 0,
+          totalUsers: 0,
+          mostViewedExam: "N/A",
+          mostViewedSubject: "N/A",
+        };
+      }
+    } catch (error) {
+      console.error("Error getting admin stats:", error);
+      throw error;
+    }
+  },
+
+  async getRevenueStats(): Promise<RevenueStats> {
+    const db = getFirestoreDb();
+    if (!db) {
+      console.error('Firestore not initialized - db is null');
+      throw new Error('Firestore not initialized');
+    }
+    try {
+      const docRef = doc(db, "admin", "revenue");
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        return docSnap.data() as RevenueStats;
+      } else {
+        console.warn("No revenue stats document found!");
+        return {
+          totalRevenue: 0,
+          monthlyRevenue: 0,
+          annualRevenue: 0,
+        };
+      }
+    } catch (error) {
+      console.error("Error getting revenue stats:", error);
+      throw error;
+    }
+  },
+
+  async getRecentUserActivity(): Promise<RecentUserActivity[]> {
+    const db = getFirestoreDb();
+    if (!db) {
+      console.error('Firestore not initialized - db is null');
+      throw new Error('Firestore not initialized');
+    }
+    try {
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, orderBy("lastSeen", "desc"), limit(5)); // Assuming 'lastSeen' field exists and is a timestamp
+      const querySnapshot = await getDocs(q);
+
+      const recentUsers: RecentUserActivity[] = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        recentUsers.push({
+          id: doc.id,
+          name: data.displayName || data.email,
+          email: data.email,
+          lastSeen: data.lastSeen ? new Date(data.lastSeen.toDate()).toLocaleString() : "N/A",
+          examsTaken: data.examsTaken || 0,
+          role: data.role || "Student",
+        });
+      });
+      return recentUsers;
+    } catch (error) {
+      console.error("Error getting recent user activity:", error);
+      throw error;
+    }
+  },
+};
+
+export const paymentService = {
+  async addPayment(payment: Payment): Promise<void> {
+    const db = getFirestoreDb();
+    if (!db) {
+      console.error('Firestore not initialized - db is null');
+      throw new Error('Firestore not initialized');
+    }
+    try {
+      const paymentsRef = collection(db, "payments");
+      await addDoc(paymentsRef, payment);
+      console.log("Payment added successfully!");
+    } catch (error) {
+      console.error("Error adding payment:", error);
+      throw error;
+    }
+  },
 };

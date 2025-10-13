@@ -43,12 +43,17 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
           emailVerified: firebaseUser.emailVerified,
         });
         
-        // Since Firestore is deleted, we simplify profile loading.
-        // The AppUser type might have Firestore-dependent fields; for now, just cast.
-        setUser(firebaseUser as AppUser); 
-        // No actual profile fetch from Firestore needed here anymore if DB is gone.
+        // Fetch custom claims to get the user's role
+        const idTokenResult = await firebaseUser.getIdTokenResult(true); // Force refresh to get latest claims
+        const role = idTokenResult.claims.role as 'admin' | 'student' | undefined;
+
+        setUser({
+          ...firebaseUser,
+          role: role, // Assign the role from custom claims
+        } as AppUser); 
+        
         setUserProfileLoading(false); 
-        console.log("[FirebaseProvider] Set user from auth, userProfileLoading set to false (profile fetch from Firestore is bypassed).");
+        console.log("[FirebaseProvider] Set user from auth with role, userProfileLoading set to false.");
 
       } else {
         console.log("[FirebaseProvider] No user from onAuthStateChanged. Setting user to null.");

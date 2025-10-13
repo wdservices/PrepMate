@@ -22,6 +22,13 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
       router.push(redirectUrl);
     } else if (!loading && !userProfileLoading && user) {
       console.log(`[ProtectedRoute] Effect: User is present and all loading complete. Access granted for path: ${pathname}`);
+
+      // Role-based access control for admin pages
+      if (pathname.startsWith('/admin') && user.role !== 'admin') {
+        console.warn(`[ProtectedRoute] User ${user.uid} (role: ${user.role || 'none'}) attempted to access admin page: ${pathname}. Redirecting to dashboard.`);
+        router.replace('/dashboard');
+      }
+
     } else {
       console.log(`[ProtectedRoute] Effect: Still loading (Auth: ${loading}, Profile: ${userProfileLoading}) or user state indeterminate. Path: ${pathname}, User: ${user ? user.uid : 'null'}`);
     }

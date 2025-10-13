@@ -1,7 +1,7 @@
 var admin = require("firebase-admin");
 
 // Correct path to your service account key JSON file
-var serviceAccount = require("./prepmate-6eb9d-firebase-adminsdk-fbsvc-f1b65c80b4.json");
+var serviceAccount = require("./prepmate-6eb9d-firebase-adminsdk-fbsvc-dbd9469e01.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -25,9 +25,22 @@ async function setSubscriptionClaim(uid) {
   console.log('Subscription claim set for', uid);
 }
 
+// Set admin role claim
+async function setAdminRoleClaim(email) {
+  try {
+    const user = await admin.auth().getUserByEmail(email);
+    await admin.auth().setCustomUserClaims(user.uid, { role: 'admin' });
+    console.log(`Admin role set for user: ${email} (UID: ${user.uid})`);
+  } catch (error) {
+    console.error(`Error setting admin role for ${email}:`, error);
+  }
+}
+
 // Example usage:
 const uid = 'xidw2H21KQU6ln4ITGbvNZV8WFw1';
+const adminEmail = 'hello.wdservices@gmail.com';
 
 // Uncomment one of the following lines as needed:
-setTrialClaim(uid);
+// setTrialClaim(uid);
 // setSubscriptionClaim(uid);
+setAdminRoleClaim(adminEmail);

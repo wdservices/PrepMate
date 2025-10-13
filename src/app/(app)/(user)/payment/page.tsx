@@ -1,4 +1,16 @@
 
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { COUNTRY_OPTIONS } from "./_components/country-options";
+import { generateReferenceKey } from "@/lib/utils";
+import { FLUTTERWAVE_PUBLIC_KEY } from "@/config/client";
+import { getAuth } from "firebase/auth";
+import { httpsCallable } from "firebase/functions";
+import { functions } from "@/lib/firebase";
+import { paymentService } from "@/lib/firestore-service";
+import { Payment } from "@/types";
+
 "use client";
 import React, { useEffect, useState } from "react";
 // import { toast } from "@/hooks/use-toast"; // Uncomment if you have a toast hook
@@ -94,13 +106,27 @@ export default function PaymentPage() {
             }
             const setSubscription = httpsCallable(functions, 'setSubscriptionAfterPayment');
             await setSubscription();
+
+            // Add payment record to Firestore
+            const newPayment: Payment = {
+              userId: user.uid, // Assuming user is logged in and user.uid is available
+              amount: selectedCountry?.amount || 0,
+              currency: selectedCountry?.currency || "NGN",
+              paymentGateway: "Flutterwave",
+              transactionRef: response.tx_ref,
+              status: "successful",
+              paymentDate: new Date(),
+              // Add other relevant fields from the response or local state
+            };
+            await paymentService.addPayment(newPayment);
+
             // Force token refresh
             const auth = getAuth();
             await auth.currentUser?.getIdToken(true);
             alert("Payment successful! Thank you for subscribing. Your access has been updated.");
           } catch (err) {
-            console.error("Error setting subscription:", err);
-            alert("Payment succeeded, but failed to update your subscription. Please contact support.");
+            console.error("Error setting subscription or adding payment:", err);
+            alert("Payment succeeded, but failed to update your subscription or record payment. Please contact support.");
           }
         } else {
           alert("Payment not completed.");

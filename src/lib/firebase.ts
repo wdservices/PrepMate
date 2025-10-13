@@ -1,56 +1,30 @@
 
-import { initializeApp, getApps, getApp, type FirebaseApp, type FirebaseOptions } from "firebase/app";
+import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 import { getAuth, type Auth } from "firebase/auth";
-import { getFunctions } from "firebase/functions";
+import { getFunctions, type Functions } from "firebase/functions";
 import { getFirestore, type Firestore } from "firebase/firestore";
-import { getStorage, type FirebaseStorage } from "firebase/storage";
 
-// IMPORTANT: The Firebase configuration is hardcoded here to resolve a persistent
-// "auth/api-key-not-valid" error that can occur if environment variables (.env)
-// are not loaded correctly in some development environments.
-// For production, it is highly recommended to move this configuration back into
-// environment variables (e.g., process.env.NEXT_PUBLIC_FIREBASE_API_KEY).
-const firebaseConfig: FirebaseOptions = {
-  apiKey: "AIzaSyBCWamjKQNslH08io4ovsWykHpYVljwHo8",
-  authDomain: "prepmate-6eb9d.firebaseapp.com",
-  projectId: "prepmate-6eb9d",
-  storageBucket: "prepmate-6eb9d.firebasestorage.app",
-  messagingSenderId: "322875549685",
-  appId: "1:322875549685:web:8b6e70dc551992c753a2bc"
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
+let db: Firestore | null = null;
 
 // Initialize Firebase
-let app: FirebaseApp | null = null;
-let auth: Auth | null = null;
-let functions = null;
-let db: Firestore | null = null;
-let storage: FirebaseStorage | null = null;
+const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+const auth: Auth = getAuth(app);
+const functions: Functions = getFunctions(app);
+db = getFirestore(app);
 
-try {
-    // Basic check to ensure config is not empty
-    if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
-        throw new Error("Firebase configuration is missing critical values (apiKey, projectId).");
-    }
-    
-    app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    functions = getFunctions(app);
-    db = getFirestore(app);
-    storage = getStorage(app);
+// Function to get Firestore DB instance, ensuring it's initialized
+const getFirestoreDb = (): Firestore => {
+  return db as Firestore;
+};
 
-    if(typeof window !== 'undefined'){
-        console.log(`Firebase SDK initialized successfully for project: ${firebaseConfig.projectId}`);
-    }
-} catch (error) {
-    console.error("CRITICAL: Firebase initialization error:", error);
-    // In case of error, set to null to avoid breaking the app on the client
-    app = null;
-    auth = null;
-    functions = null;
-    db = null;
-    storage = null;
-}
-
-// Export Firebase services
-export { app, auth, functions, db, storage };
+export { app, auth, getFirestoreDb, functions };

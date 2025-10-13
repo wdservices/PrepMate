@@ -1,7 +1,8 @@
 
-import { db } from '@/lib/firebase';
+import { getFirestoreDb } from '@/lib/firebase';
 import { collection, getDocs, query, orderBy, doc, getDoc, where } from 'firebase/firestore';
 import type { FirestoreExamData, FirestoreSubjectData, Question } from '@/types';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const FIRESTORE_DELETED_ERROR_PREFIX = "[firebase-service] CRITICAL WARNING: Firestore database is presumed deleted. ";
 const FIRESTORE_DELETED_SUFFIX = " This function will likely return no data or an error, and should not be relied upon.";
@@ -9,6 +10,7 @@ const FIRESTORE_DELETED_SUFFIX = " This function will likely return no data or a
 // Fetches top-level exam documents
 export async function getExamsFromFirestore(): Promise<FirestoreExamData[]> {
   console.error(FIRESTORE_DELETED_ERROR_PREFIX + "getExamsFromFirestore called." + FIRESTORE_DELETED_SUFFIX);
+  const db = getFirestoreDb();
   if (!db) {
     console.error("[firebase-service] Firestore (db) is not initialized. Cannot fetch exams.");
     return [];
@@ -37,6 +39,7 @@ export async function getExamsFromFirestore(): Promise<FirestoreExamData[]> {
 // Fetches a single exam document by ID
 export async function getExamByIdFromFirestore(examId: string): Promise<FirestoreExamData | null> {
   console.error(FIRESTORE_DELETED_ERROR_PREFIX + `getExamByIdFromFirestore called for examId: ${examId}.` + FIRESTORE_DELETED_SUFFIX);
+  const db = getFirestoreDb();
   if (!db) {
     console.error("[firebase-service] Firestore (db) is not initialized. Cannot fetch exam.");
     return null;
@@ -76,6 +79,7 @@ const mapToSubject = (docId: string, data: any): FirestoreSubjectData => {
 
 export async function getSubjectsForExamFromFirestore(examId: string): Promise<FirestoreSubjectData[]> {
   console.error(FIRESTORE_DELETED_ERROR_PREFIX + `getSubjectsForExamFromFirestore called for examId: ${examId}.` + FIRESTORE_DELETED_SUFFIX);
+  const db = getFirestoreDb();
   if (!db) {
     console.error("[firebase-service] Firestore (db) is not initialized. Cannot fetch subjects.");
     return [];
@@ -95,6 +99,7 @@ export async function getSubjectsForExamFromFirestore(examId: string): Promise<F
 // Fetches a single subject document by exam ID and subject ID
 export async function getSubjectByIdFromFirestore(examId: string, subjectId: string): Promise<FirestoreSubjectData | null> {
   console.error(FIRESTORE_DELETED_ERROR_PREFIX + `getSubjectByIdFromFirestore called for examId: ${examId}, subjectId: ${subjectId}.` + FIRESTORE_DELETED_SUFFIX);
+  const db = getFirestoreDb();
   if (!db) {
     console.error("[firebase-service] Firestore (db) is not initialized. Cannot fetch subject.");
     return null;
@@ -143,4 +148,19 @@ export async function getQuestionsForSubjectYearFromFirestore(examId: string, su
     return [];
   }
 }
+
+
+export const storageService = {
+  async uploadImage(file: File, path: string): Promise<string> {
+    const db = getFirestoreDb();
+    if (!db) {
+      console.error('Firebase not initialized - db is null');
+      return null;
+    }
+    const storage = getStorage();
+    const storageRef = ref(storage, `images/${file.name}`);
+    await uploadBytes(storageRef, file);
+    return getDownloadURL(storageRef);
+  }
+};
 

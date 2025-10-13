@@ -1,4 +1,3 @@
-
 "use client";
 
 import type { ReactNode } from 'react';
@@ -18,12 +17,12 @@ import {
   SidebarSeparator, 
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
-import { LayoutGrid, BarChart3, Sparkles, BotMessageSquare, BookOpen, Settings } from 'lucide-react'; 
+import { LayoutGrid, BarChart3, Sparkles, BotMessageSquare, BookOpen, Settings, Users, DollarSign, UploadCloud } from 'lucide-react'; 
 import { usePathname } from 'next/navigation';
 import { examService, type Exam } from '@/lib/firestore-service';
 import { useState, useEffect } from 'react'; 
 
-export function AppLayout({ children }: { children: ReactNode }) {
+export function AdminLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [exams, setExams] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(true);
@@ -43,25 +42,13 @@ export function AppLayout({ children }: { children: ReactNode }) {
     loadExams();
   }, []);
 
-  const mainNavItems = [
-    { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid, type: 'static' as const },
-    ...exams.map(exam => {
-      const ExamIcon = exam.icon || BookOpen; 
-      return {
-        href: `/exams/${exam.id}`,
-        label: exam.name,
-        icon: ExamIcon,
-        id: exam.id,
-        type: 'exam' as const,
-      };
-    }),
-    { href: '/insights', label: 'Smart Analysis', icon: BarChart3, type: 'static' as const },
-    { href: '/ai-tutor', label: 'AI Tutor', icon: BotMessageSquare, type: 'static' as const },
+  const adminNavItems = [
+     { href: '/admin', label: 'Admin Dashboard', icon: Users, type: 'admin' as const },
+     { href: '/admin/revenue', label: 'Revenue', icon: DollarSign, type: 'admin' as const },
+     { href: '/admin/users', label: 'Users', icon: Users, type: 'admin' as const },
+     { href: '/admin/settings', label: 'Admin Settings', icon: Settings, type: 'admin' as const },
+     { href: '/admin/upload', label: 'Upload Content', icon: UploadCloud, type: 'admin' as const },
   ];
-
-  const utilityNavItems = [
-    { href: '/settings', label: 'Settings', icon: Settings, type: 'static' as const },
-  ]
 
   return (
     <ProtectedRoute>
@@ -78,15 +65,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
             </SidebarHeader>
             <SidebarContent className="flex-grow">
               <SidebarMenu>
-                {mainNavItems.map((item) => {
-                  let isActive = false;
-                  if (item.type === 'exam') {
-                    isActive = pathname.startsWith(item.href); 
-                  } else if (item.href === '/dashboard') {
-                    isActive = pathname === '/dashboard' || pathname === '/'; 
-                  } else {
-                    isActive = pathname === item.href;
-                  }
+                 {adminNavItems.map((item) => {
+                  const isActive = pathname === item.href || (item.href === '/admin' && pathname.startsWith('/admin/')); 
                   const ItemIcon = item.icon;
                   return (
                     <SidebarMenuItem key={item.href}>
@@ -108,27 +88,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
             </SidebarContent>
             
             <SidebarFooter className="mt-auto border-t border-sidebar-border">
-              <SidebarMenu>
-                {utilityNavItems.map((item) => {
-                  const isActive = pathname === item.href;
-                  const ItemIcon = item.icon;
-                    return (
-                      <SidebarMenuItem key={item.href}>
-                        <SidebarMenuButton
-                          asChild
-                          isActive={isActive}
-                          tooltip={item.label}
-                          className="justify-start"
-                        >
-                          <Link href={item.href}>
-                            <ItemIcon className="flex-shrink-0" />
-                            <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    );
-                })}
-              </SidebarMenu>
+              {/* Admin specific footer items can go here if needed */}
             </SidebarFooter>
           </Sidebar>
 

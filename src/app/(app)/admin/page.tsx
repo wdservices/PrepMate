@@ -1,109 +1,158 @@
 
+"use client";
+
 import type { Metadata } from 'next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { QuestionUploadDialog } from "@/components/admin/question-upload-dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Users, BarChart3, Eye, Clock, Activity, UploadCloud } from 'lucide-react';
-import { QuestionUploadForm } from '@/components/admin/question-upload-form';
+import { Users, BarChart3, Eye, Clock, Activity, UploadCloud, Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { adminService } from '@/lib/firestore-service';
+import { AdminStats, RecentUserActivity, RevenueStats } from '@/types';
+import { RevenueCard } from '@/components/admin/revenue-card';
 
-export const metadata: Metadata = {
-  title: 'Admin Dashboard',
-};
 
-// Mock data - in a real app, this would come from your database/analytics
-const mockStats = {
-  todaysUsers: 125,
-  monthlyUsers: 1850,
-  totalUsers: 5400,
-  mostViewedExam: "JAMB",
-  mostViewedSubject: "Chemistry",
-};
-
-const mockRecentUsers = [
-  { id: "user1", name: "Aisha Bello", email: "aisha.b@example.com", lastSeen: "Online", examsTaken: 3, role: "Student" },
-  { id: "user2", name: "Chinedu Okoro", email: "chinedu.o@example.com", lastSeen: "2 hours ago", examsTaken: 1, role: "Student" },
-  { id: "user3", name: "Funke Adebayo", email: "funke.a@example.com", lastSeen: "1 day ago", examsTaken: 5, role: "Student" },
-  { id: "user4", name: "Musa Ibrahim", email: "musa.i@example.com", lastSeen: "Online", examsTaken: 0, role: "New User" },
-  { id: "user5", name: "Admin User", email: "admin@prepmate.com", lastSeen: "5 minutes ago", examsTaken: 0, role: "Admin" },
-];
 
 export default function AdminDashboardPage() {
+  const [adminStats, setAdminStats] = useState<AdminStats | null>(null);
+  const [recentUsers, setRecentUsers] = useState<RecentUserActivity[]>([]);
+  const [revenueStats, setRevenueStats] = useState<RevenueStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const stats = await adminService.getAdminStats();
+        setAdminStats(stats);
+
+        const users = await adminService.getRecentUserActivity();
+        setRecentUsers(users);
+
+        const revenue = await adminService.getRevenueStats();
+        setRevenueStats(revenue);
+      } catch (err) {
+        console.error("Error fetching admin dashboard data:", err);
+        setError("Failed to load dashboard data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="h-10 w-10 animate-spin text-primary" />
+        <span className="ml-3 text-lg">Loading Admin Dashboard...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="flex justify-center items-center h-screen text-lg text-red-500">Error: {error}</div>;
+  }
+
   return (
-    <div className="space-y-8">
+    <div className="container mx-auto py-8 px-4 min-h-screen shadow-lg rounded-lg">
+      <div className="space-y-8 mb-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl flex items-center">
+          <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl flex items-center dark:text-gray-50">
             <BarChart3 className="mr-3 h-8 w-8 text-primary" />
             Admin Dashboard
           </h1>
-          <p className="mt-2 text-lg text-muted-foreground">
+          <p className="mt-2 text-base text-gray-500 dark:text-gray-400">
             Overview of application usage, user activity, and content management.
           </p>
         </div>
+        <QuestionUploadDialog />
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="shadow-lg">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <RevenueCard totalRevenue={revenueStats?.totalRevenue || 0} period="All Time" />
+        <Card className="shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Today's Active Users</CardTitle>
             <Users className="h-5 w-5 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-foreground">{mockStats.todaysUsers}</div>
-            <p className="text-xs text-muted-foreground mt-1">+5 since yesterday (mock data)</p>
+            <div className="text-3xl font-bold text-foreground">{adminStats?.todaysUsers}</div>
+            <p className="text-xs text-muted-foreground mt-1">+5 since yesterday</p>
           </CardContent>
         </Card>
-        <Card className="shadow-lg">
+        <Card className="shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Monthly Active Users</CardTitle>
             <Users className="h-5 w-5 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-foreground">{mockStats.monthlyUsers}</div>
-             <p className="text-xs text-muted-foreground mt-1">+10% this month (mock data)</p>
+            <div className="text-3xl font-bold text-foreground">{adminStats?.monthlyUsers}</div>
+             <p className="text-xs text-muted-foreground mt-1">+10% this month</p>
           </CardContent>
         </Card>
-        <Card className="shadow-lg">
+        <Card className="shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Total Registered Users</CardTitle>
             <Users className="h-5 w-5 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-foreground">{mockStats.totalUsers}</div>
-            <p className="text-xs text-muted-foreground mt-1">Growing steadily (mock data)</p>
+            <div className="text-3xl font-bold text-foreground">{adminStats?.totalUsers}</div>
+            <p className="text-xs text-muted-foreground mt-1">Growing steadily</p>
           </CardContent>
         </Card>
-         <Card className="shadow-lg">
+         <Card className="shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Most Viewed Exam</CardTitle>
             <Eye className="h-5 w-5 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">{mockStats.mostViewedExam}</div>
-            <p className="text-xs text-muted-foreground mt-1">Based on recent activity (mock data)</p>
+            <div className="text-2xl font-bold text-foreground">{adminStats?.mostViewedExam}</div>
+            <p className="text-xs text-muted-foreground mt-1">Based on recent activity</p>
           </CardContent>
         </Card>
-        <Card className="shadow-lg">
+        <Card className="shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Most Viewed Subject</CardTitle>
             <Activity className="h-5 w-5 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">{mockStats.mostViewedSubject}</div>
-            <p className="text-xs text-muted-foreground mt-1">Across all exams (mock data)</p>
+            <div className="text-2xl font-bold text-foreground">{adminStats?.mostViewedSubject}</div>
+            <p className="text-xs text-muted-foreground mt-1">Across all exams</p>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Content Management */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-50">Content Management</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Card className="shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Upload New Questions</CardTitle>
+              <UploadCloud className="h-5 w-5 text-primary" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-xs text-muted-foreground mb-3">Add new questions to the database for various exams and subjects.</p>
+              <QuestionUploadDialog />
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       {/* Recent Users Table */}
       <Card className="shadow-xl">
         <CardHeader>
-          <CardTitle className="text-xl">Recent User Activity</CardTitle>
-          <CardDescription>A snapshot of user details and their status. (Mock Data)</CardDescription>
+          <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-50">Recent User Activity</CardTitle>
+          <CardDescription className="text-gray-500 dark:text-gray-400">A snapshot of user details and their status.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
+          <div className="overflow-x-auto">
+            <Table className="min-w-full">
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
@@ -114,7 +163,7 @@ export default function AdminDashboardPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockRecentUsers.map((user) => (
+              {recentUsers.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell className="font-medium">{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
@@ -132,12 +181,14 @@ export default function AdminDashboardPage() {
               ))}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
 
       {/* Question Upload Form */}
-      <QuestionUploadForm />
 
+
+    </div>
     </div>
   );
 }

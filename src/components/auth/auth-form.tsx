@@ -128,10 +128,18 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
         console.log(`[AuthForm] router.replace(${redirectUrl}) called after signup.`);
       } else if (authMode === "login") {
         const { email, password } = values as z.infer<typeof loginSchema>;
-        await signInWithEmailAndPassword(firebaseAuth, email, password);
+        const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
+        const idTokenResult = await userCredential.user.getIdTokenResult(true);
+        const role = idTokenResult.claims.role as 'admin' | 'student' | undefined;
+
         toast({ title: "Logged In", description: "Welcome back!" });
-        const redirectUrl = searchParams.get('redirect') || '/dashboard';
-        console.log(`[AuthForm] Login successful. Calculated redirectUrl: ${redirectUrl}. Attempting redirect...`);
+
+        let redirectUrl = searchParams.get('redirect') || '/dashboard';
+        if (role === 'admin') {
+          redirectUrl = '/admin';
+        }
+
+        console.log(`[AuthForm] Login successful. User role: ${role}. Calculated redirectUrl: ${redirectUrl}. Attempting redirect...`);
         router.replace(redirectUrl);
         console.log(`[AuthForm] router.replace(${redirectUrl}) called after login.`);
       } else if (authMode === "forgotPassword") {

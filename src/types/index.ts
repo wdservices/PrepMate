@@ -73,6 +73,40 @@ export interface AppUser extends FirebaseUser {
   trialEndsAt?: number; // Timestamp
   isSubscribed?: boolean;
   subscriptionEndsAt?: number; // Timestamp
+  role?: 'admin' | 'student'; // Added role property
   // Add other app-specific user properties here if needed
+}
+
+export interface AdminStats {
+  todaysUsers: number;
+  monthlyUsers: number;
+  totalUsers: number;
+  mostViewedExam: string;
+  mostViewedSubject: string;
+}
+
+export interface RecentUserActivity {
+  id: string;
+  name: string;
+  email: string;
+  lastSeen: string;
+  examsTaken: number;
+  role: string;
+}
+
+export interface RevenueStats {
+  totalRevenue: number;
+  monthlyRevenue: number;
+  annualRevenue: number;
+}
+
+export interface Payment {
+  id?: string;
+  userId: string;
+  amount: number;
+  currency: string;
+  status: 'pending' | 'completed' | 'failed';
+  timestamp: any; // Firestore Timestamp
+  // Add other relevant payment details like paymentMethod, transactionId, etc.
 }
 
