@@ -3,10 +3,12 @@ import { QuestionCard } from '@/components/questions/QuestionCard';
 import { examService, type Question as FirestoreQuestion } from '@/lib/firestore-service';
 import { useState } from 'react';
 
+import { QuestionOption } from '@/types';
+
 interface Question {
   id: string;
   text: string;
-  options: string[];
+  options: QuestionOption[];
   answer: string;
   explanation?: string;
 }

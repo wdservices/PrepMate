@@ -6,24 +6,10 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle, Bot, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type QuestionOption = {
-  id: string;
-  text: string;
-};
-
-type Question = {
-  id: string;
-  text: string;
-  options: QuestionOption[] | string[];
-  correctOptionId?: string;
-  answer?: string | number;  // Alternative field for correct answer
-  correctAnswer?: string | number;  // Another alternative field
-  explanation?: string;
-  imageUrl?: string;
-};
+import { UnifiedQuestion } from '@/types/question';
 
 interface QuestionDisplayProps {
-  question: Question;
+  question: UnifiedQuestion;
   subjectName: string;
   questionNumber?: number;
   onRequestExplanation?: (question: Question) => void;

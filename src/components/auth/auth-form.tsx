@@ -122,7 +122,7 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
           await updateProfile(userCredential.user, { displayName: name });
         }
         toast({ title: "Account Created", description: `Welcome to ${siteConfig.name}!` });
-        const redirectUrl = searchParams.get('redirect') || '/dashboard';
+        const redirectUrl = searchParams?.get('redirect') || '/dashboard';
         console.log(`[AuthForm] Signup successful. Attempting to redirect to: ${redirectUrl}`);
         router.replace(redirectUrl);
         console.log(`[AuthForm] router.replace(${redirectUrl}) called after signup.`);
@@ -134,7 +134,7 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
 
         toast({ title: "Logged In", description: "Welcome back!" });
 
-        let redirectUrl = searchParams.get('redirect') || '/dashboard';
+        let redirectUrl = searchParams?.get('redirect') || '/dashboard';
         if (role === 'admin') {
           redirectUrl = '/admin';
         }

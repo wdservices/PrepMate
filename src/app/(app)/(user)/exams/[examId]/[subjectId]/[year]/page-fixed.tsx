@@ -43,9 +43,9 @@ export default function SubjectYearQuestionsPage() {
   const [aiMessages, setAiMessages] = useState<Array<{role: 'user' | 'ai', content: string}>>([]);
 
   // Extract parameters from URL
-  const examId = Array.isArray(params.examId) ? params.examId[0] : params.examId;
-  const subjectId = Array.isArray(params.subjectId) ? params.subjectId[0] : params.subjectId;
-  const year = Array.isArray(params.year) ? params.year[0] : params.year;
+  const examId = params?.examId ? (Array.isArray(params.examId) ? params.examId[0] : params.examId) : '';
+  const subjectId = params?.subjectId ? (Array.isArray(params.subjectId) ? params.subjectId[0] : params.subjectId) : '';
+  const year = params?.year ? (Array.isArray(params.year) ? params.year[0] : params.year) : '';
   const yearNumber = year ? parseInt(year, 10) : new Date().getFullYear();
   const yearString = yearNumber.toString();
 

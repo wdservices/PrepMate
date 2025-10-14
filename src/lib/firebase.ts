@@ -14,16 +14,19 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-let db: Firestore | null = null;
+export let db: Firestore;
 
 // Initialize Firebase
 const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+db = getFirestore(app);
 const auth: Auth = getAuth(app);
 const functions: Functions = getFunctions(app);
-db = getFirestore(app);
 
 // Function to get Firestore DB instance, ensuring it's initialized
 const getFirestoreDb = (): Firestore => {
+  if (!db) {
+    db = getFirestore(app);
+  }
   return db as Firestore;
 };
 

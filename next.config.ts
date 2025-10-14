@@ -61,7 +61,6 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   // Disable server components for now
   experimental: {
-    serverComponents: false,
   },
 };
 

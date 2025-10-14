@@ -11,6 +11,8 @@ import {
   type DocumentData,
   type QueryDocumentSnapshot
 } from 'firebase/firestore';
+import { QuestionOption } from '@/types';
+
 import { getFirestoreDb } from './firebase';
 import { AdminStats, RecentUserActivity, RevenueStats, Payment } from '../types';
 
@@ -36,6 +38,7 @@ export interface Subject {
 export interface Question {
   id: string;
   text: string;
+  options: QuestionOption[];
   year: number;
   correctOptionId: string;
   options: Array<{

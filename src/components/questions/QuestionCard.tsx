@@ -73,6 +73,7 @@ export function QuestionCard({
         : `You selected: ${option}. The correct answer is: ${question.answer}. ` + 
           (question.explanation || '')
       );
+  };
     
     setExplanation(defaultExplanation);
     setIsLoading(false);
@@ -109,7 +110,7 @@ export function QuestionCard({
     
     // Show the explanation
     showFallbackExplanation(option, isAnswerCorrect);
-    });
+
 
     // Normalize both the selected option and the correct answer for comparison
     const normalizedOption = normalizeString(option);
@@ -365,4 +366,3 @@ export function QuestionCard({
       />
     </Card>
   );
-}

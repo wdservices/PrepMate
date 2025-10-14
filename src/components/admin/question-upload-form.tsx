@@ -101,7 +101,7 @@ export function QuestionUploadForm() {
       return;
     }
     
-    let imageUrl: string | undefined = undefined;
+    let imageUrl: string | null = null; // Initialize as null instead of undefined
     if (imageFile) {
       try {
         toast({

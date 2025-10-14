@@ -18,10 +18,12 @@ import { cn } from "@/lib/utils";
 import { ChatModal } from "./ChatModal";
 import { aiService } from "@/lib/ai-service-client";
 
+import { QuestionOption } from '@/types';
+
 type Question = {
   id: string;
   text: string;
-  options: string[];
+  options: QuestionOption[];
   answer: string;
   explanation?: string;
 };

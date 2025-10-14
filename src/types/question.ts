@@ -5,10 +5,10 @@ import type { Question as UIDataQuestion } from '@/types';
 export type UnifiedQuestion = {
   id: string;
   text: string;
-  options: Array<{ id: string; text: string }> | string[];
+  options: Array<{ id: string; text: string }>;
   correctOptionId: string;
   explanation?: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   year?: number;
 };
 
