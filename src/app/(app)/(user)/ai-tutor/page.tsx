@@ -5,7 +5,7 @@ import { useState } from 'react';
 import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AiAssistantChat } from '@/components/ai/ai-assistant-chat';
+import { AIAssistantChat } from '@/components/ai/ai-assistant-chat';
 import { BotMessageSquare, MessageSquare } from 'lucide-react';
 
 // Client components cannot export metadata directly.
@@ -43,10 +43,10 @@ export default function AiTutorPage() {
         </CardContent>
       </Card>
 
-      <AiAssistantChat
+      <AIAssistantChat
         isOpen={isChatOpen}
         onOpenChange={setIsChatOpen}
-        currentQuestionContext={null} // No specific question context for general tutor
+        currentQuestionContext={undefined} // No specific question context for general tutor
         subjectName="General Academic Support" // Generic subject
       />
     </div>

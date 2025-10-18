@@ -1,0 +1,782 @@
+[
+  {
+    "id": "q1",
+    "text": "Which of the following is not a solution to problems of local farmers?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Rehabilitating bad roads" },
+      { "id": "optB", "text": "Subsidizing crude implements" },
+      { "id": "optC", "text": "Practising improved farming methods" },
+      { "id": "optD", "text": "Providing credit facilities by governments" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q2",
+    "text": "The main motive of the farmer in commercial agriculture is to",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "maximize profit." },
+      { "id": "optB", "text": "produce rare crop varieties." },
+      { "id": "optC", "text": "produce for family consumption." },
+      { "id": "optD", "text": "increase risk." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q3",
+    "text": "The land tenure system which leads to land fragmentation is",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "freehold." },
+      { "id": "optB", "text": "inheritance." },
+      { "id": "optC", "text": "pledging." },
+      { "id": "optD", "text": "gift." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q4",
+    "text": "Subsistence farming is practised in West Africa on land mostly acquired through",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "pledge." },
+      { "id": "optB", "text": "donation." },
+      { "id": "optC", "text": "inheritance." },
+      { "id": "optD", "text": "purchase." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q5",
+    "text": "The roles of government in the development of agriculture in Nigeria include the following except",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "reorganization of the rural communities." },
+      { "id": "optB", "text": "provision of extension service." },
+      { "id": "optC", "text": "provision of credit facilities." },
+      { "id": "optD", "text": "rehabilitation of feeder roads." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q6",
+    "text": "The main reason for governments enforcement of efficient quarantine laws is to",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "check the destruction of unproductive animals." },
+      { "id": "optB", "text": "attract school leavers into agriculture." },
+      { "id": "optC", "text": "give grants to researchers for agricultural problems." },
+      { "id": "optD", "text": "check and control the inflow of animals and crops." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q7",
+    "text": "The most important objective of the farm settlement scheme is to",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "supply farm tools to farmers." },
+      { "id": "optB", "text": "provide subsidy for small scale farmers." },
+      { "id": "optC", "text": "demonstrate that farming can be a profitable business." },
+      { "id": "optD", "text": "mechanise agriculture." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q8",
+    "text": "In which of the following is land used for agricultural purposes?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Forage production" },
+      { "id": "optB", "text": "Recreation" },
+      { "id": "optC", "text": "Mining" },
+      { "id": "optD", "text": "Road construction" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q9",
+    "text": "Which of the following climatic factors is primarily necessary for photosynthesis in crop plants?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Wind" },
+      { "id": "optB", "text": "Light" },
+      { "id": "optC", "text": "Rainfall" },
+      { "id": "optD", "text": "Temperature" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q10",
+    "text": "An example of a biotic factor affecting crop or animal production is",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "predator." },
+      { "id": "optB", "text": "soil texture." },
+      { "id": "optC", "text": "soil structure." },
+      { "id": "optD", "text": "light." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q11",
+    "text": "The effect of high temperature on livestock production include the following except",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "reduction in growth rate." },
+      { "id": "optB", "text": "reduction in feed intake." },
+      { "id": "optC", "text": "increase in water intake." },
+      { "id": "optD", "text": "increase in production." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q12",
+    "text": "Which of the following is the role of organisms in soil formation?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Deposition of soil particles" },
+      { "id": "optB", "text": "Breaking down of rocks" },
+      { "id": "optC", "text": "Increasing the level of soil minerals" },
+      { "id": "optD", "text": "Transporting soil particles" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q13",
+    "text": "Which of these rocks is formed from sandstone?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Limestone" },
+      { "id": "optB", "text": "Quartzite" },
+      { "id": "optC", "text": "Marble" },
+      { "id": "optD", "text": "Graphite" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q14",
+    "text": "Soils with particle sizes ranging between 0.2 – 0.02 mm are referred to as",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "gravel." },
+      { "id": "optB", "text": "fine sand." },
+      { "id": "optC", "text": "silt." },
+      { "id": "optD", "text": "clay." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q15",
+    "text": "Which of the following types of soil is easily water logged?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Sand" },
+      { "id": "optB", "text": "Clay" },
+      { "id": "optC", "text": "Loam" },
+      { "id": "optD", "text": "Silt" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q16",
+    "text": "The most important horizon in a soil profile for crop production is",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "bed rock." },
+      { "id": "optB", "text": "weathered parent material." },
+      { "id": "optC", "text": "sub soil." },
+      { "id": "optD", "text": "top soil." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q17",
+    "text": "Which of the following is a micro element?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Calcium" },
+      { "id": "optB", "text": "Sulphur" },
+      { "id": "optC", "text": "Phosphorus" },
+      { "id": "optD", "text": "Manganese" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q18",
+    "text": "Soil fertility can be improved through the following except",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "planting of cover crops." },
+      { "id": "optB", "text": "crop rotation." },
+      { "id": "optC", "text": "fertilizer application." },
+      { "id": "optD", "text": "continuous cropping." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q19",
+    "text": "Which of the following farm practices will lead to the pollution of soil water?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Bush burning" },
+      { "id": "optB", "text": "Crop rotation" },
+      { "id": "optC", "text": "Clean clearing" },
+      { "id": "optD", "text": "Zero grazing" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q20",
+    "text": "The most suitable structure for underground drainage in farms is",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "narrow solid pipe." },
+      { "id": "optB", "text": "waste pipe." },
+      { "id": "optC", "text": "perforated concrete pipe." },
+      { "id": "optD", "text": "clay pipe." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q21",
+    "text": "The most unreliable source of power on the farm is",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "heat engine." },
+      { "id": "optB", "text": "wind." },
+      { "id": "optC", "text": "electricity." },
+      { "id": "optD", "text": "animal." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q22",
+    "text": "The farm machinery used to sow seeds and apply fertilizer at the same time is",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "seed drill." },
+      { "id": "optB", "text": "combine drill." },
+      { "id": "optC", "text": "fertilizer spreader." },
+      { "id": "optD", "text": "jab planter." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q23",
+    "text": "The farm operation which require stationary power is",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "land clearing." },
+      { "id": "optB", "text": "threshing." },
+      { "id": "optC", "text": "ploughing." },
+      { "id": "optD", "text": "harrowing." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q24",
+    "text": "The following are all secondary tillage implements except the",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "disc harrow." },
+      { "id": "optB", "text": "spring line harrow." },
+      { "id": "optC", "text": "disc plough." },
+      { "id": "optD", "text": "disc ridger." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q25",
+    "text": "An instrument used to determine height or elevation of a point relative to another during survey on the farm is the",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "arrow." },
+      { "id": "optB", "text": "ranging pole." },
+      { "id": "optC", "text": "cross staff." },
+      { "id": "optD", "text": "Gunter’s chain." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q26",
+    "text": "A variety of oil palm is",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Amelonado." },
+      { "id": "optB", "text": "Acuminata." },
+      { "id": "optC", "text": "Tenera." },
+      { "id": "optD", "text": "Trinitario." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q27",
+    "text": "Which of the following crops has not lost its ability to propagate by seeds despite being propagated by vegetative means for many years?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Yam" },
+      { "id": "optB", "text": "Cassava" },
+      { "id": "optC", "text": "Cocoyam" },
+      { "id": "optD", "text": "Spinach" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q28",
+    "text": "Which of the following statements is not a reason for pruning? To",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "remove dead and diseased plant parts." },
+      { "id": "optB", "text": "reduce the leave area and allow greater light penetration." },
+      { "id": "optC", "text": "encourage plant to attain a desirable shape." },
+      { "id": "optD", "text": "incorporate plant matter into the soil." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q29",
+    "text": "Which of the following is not an advantage of cover cropping?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Protecting soil from direct heat of the sun" },
+      { "id": "optB", "text": "Preventing soil erosion" },
+      { "id": "optC", "text": "Decreasing the population of earthworms in the soil" },
+      { "id": "optD", "text": "Functioning as wind breaker" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q30",
+    "text": "If the yield of cowpea is 750 kg per hectare. Calculate the yield of cowpea from a 20 ha farm.",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "7,500 kg" },
+      { "id": "optB", "text": "15,000 kg" },
+      { "id": "optC", "text": "22,500 kg" },
+      { "id": "optD", "text": "30,000 kg" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q31",
+    "text": "The major reason why the moisture content of crops should be reduced before storage is to",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "improve storage quality and avoid fungal infection." },
+      { "id": "optB", "text": "reduce weight during transportation." },
+      { "id": "optC", "text": "maintain chemical composition of the crop." },
+      { "id": "optD", "text": "make crop palatable for eating." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q32",
+    "text": "A creeping perennial grass which forms rhizomes and roots freely at the nodes is",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "elephant grass." },
+      { "id": "optB", "text": "guinea grass." },
+      { "id": "optC", "text": "gamba grass." },
+      { "id": "optD", "text": "giant star grass." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q33",
+    "text": "The insect vector involved in the transmission of cassava mosaic virus is",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "grasshopper." },
+      { "id": "optB", "text": "termite." },
+      { "id": "optC", "text": "whitefly." },
+      { "id": "optD", "text": "moth." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q34",
+    "text": "Mottling and deformation of leaves in crops are symptoms of a",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "viral disease." },
+      { "id": "optB", "text": "bacterial disease." },
+      { "id": "optC", "text": "fungal disease." },
+      { "id": "optD", "text": "nematode disease." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q35",
+    "text": "Downy mildew in maize is caused by a/an",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "insect." },
+      { "id": "optB", "text": "fungus." },
+      { "id": "optC", "text": "nematode." },
+      { "id": "optD", "text": "bacterium." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q36",
+    "text": "Which of the following is best for controlling yellow streak of maize?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Early planting and spraying with insecticides" },
+      { "id": "optB", "text": "Early planting and application of fungicides" },
+      { "id": "optC", "text": "Late planting and application of nematicides" },
+      { "id": "optD", "text": "Late planting and application of fungicides" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q37",
+    "text": "Which of the following is not a method of controlling perennial weeds?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Hand pulling" },
+      { "id": "optB", "text": "Use of crop rotation" },
+      { "id": "optC", "text": "Regular tillage" },
+      { "id": "optD", "text": "Use of hoes" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q38",
+    "text": "Which of the following weeds is dispersed by animals?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Crotolaria" },
+      { "id": "optB", "text": "Acanthospermum hispidium" },
+      { "id": "optC", "text": "Talinum triangulare" },
+      { "id": "optD", "text": "Emilia sonchifolia" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q39",
+    "text": "A weed is a grass",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "growing on a lawn." },
+      { "id": "optB", "text": "growing on a legume farm." },
+      { "id": "optC", "text": "that has been cultivated." },
+      { "id": "optD", "text": "that is grazed upon by animals." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q40",
+    "text": "Which of the following corresponds to the true stomach of a simple stomach animal?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Omasum" },
+      { "id": "optB", "text": "Reticulum" },
+      { "id": "optC", "text": "Abomasum" },
+      { "id": "optD", "text": "Rumen" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q41",
+    "text": "The gestation period of rabbits (in days) is",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "15." },
+      { "id": "optB", "text": "21." },
+      { "id": "optC", "text": "31." },
+      { "id": "optD", "text": "42." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q42",
+    "text": "Parturition in farm animals marks the end of",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "breeding." },
+      { "id": "optB", "text": "mating." },
+      { "id": "optC", "text": "gestation." },
+      { "id": "optD", "text": "egg laying." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q43",
+    "text": "N’dama cattle are well adapted to West Africa because the breed",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "can withstand a long period of drought." },
+      { "id": "optB", "text": "is resistant to trypanosomiasis." },
+      { "id": "optC", "text": "can feed well on poor quality forages." },
+      { "id": "optD", "text": "is gregarious." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q44",
+    "text": "Livestock feed concentrates are usually those ingredients that are high in",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "fibre and water." },
+      { "id": "optB", "text": "protein and energy." },
+      { "id": "optC", "text": "vitamins and crude fibre." },
+      { "id": "optD", "text": "fibre and vitamins." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q45",
+    "text": "Vitamin A is needed in livestock for the prevention of",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "milk fever." },
+      { "id": "optB", "text": "rickets." },
+      { "id": "optC", "text": "night blindness." },
+      { "id": "optD", "text": "beriberi." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q46",
+    "text": "Natural rangelands are not commonly found in areas with",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "solar radiation." },
+      { "id": "optB", "text": "strong wind." },
+      { "id": "optC", "text": "high relative humidity." },
+      { "id": "optD", "text": "low atmospheric pressure." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q47",
+    "text": "Crops grown specifically to feed animals in fresh or preserved forms are referred to as",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "grass crops." },
+      { "id": "optB", "text": "fodder crops." },
+      { "id": "optC", "text": "arable crops." },
+      { "id": "optD", "text": "cereal crops." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q48",
+    "text": "Which of the following is not a characteristic feature of a well prepared silage?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Sweet aromatic smell" },
+      { "id": "optB", "text": "Greenish colouration" },
+      { "id": "optC", "text": "Very nutritive" },
+      { "id": "optD", "text": "Mouldy growth" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q49",
+    "text": "Which of the following diseases is caused by a protozoon?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Trypanosomiasis" },
+      { "id": "optB", "text": "Milk fever" },
+      { "id": "optC", "text": "Rinderpest" },
+      { "id": "optD", "text": "Anthrax" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q50",
+    "text": "Which of the following is not involved in the life cycle of the liver fluke?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Sheep" },
+      { "id": "optB", "text": "Cattle" },
+      { "id": "optC", "text": "Snail" },
+      { "id": "optD", "text": "Tick" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q51",
+    "text": "The main mode of infection of rinderpest disease in cattle is through",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "grazing." },
+      { "id": "optB", "text": "drinking." },
+      { "id": "optC", "text": "contact." },
+      { "id": "optD", "text": "inhalation." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q52",
+    "text": "Which of the following methods of animal selection is based on the performance of the offspring?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Individual selection" },
+      { "id": "optB", "text": "Progeny selection" },
+      { "id": "optC", "text": "Family selection" },
+      { "id": "optD", "text": "Mass selection" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q53",
+    "text": "Calculate the percentage change in quantity of commodity demanded.",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "10%" },
+      { "id": "optB", "text": "20%" },
+      { "id": "optC", "text": "30%" },
+      { "id": "optD", "text": "40%" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q54",
+    "text": "Calculate the percentage change in price for the commodity.",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "50.0%" },
+      { "id": "optB", "text": "40.0%" },
+      { "id": "optC", "text": "33.3%" },
+      { "id": "optD", "text": "23.3%" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q55",
+    "text": "Find the elasticity of demand for the commodity.",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "0.9" },
+      { "id": "optB", "text": "0.8" },
+      { "id": "optC", "text": "0.6" },
+      { "id": "optD", "text": "0.3" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q56",
+    "text": "A repayable loan obtained from the bank for farm operations is known as",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "subsidy." },
+      { "id": "optB", "text": "credit." },
+      { "id": "optC", "text": "subvention." },
+      { "id": "optD", "text": "capital." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q57",
+    "text": "Which of the following is not true about record keeping in agricultural production?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "It shows the performance of the farm at a given time." },
+      { "id": "optB", "text": "It assists in the modification of farm strategies." },
+      { "id": "optC", "text": "It enables the farmers to purchase heavy farm machinery." },
+      { "id": "optD", "text": "It is useful for tax purposes." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q58",
+    "text": "The process of spreading new farming techniques to farmers is commonly referred to as",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "diffusion." },
+      { "id": "optB", "text": "learning." },
+      { "id": "optC", "text": "distribution." },
+      { "id": "optD", "text": "assimilation." }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q59",
+    "text": "Which of the following agricultural specialist serves as an intermediary between research organisations and the farmers?",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "Plant pathologist" },
+      { "id": "optB", "text": "Project planning officer" },
+      { "id": "optC", "text": "Entomologist" },
+      { "id": "optD", "text": "Extension officer" }
+    ],
+    "imageUrl": null
+  },
+  {
+    "id": "q60",
+    "text": "The most popular method used by the Agricultural Development Projects in their extension service is",
+    "year": 2000,
+    "correctOptionId": null,
+    "options": [
+      { "id": "optA", "text": "training and visits." },
+      { "id": "optB", "text": "individual contact." },
+      { "id": "optC", "text": "demonstration." },
+      { "id": "optD", "text": "farmers’ festivals." }
+    ],
+    "imageUrl": null
+  }
+]

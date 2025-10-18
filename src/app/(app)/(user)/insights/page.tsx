@@ -88,17 +88,25 @@ export default function SmartAnalysisPage() {
         throw new Error('No questions found for the selected subject');
       }
 
+      // Get exam and subject names
+      const selectedExam = exams.find(e => e.id === selectedExamId);
+      const selectedSubject = subjects.find(s => s.id === selectedSubjectId);
+
       // Format questions for analysis
-      const formattedQuestions = questions.map(q => ({
-        id: q.id,
-        text: q.text,
-        options: q.options.map(opt => opt.text),
-        correctAnswer: q.correctOptionId,
+      const pastQuestions = questions.map(q => ({
+        questionText: q.text,
         year: q.year
       }));
 
+      // Prepare analysis input
+      const analysisInput = {
+        examName: selectedExam?.name || 'Unknown Exam',
+        subject: selectedSubject?.name || 'Unknown Subject',
+        pastQuestions
+      };
+
       // Run analysis
-      const result = analyzeQuestionFrequency(formattedQuestions);
+      const result = await analyzeQuestionFrequency(analysisInput);
       setAnalysisResult(result);
       
       toast({
@@ -222,16 +230,16 @@ export default function SmartAnalysisPage() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-muted p-4 rounded-lg">
-                  <p className="text-sm text-muted-foreground">Total Questions</p>
-                  <p className="text-2xl font-bold">{analysisResult.totalQuestions}</p>
+                  <p className="text-sm text-muted-foreground">Frequent Questions</p>
+                  <p className="text-2xl font-bold">{analysisResult.frequentQuestions.length}</p>
                 </div>
                 <div className="bg-muted p-4 rounded-lg">
-                  <p className="text-sm text-muted-foreground">Unique Questions</p>
-                  <p className="text-2xl font-bold">{analysisResult.uniqueQuestions}</p>
+                  <p className="text-sm text-muted-foreground">Predicted Questions</p>
+                  <p className="text-2xl font-bold">{analysisResult.predictedQuestions.length}</p>
                 </div>
                 <div className="bg-muted p-4 rounded-lg">
-                  <p className="text-sm text-muted-foreground">Most Frequent Year</p>
-                  <p className="text-2xl font-bold">{analysisResult.mostFrequentYear || 'N/A'}</p>
+                  <p className="text-sm text-muted-foreground">Analysis Available</p>
+                  <p className="text-2xl font-bold">✓</p>
                 </div>
               </div>
             </CardContent>
@@ -253,19 +261,21 @@ export default function SmartAnalysisPage() {
                         <div className="flex items-center space-x-3">
                           <span className="font-medium">{item.questionText}</span>
                           <span className="text-sm text-muted-foreground">
-                            (Appears {item.frequency} times)
+                            (Appears {item.appearedInYears.length} times)
                           </span>
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
                         <div className="space-y-2 pl-1">
-                          <p className="text-sm">
-                            <span className="font-medium">Correct Answer:</span>{' '}
-                            {item.correctAnswer}
-                          </p>
+                          {item.topic && (
+                            <p className="text-sm">
+                              <span className="font-medium">Topic:</span>{' '}
+                              {item.topic}
+                            </p>
+                          )}
                           <p className="text-sm">
                             <span className="font-medium">Appears in years:</span>{' '}
-                            {item.years.join(', ')}
+                            {item.appearedInYears.join(', ')}
                           </p>
                         </div>
                       </AccordionContent>

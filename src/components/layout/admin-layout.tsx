@@ -66,7 +66,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
             <SidebarContent className="flex-grow">
               <SidebarMenu>
                  {adminNavItems.map((item) => {
-                  const isActive = pathname === item.href || (item.href === '/admin' && pathname.startsWith('/admin/')); 
+                  const isActive = pathname === item.href || (item.href === '/admin' && pathname?.startsWith('/admin/')); 
                   const ItemIcon = item.icon;
                   return (
                     <SidebarMenuItem key={item.href}>

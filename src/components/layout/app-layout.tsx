@@ -46,7 +46,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const mainNavItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutGrid, type: 'static' as const },
     ...exams.map(exam => {
-      const ExamIcon = exam.icon || BookOpen; 
+      const ExamIcon = BookOpen; // Default to BookOpen since Firestore exams don't have icon property 
       return {
         href: `/exams/${exam.id}`,
         label: exam.name,
@@ -80,12 +80,14 @@ export function AppLayout({ children }: { children: ReactNode }) {
               <SidebarMenu>
                 {mainNavItems.map((item) => {
                   let isActive = false;
-                  if (item.type === 'exam') {
-                    isActive = pathname.startsWith(item.href); 
-                  } else if (item.href === '/dashboard') {
-                    isActive = pathname === '/dashboard' || pathname === '/'; 
-                  } else {
-                    isActive = pathname === item.href;
+                  if (pathname) {
+                    if (item.type === 'exam') {
+                      isActive = pathname.startsWith(item.href); 
+                    } else if (item.href === '/dashboard') {
+                      isActive = pathname === '/dashboard' || pathname === '/'; 
+                    } else {
+                      isActive = pathname === item.href;
+                    }
                   }
                   const ItemIcon = item.icon;
                   return (

@@ -229,7 +229,7 @@ export const examService = {
     }
   },
 
-  // Get all questions for a subject
+  // Get all questions for a subject (supports both old and new year-based structure)
   async getQuestionsBySubject(
     examId: string, 
     subjectId: string, 
@@ -239,44 +239,118 @@ export const examService = {
     if (!db) throw new Error('Firestore not initialized');
     
     try {
-      const questionsRef = collection(db, 'exams', examId, 'subjects', subjectId, 'questions');
-      let q = questionsRef;
+      // First check if subject uses year-based structure
+      const subjectRef = doc(db, 'exams', examId, 'subjects', subjectId);
+      const subjectSnap = await getDoc(subjectRef);
       
-      if (year) {
-        q = query(questionsRef, where('year', '==', year));
+      if (!subjectSnap.exists()) {
+        console.warn(`Subject ${subjectId} not found in exam ${examId}`);
+        return [];
       }
       
-      const snapshot = await getDocs(q);
+      const subjectData = subjectSnap.data();
+      const usesYearBasedStructure = subjectData.hasYearBasedStructure;
       
-      return snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Question[];
+      if (usesYearBasedStructure) {
+        if (year) {
+          // Use new year-based structure for specific year
+          const questionsRef = collection(db, 'exams', examId, 'subjects', subjectId, 'years', year.toString(), 'questions');
+          const snapshot = await getDocs(questionsRef);
+          
+          return snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            year: year
+          })) as Question[];
+        } else {
+          // Fetch from all years
+          const yearsRef = collection(db, 'exams', examId, 'subjects', subjectId, 'years');
+          const yearsSnapshot = await getDocs(yearsRef);
+          
+          const allQuestions: Question[] = [];
+          for (const yearDoc of yearsSnapshot.docs) {
+            const yearStr = yearDoc.id;
+            const questionsRef = collection(db, 'exams', examId, 'subjects', subjectId, 'years', yearStr, 'questions');
+            const qSnapshot = await getDocs(questionsRef);
+            
+            qSnapshot.docs.forEach(doc => {
+              allQuestions.push({
+                id: doc.id,
+                ...doc.data(),
+                year: parseInt(yearStr)
+              } as Question);
+            });
+          }
+          return allQuestions;
+        }
+      } else {
+        // Old structure
+        const questionsRef = collection(db, 'exams', examId, 'subjects', subjectId, 'questions');
+        let q;
+        if (year) {
+          q = query(questionsRef, where('year', '==', year));
+        } else {
+          q = query(questionsRef);
+        }
+        const snapshot = await getDocs(q);
+        
+        return snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as Question[];
+      }
     } catch (error) {
       console.error(`Error fetching questions for subject ${subjectId}:`, error);
       throw error;
     }
   },
 
-  // Get a single question by ID
+  // Get a single question by ID (supports both old and new year-based structure)
   async getQuestionById(
     examId: string, 
     subjectId: string, 
-    questionId: string
+    questionId: string,
+    year?: number
   ): Promise<Question | null> {
     const db = getFirestoreDb();
     if (!db) throw new Error('Firestore not initialized');
     
     try {
-      const questionRef = doc(db, 'exams', examId, 'subjects', subjectId, 'questions', questionId);
-      const docSnap = await getDoc(questionRef);
+      // First check if subject uses year-based structure
+      const subjectRef = doc(db, 'exams', examId, 'subjects', subjectId);
+      const subjectSnap = await getDoc(subjectRef);
       
-      if (!docSnap.exists()) return null;
+      if (!subjectSnap.exists()) {
+        console.warn(`Subject ${subjectId} not found in exam ${examId}`);
+        return null;
+      }
       
-      return {
-        id: docSnap.id,
-        ...docSnap.data()
-      } as Question;
+      const subjectData = subjectSnap.data();
+      const usesYearBasedStructure = subjectData.hasYearBasedStructure;
+      
+      if (usesYearBasedStructure && year) {
+        // Use new year-based structure
+        const questionRef = doc(db, 'exams', examId, 'subjects', subjectId, 'years', year.toString(), 'questions', questionId);
+        const docSnap = await getDoc(questionRef);
+        
+        if (!docSnap.exists()) return null;
+        
+        return {
+          id: docSnap.id,
+          ...docSnap.data()
+        } as Question;
+      } else {
+        // Use old structure
+        const questionRef = doc(db, 'exams', examId, 'subjects', subjectId, 'questions', questionId);
+        const docSnap = await getDoc(questionRef);
+        
+        if (!docSnap.exists()) return null;
+        
+        return {
+          id: docSnap.id,
+          ...docSnap.data()
+        } as Question;
+      }
     } catch (error) {
       console.error(`Error fetching question ${questionId}:`, error);
       throw error;
@@ -292,8 +366,27 @@ export const questionService = {
       throw new Error('Firestore not initialized');
     }
     try {
-      const questionsRef = collection(db, 'exams', examId, 'subjects', subjectId, 'questions');
-      await addDoc(questionsRef, question);
+      // First check if subject uses year-based structure
+      const subjectRef = doc(db, 'exams', examId, 'subjects', subjectId);
+      const subjectSnap = await getDoc(subjectRef);
+      
+      if (!subjectSnap.exists()) {
+        throw new Error(`Subject ${subjectId} not found in exam ${examId}`);
+      }
+      
+      const subjectData = subjectSnap.data();
+      const usesYearBasedStructure = subjectData.hasYearBasedStructure;
+      
+      if (usesYearBasedStructure && question.year) {
+        // Use new year-based structure
+        const questionsRef = collection(db, 'exams', examId, 'subjects', subjectId, 'years', question.year.toString(), 'questions');
+        await addDoc(questionsRef, question);
+      } else {
+        // Use old structure
+        const questionsRef = collection(db, 'exams', examId, 'subjects', subjectId, 'questions');
+        await addDoc(questionsRef, question);
+      }
+      
       console.log("Question added successfully!");
     } catch (error) {
       console.error("Error adding question:", error);

@@ -17,7 +17,7 @@ export default function ExamSubjectsPage() {
   const router = useRouter();
   const { user, loading: authLoading, userProfileLoading } = useAuth();
 
-  const examId = params.examId as string;
+  const examId = params?.examId as string;
   
   const [exam, setExam] = useState<Exam | null>(null); 
   const [subjects, setSubjects] = useState<Subject[]>([]); 

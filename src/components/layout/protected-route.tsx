@@ -17,14 +17,14 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
   useEffect(() => { 
     // If auth loading and profile loading are complete, and there's still no user, then redirect.
     if (!loading && !userProfileLoading && !user) {
-      const redirectUrl = `/auth/login?redirect=${encodeURIComponent(pathname)}`;
+      const redirectUrl = `/auth/login?redirect=${encodeURIComponent(pathname || '/dashboard')}`;
       console.log(`[ProtectedRoute] Effect: No user & all loading complete. Redirecting to: ${redirectUrl}`);
       router.push(redirectUrl);
     } else if (!loading && !userProfileLoading && user) {
       console.log(`[ProtectedRoute] Effect: User is present and all loading complete. Access granted for path: ${pathname}`);
 
       // Role-based access control for admin pages
-      if (pathname.startsWith('/admin') && user.role !== 'admin') {
+      if (pathname?.startsWith('/admin') && user.role !== 'admin') {
         console.warn(`[ProtectedRoute] User ${user.uid} (role: ${user.role || 'none'}) attempted to access admin page: ${pathname}. Redirecting to dashboard.`);
         router.replace('/dashboard');
       }

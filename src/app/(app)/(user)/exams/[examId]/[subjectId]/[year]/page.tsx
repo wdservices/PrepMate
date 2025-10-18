@@ -196,7 +196,7 @@ export default function SubjectYearQuestionsPage() {
         console.log(`[SubjectYearQuestionsPage] Fetching data for Exam: ${examId}, Subject: ${subjectId}, Year: ${year} from Firestore`);
         const examData = await examService.getExamById(examId);
         const subjectData = examData ? await examService.getSubjectById(examId, subjectId) : null;
-        const questionsData = await examService.getQuestionsBySubject(examId, subjectId);
+const questionsData = await examService.getQuestionsBySubject(examId, subjectId, year);
 
         if (!examData) setError(prev => prev ? `${prev} Exam not found.` : "Exam not found.");
         if (!subjectData) setError(prev => prev ? `${prev} Subject not found.` : "Subject not found.");

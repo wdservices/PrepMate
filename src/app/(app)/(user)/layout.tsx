@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: 'PrepMate App', // Generic title for app sections
 };
 
-export default function AuthenticatedAppLayout({ children }: { ReactNode }) {
+export default function AuthenticatedAppLayout({ children }: { children: ReactNode }) {
   return (
     <ProtectedRoute>
       <AppLayout>{children}</AppLayout>

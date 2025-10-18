@@ -12,8 +12,8 @@ import type { Exam, Subject as AppSubject } from '@/types'; // Renamed Subject t
 export default function SubjectYearsPage() {
   const params = useParams();
   const router = useRouter();
-  const examId = params.examId as string;
-  const subjectId = params.subjectId as string;
+  const examId = params?.examId as string;
+  const subjectId = params?.subjectId as string;
 
   const [exam, setExam] = useState<Exam | null>(null); // Use Exam type
   const [subject, setSubject] = useState<AppSubject | null>(null); // Use AppSubject type

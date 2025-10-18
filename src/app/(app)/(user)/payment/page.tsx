@@ -1,23 +1,17 @@
 
-import { useState, useEffect } from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { COUNTRY_OPTIONS } from "./_components/country-options";
 import { generateReferenceKey } from "@/lib/utils";
 import { FLUTTERWAVE_PUBLIC_KEY } from "@/config/client";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { httpsCallable } from "firebase/functions";
 import { functions } from "@/lib/firebase";
 import { paymentService } from "@/lib/firestore-service";
 import { Payment } from "@/types";
-
-"use client";
-import React, { useEffect, useState } from "react";
 // import { toast } from "@/hooks/use-toast"; // Uncomment if you have a toast hook
-import { Button } from "@/components/ui/button";
-import { functions } from "@/lib/firebase";
-import { getAuth } from "firebase/auth";
-import { httpsCallable } from "firebase/functions";
 
 const COUNTRY_OPTIONS = [
   { code: "NG", name: "Nigeria", currency: "NGN", symbol: "₦", planId: "143879", amount: 1500 },
@@ -28,14 +22,23 @@ const COUNTRY_OPTIONS = [
   // Add more WAEC countries as needed
 ];
 
-const FLUTTERWAVE_PUBLIC_KEY = "FLWPUBK-f1ca421754831757166c4e74547967c0-X"; // Replace with your key
-
 export default function PaymentPage() {
   const [selectedCountry, setSelectedCountry] = useState(() => {
     return COUNTRY_OPTIONS.length > 0 ? COUNTRY_OPTIONS[0] : null;
   });
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    // Listen for auth state changes
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     // Dynamically load Flutterwave script
@@ -74,9 +77,13 @@ export default function PaymentPage() {
       alert("Payment system is still loading. Please try again in a moment.");
       return;
     }
+    
+    if (!user) {
+      alert("Please log in to make a payment.");
+      return;
+    }
+    
     setIsProcessing(true);
-    // TODO: Replace with real user info
-    const user = { email: "test@example.com", name: "Test User" };
     // TODO: Fill in planId for each country when available
     const planId = selectedCountry?.planId || "";
     // @ts-ignore
@@ -87,8 +94,8 @@ export default function PaymentPage() {
       currency: selectedCountry?.currency || "NGN",
       payment_options: "card,banktransfer,ussd",
       customer: {
-        email: user.email,
-        name: user.name,
+        email: user.email || "",
+        name: user.displayName || user.email || "User",
       },
       customizations: {
         title: "PrepMate Subscription",
@@ -109,14 +116,11 @@ export default function PaymentPage() {
 
             // Add payment record to Firestore
             const newPayment: Payment = {
-              userId: user.uid, // Assuming user is logged in and user.uid is available
+              userId: user.uid,
               amount: selectedCountry?.amount || 0,
               currency: selectedCountry?.currency || "NGN",
-              paymentGateway: "Flutterwave",
-              transactionRef: response.tx_ref,
-              status: "successful",
-              paymentDate: new Date(),
-              // Add other relevant fields from the response or local state
+              status: "completed",
+              timestamp: new Date(),
             };
             await paymentService.addPayment(newPayment);
 

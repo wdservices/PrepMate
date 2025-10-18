@@ -1,166 +1,221 @@
 
-"use client";
-
-import { useState, useRef, useEffect, type FormEvent } from "react";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Loader2, Send, User, Sparkles } from "lucide-react";
-import { aiQuestionAssistant } from "@/ai/flows/ai-question-assistant";
-import type { Question } from "@/types";
-import { cn } from "@/lib/utils";
-
-type ExtendedQuestion = Question & {
-  userAnswer?: string | null;
-  isCorrect?: boolean;
-  correctAnswer?: string | number | null;
-};
-
-type AiAssistantChatProps = {
-  isOpen: boolean;
-  onOpenChange: (isOpen: boolean) => void;
-  currentQuestionContext: ExtendedQuestion | null;
-  subjectName: string;
-};
+import { useState, useEffect, useRef } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { GraduationCap, Send, Loader2, User } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ChatMessage {
   id: string;
-  sender: "user" | "ai";
+  sender: 'user' | 'ai';
   text: string;
   timestamp: Date;
+  sources?: Array<{uri: string, title: string}>;
 }
 
-export function AiAssistantChat({ isOpen, onOpenChange, currentQuestionContext, subjectName }: AiAssistantChatProps) {
+interface AIAssistantChatProps {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  currentQuestionContext?: {
+    id: string;
+    text: string;
+    options?: string[];
+    correctAnswer?: string;
+    explanation?: string;
+    isCorrect?: boolean;
+  };
+  subjectName: string;
+}
+
+export function AIAssistantChat({
+  isOpen,
+  onOpenChange,
+  currentQuestionContext,
+  subjectName = 'General',
+}: AIAssistantChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [userInput, setUserInput] = useState("");
+  const [userInput, setUserInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
+  const chatHistoryData = useRef<Array<{role: string, text: string}>>([]);
+
+  // System instruction from the new script
+  const systemInstruction = "You are the PrepMate AI Tutor. Your primary goal is to provide brief, straightforward, and direct academic answers. Do not use conversational fillers, jokes, personal opinions, or complex formatting. Get straight to the point in every response.";
+
+  // Parse Markdown function from the new script
+  const parseMarkdown = (markdownText: string): string => {
+    let htmlText = markdownText || '';
+    
+    // Convert bold (**text** or __text__)
+    htmlText = htmlText.replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>');
+    htmlText = htmlText.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+    
+    // Convert italics (*text* or _text_)
+    htmlText = htmlText.replace(/\*([^\*]+)\*/g, '<em>$1</em>');
+    htmlText = htmlText.replace(/_([^_]+)_/g, '<em>$1</em>');
+    
+    // Convert list items (simple - item)
+    htmlText = htmlText.replace(/^\s*-\s+(.*)$/gm, '<li>$1</li>');
+    htmlText = htmlText.replace(/<\/li>\n<li>/g, '</li><li>');
+    
+    // Wrap lists
+    if (htmlText.includes('<li>')) {
+      htmlText = '<ul>' + htmlText.replace(/<li>/g, '<li class="ml-4 list-disc">').replace(/<\/li>/g, '</li>') + '</ul>';
+    }
+
+    // Convert double newlines to paragraph breaks, single newlines to br
+    htmlText = htmlText.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+
+    // Ensure text is wrapped in <p> tags if it wasn't already
+    if (!htmlText.startsWith('<p>') && !htmlText.startsWith('<ul>')) {
+      htmlText = `<p>${htmlText}</p>`;
+    }
+    
+    return htmlText;
+  };
 
   useEffect(() => {
     if (isOpen) {
-      let initialMessageText = "";
-      let initialMessages: ChatMessage[] = [];
+      const initialMessage: ChatMessage = {
+        id: 'welcome',
+        sender: 'ai',
+        text: 'PrepMate AI Tutor is active. Provide your study question for a direct answer.',
+        timestamp: new Date(),
+      };
+
+      setMessages([initialMessage]);
+      chatHistoryData.current = [{
+        role: 'model',
+        text: 'PrepMate AI Tutor is active. Provide your study question for a direct answer.'
+      }];
       
-      // Add welcome message
-      initialMessages.push({
-        id: "initial-ai-prompt",
-        sender: "ai",
-        text: `Hi! I'm your AI Tutor. I'm here to help you with your ${subjectName} questions.`,
-        timestamp: new Date()
-      });
-      
-      // Add context about the current question if available
-      if (currentQuestionContext) {
-        const questionText = currentQuestionContext.text.substring(0, 200) + 
-                           (currentQuestionContext.text.length > 200 ? '...' : '');
-        
-        // Add the question as context
-        initialMessages.push({
-          id: `question-${currentQuestionContext.id}`,
-          sender: "ai",
-          text: `I see you're working on this question:
-          
-"${questionText}"
-          
-I can help explain concepts related to this question. What would you like to know?`,
-          timestamp: new Date()
-        });
-        
-        // If we have user's answer status, provide feedback
-        if (currentQuestionContext.isCorrect !== undefined) {
-          const isCorrect = currentQuestionContext.isCorrect;
-          const correctAnswer = currentQuestionContext.correctAnswer || 'the correct option';
-          const feedback = isCorrect 
-            ? "Great job! You got it right! 🎉"
-            : `The correct answer is ${correctAnswer}. Would you like me to explain why?`;
-            
-          initialMessages.push({
-            id: `feedback-${currentQuestionContext.id}`,
-            sender: "ai",
-            text: feedback,
-            timestamp: new Date()
-          });
-        }
-      }
-      
-      setMessages(initialMessages);
-      setUserInput("");
+      setUserInput('');
     }
-  }, [isOpen, currentQuestionContext, subjectName]);
-  
+  }, [isOpen]);
+
   useEffect(() => {
     if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+      lastMessageRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
   }, [messages]);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const callGeminiAPI = async (userQuery: string, retryCount = 0): Promise<{text: string, sources: Array<{uri: string, title: string}>}> => {
+    const apiKey = ""; // Replace with your API key if needed
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+    const maxRetries = 3;
+    const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff: 1s, 2s, 4s
+
+    const conversationHistory = chatHistoryData.current.map(msg => ({
+      role: msg.role === 'user' ? 'user' : 'model',
+      parts: [{ text: msg.text }]
+    }));
+    
+    conversationHistory.push({ role: 'user', parts: [{ text: userQuery }] });
+
+    const payload = {
+      contents: conversationHistory,
+      // Enable Google Search grounding for up-to-date academic information
+      tools: [{ "google_search": {} }], 
+      systemInstruction: {
+        parts: [{ text: systemInstruction }]
+      },
+    };
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        if (retryCount < maxRetries) {
+          await new Promise(resolve => setTimeout(resolve, delay));
+          return callGeminiAPI(userQuery, retryCount + 1);
+        }
+        throw new Error(`API call failed with status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      const candidate = result.candidates?.[0];
+
+      if (candidate && candidate.content?.parts?.[0]?.text) {
+        const text = candidate.content.parts[0].text;
+        
+        let sources: Array<{uri: string, title: string}> = [];
+        const groundingMetadata = candidate.groundingMetadata;
+        if (groundingMetadata && groundingMetadata.groundingAttributions) {
+          sources = groundingMetadata.groundingAttributions
+            .map((attribution: any) => ({
+              uri: attribution.web?.uri,
+              title: attribution.web?.title,
+            }))
+            .filter((source: any) => source.uri && source.title);
+        }
+
+        return { text, sources };
+      } else {
+        return { 
+          text: "Sorry, I ran into an issue getting a detailed response. Please try asking again!", 
+          sources: [] 
+        };
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      if (retryCount < maxRetries) {
+        await new Promise(resolve => setTimeout(resolve, delay));
+        return callGeminiAPI(userQuery, retryCount + 1);
+      }
+      return { 
+        text: "Oops! I couldn't connect to the tutoring system. Please check your network or try again later.", 
+        sources: [] 
+      };
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const trimmedInput = userInput.trim();
     if (!trimmedInput) return;
 
     const userMessage: ChatMessage = {
-      id: Date.now().toString() + "-user",
-      sender: "user",
+      id: Date.now().toString() + '-user',
+      sender: 'user',
       text: trimmedInput,
       timestamp: new Date(),
     };
+
+    setMessages(prev => [...prev, userMessage]);
+    chatHistoryData.current.push({ role: 'user', text: trimmedInput });
     
-    // Add user message to chat
-    setMessages((prev) => [...prev, userMessage]);
-    setUserInput("");
+    setUserInput('');
     setIsLoading(true);
 
     try {
-      // Format options for better AI understanding
-      const formatOptions = (opts: any) => {
-        if (!opts) return '';
-        if (Array.isArray(opts)) {
-          return opts.map((opt, i) => 
-            `${String.fromCharCode(65 + i)}. ${typeof opt === 'string' ? opt : opt.text}`
-          ).join('\n');
-        }
-        return '';
-      };
-
-      // Prepare the question context
-      const questionContext = currentQuestionContext ? {
-        subject: subjectName,
-        question: currentQuestionContext.text,
-        options: formatOptions(currentQuestionContext.options),
-        correctAnswer: currentQuestionContext.correctAnswer || 
-                      (currentQuestionContext as any).correctOptionId || 
-                      'Not specified',
-        userAnswer: (currentQuestionContext as any).userAnswer || 'Not answered',
-        isCorrect: (currentQuestionContext as any).isCorrect || false,
-        explanation: currentQuestionContext.explanation || 'No explanation available'
-      } : null;
-
-      // Call the AI with the full context
-      const response = await aiQuestionAssistant({
-        subject: subjectName,
-        question: questionContext ? JSON.stringify(questionContext, null, 2) : "No question context",
-        studentQuery: trimmedInput,
-      });
-
+      const { text, sources } = await callGeminiAPI(trimmedInput);
+      
       const aiMessage: ChatMessage = {
-        id: Date.now().toString() + "-ai",
-        sender: "ai",
-        text: response.answer,
+        id: Date.now().toString() + '-ai',
+        sender: 'ai',
+        text: text,
         timestamp: new Date(),
+        sources: sources
       };
-      setMessages((prev) => [...prev, aiMessage]);
+      
+      setMessages(prev => [...prev, aiMessage]);
+      chatHistoryData.current.push({ role: 'model', text: text });
     } catch (error) {
-      console.error("AI Assistant Error:", error);
+      console.error('AI Error:', error);
       const errorMessage: ChatMessage = {
-        id: Date.now().toString() + "-error",
-        sender: "ai",
-        text: "Sorry, I encountered an error processing your request. Please try again or check my configuration.",
+        id: Date.now().toString() + '-error',
+        sender: 'ai',
+        text: 'Sorry, I encountered an error. Please try again.',
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, errorMessage]);
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -169,79 +224,88 @@ I can help explain concepts related to this question. What would you like to kno
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[525px] p-0 flex flex-col max-h-[80svh] sm:max-h-[80vh] rounded-lg shadow-xl">
-        <DialogHeader className="p-4 pb-2 border-b bg-card">
-          <DialogTitle className="text-xl flex items-center font-semibold text-foreground">
-             <Sparkles className="h-5 w-5 mr-2 text-primary" /> AI Tutor
+        <DialogHeader className="p-4 pb-2 border-b bg-indigo-600 text-white rounded-t-xl">
+          <DialogTitle className="text-xl flex items-center font-semibold">
+            <GraduationCap className="h-5 w-5 mr-2 text-indigo-200" /> AI Tutor
           </DialogTitle>
-          <DialogDescription className="text-xs text-muted-foreground">
-            Ask about {currentQuestionContext ? `${subjectName} or the current question` : 'any academic topic'}.
+          <DialogDescription className="text-xs text-indigo-200">
+            PrepMate Exam Companion
           </DialogDescription>
         </DialogHeader>
         
-        <div 
-          ref={messagesContainerRef} 
-          className="flex-1 min-h-0 overflow-y-auto bg-background/70"
-        >
-           <div className="p-4 space-y-4">
+        <div ref={messagesContainerRef} className="flex-1 min-h-0 overflow-y-auto bg-white" id="chat-history">
+          <div className="p-4 space-y-4">
             {messages.map((msg, index) => (
               <div
                 key={msg.id}
                 ref={index === messages.length - 1 ? lastMessageRef : null}
                 className={cn(
-                  "flex items-end gap-2 animate-in fade-in-50 slide-in-from-bottom-2",
-                  msg.sender === "user" ? "justify-end" : "justify-start"
+                  'flex',
+                  msg.sender === 'user' ? 'justify-end' : 'justify-start'
                 )}
               >
-                {msg.sender === "ai" && (
-                  <Avatar className="h-8 w-8 border-2 border-primary/50 bg-primary/10">
-                    <AvatarFallback className="bg-transparent"><Sparkles className="h-4 w-4 text-primary"/></AvatarFallback>
-                  </Avatar>
-                )}
                 <div
-                  className={cn("max-w-[75%] rounded-lg px-3 py-2 shadow-sm text-sm break-words", 
-                    msg.sender === "user"
-                      ? "bg-primary text-primary-foreground rounded-br-none"
-                      : "bg-card text-card-foreground border border-border rounded-bl-none"
+                  className={cn('max-w-[80%] rounded-xl p-3 shadow-sm', 
+                    msg.sender === 'user'
+                      ? 'bg-indigo-600 text-white rounded-br-none'
+                      : 'bg-indigo-100 text-gray-800 rounded-tl-none'
                   )}
                 >
-                  <p className="whitespace-pre-wrap">{msg.text}</p>
-                   <p className={cn("text-xs mt-1.5",
-                      msg.sender === 'user' ? 'text-primary-foreground/70 text-right' : 'text-muted-foreground text-left'
-                    )}>
-                    {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </p>
+                  {msg.sender === 'ai' && (
+                    <p className="font-bold text-indigo-700 mb-1">AI Tutor</p>
+                  )}
+                  <div
+                    dangerouslySetInnerHTML={{ 
+                      __html: msg.sender === 'ai' ? parseMarkdown(msg.text) : msg.text 
+                    }}
+                  />
+                  {msg.sources && msg.sources.length > 0 && (
+                    <div className="mt-2 pt-2 border-t border-indigo-200 text-xs text-indigo-700 italic">
+                      <strong>Grounded Sources:</strong> {
+                        msg.sources.slice(0, 3).map((source, i) => (
+                          <a 
+                            key={i}
+                            href={source.uri} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="hover:underline"
+                          >
+                            {source.title || 'Source'}
+                            {i < Math.min(msg.sources!.length, 3) - 1 ? ', ' : ''}
+                          </a>
+                        ))
+                      }
+                    </div>
+                  )}
                 </div>
-                 {msg.sender === "user" && (
-                  <Avatar className="h-8 w-8 border-2 border-muted bg-muted/30">
-                    <AvatarFallback className="bg-transparent"><User className="h-4 w-4 text-muted-foreground"/></AvatarFallback>
-                  </Avatar>
-                )}
               </div>
             ))}
             {isLoading && (
-              <div className="flex items-end gap-2 justify-start animate-pulse">
-                <Avatar className="h-8 w-8 border-2 border-primary/50 bg-primary/10">
-                   <AvatarFallback className="bg-transparent"><Sparkles className="h-4 w-4 text-primary"/></AvatarFallback>
-                </Avatar>
-                <div className="max-w-[75%] rounded-lg px-4 py-3 shadow-sm bg-card border border-border">
-                  <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              <div className="flex justify-start">
+                <div className="bg-indigo-100 p-3 rounded-xl rounded-tl-none max-w-[80%] shadow-sm text-gray-800">
+                  <p className="font-bold text-indigo-700 mb-1">AI Tutor</p>
+                  <span className="animate-pulse">AI Tutor is thinking...</span>
                 </div>
               </div>
             )}
           </div>
         </div>
 
-        <DialogFooter className="p-3 border-t bg-card">
+        <DialogFooter className="p-4 border-t border-gray-200 bg-gray-50 rounded-b-xl">
           <form onSubmit={handleSubmit} className="flex w-full items-center gap-2">
             <Input
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
-              placeholder="Ask any academic question..."
-              className="flex-1 h-10 text-sm"
+              placeholder="Ask a question, review a concept, or ask for a quiz..."
+              className="flex-1 h-10 text-sm border border-gray-300 rounded-lg"
               disabled={isLoading}
               autoFocus
             />
-            <Button type="submit" disabled={isLoading || !userInput.trim()} size="icon" className="h-10 w-10">
+            <Button 
+              type="submit" 
+              disabled={isLoading || !userInput.trim()} 
+              className="bg-indigo-600 hover:bg-indigo-700 text-white h-10 w-10 rounded-lg"
+            >
               {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               <span className="sr-only">Send</span>
             </Button>

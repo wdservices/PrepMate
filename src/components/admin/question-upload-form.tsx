@@ -71,6 +71,16 @@ export function QuestionUploadForm() {
     loadExams();
   }, []);
 
+  // Reset correct option if the selected option is removed
+  useEffect(() => {
+    if (!optionCText && correctOption === "C") {
+      setCorrectOption("");
+    }
+    if ((!optionCText || !optionDText) && correctOption === "D") {
+      setCorrectOption("");
+    }
+  }, [optionCText, optionDText, correctOption]);
+
   const selectedExam = exams.find(e => e.id === examId);
   const subjectsForSelectedExam = staticSubjects;
 
@@ -146,17 +156,28 @@ export function QuestionUploadForm() {
         return;
     }
 
+    const yearNumber = parseInt(year);
+    if (isNaN(yearNumber)) {
+      toast({
+        title: "Invalid Year",
+        description: "Please enter a valid year.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const questionData: Question = {
       id: newQuestionId,
-      year: parseInt(year),
+      year: yearNumber,
       text: questionText,
       options: options,
       correctOptionId: actualCorrectOptionId,
-      imageUrl: imageUrl, 
+      imageUrl: imageUrl || undefined, 
     };
 
     try {
-      await questionService.addQuestion(examId, subjectId, questionData);
+      // Cast to Firestore Question type which requires year as number
+      await questionService.addQuestion(examId, subjectId, questionData as any);
       toast({
         title: "Question Uploaded!",
         description: "The question has been successfully uploaded to Firestore.",
@@ -292,8 +313,6 @@ export function QuestionUploadForm() {
                 {optionDText && <SelectItem value="D">Option D</SelectItem>}
               </SelectContent>
             </Select>
-             {!optionCText && correctOption === "C" && setCorrectOption("")}
-             {(!optionCText || !optionDText) && correctOption === "D" && setCorrectOption("")}
           </div>
           
         </CardContent>

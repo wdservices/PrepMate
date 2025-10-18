@@ -65,15 +65,14 @@ export function QuestionCard({
   }, []);
   
   // Show fallback explanation without making API calls
-  const showFallbackExplanation = (option: string, isAnswerCorrect: boolean) => {
+  const showFallbackExplanation = (option: string, isCorrectAnswer: boolean) => {
     const defaultExplanation = 
       `The correct answer is: ${question.answer}. ` +
-      (isAnswerCorrect 
+      (isCorrectAnswer 
         ? 'Your answer is correct! ' + (question.explanation || '') 
         : `You selected: ${option}. The correct answer is: ${question.answer}. ` + 
           (question.explanation || '')
       );
-  };
     
     setExplanation(defaultExplanation);
     setIsLoading(false);
@@ -94,24 +93,6 @@ export function QuestionCard({
   const handleOptionSelect = async (option: string) => {
     if (isQuestionAnswered) return;
 
-    // Set the selected option
-    setSelectedOption(option);
-    
-    // Check if the selected option is correct
-    const isAnswerCorrect = option === question.answer || 
-                           normalizeString(option) === normalizeString(question.answer) ||
-                           question.options.some(opt => 
-                             opt === question.answer && 
-                             normalizeString(opt) === normalizeString(option)
-                           );
-    
-    // Update the score immediately
-    onAnswer(isAnswerCorrect);
-    
-    // Show the explanation
-    showFallbackExplanation(option, isAnswerCorrect);
-
-
     // Normalize both the selected option and the correct answer for comparison
     const normalizedOption = normalizeString(option);
     const normalizedAnswer = normalizeString(question.answer);
@@ -122,7 +103,7 @@ export function QuestionCard({
       opt === question.answer
     );
 
-    // If answer doesn't match any option, try to find it in the options
+    // Check if the selected option is correct
     let isAnswerCorrect = false;
     if (!isDirectMatch) {
       // Try to find the answer in the options (case-insensitive)
@@ -152,7 +133,7 @@ export function QuestionCard({
       isDirectMatch
     });
     
-    // Immediate feedback
+    // Set the selected option and immediate feedback
     setSelectedOption(option);
     setIsCorrect(isAnswerCorrect);
     onAnswer(isAnswerCorrect);
@@ -366,3 +347,4 @@ export function QuestionCard({
       />
     </Card>
   );
+}

@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { UnifiedQuestion } from '../types/question';
-import { collection, doc, setDoc } from 'firebase/firestore';
+import { collection, doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { getFirestoreDb } from '../lib/firebase';
 
 const waecBiology1993Questions: UnifiedQuestion[] = [
@@ -1259,14 +1259,56 @@ async function uploadQuestions() {
     const db = getFirestoreDb();
     console.log(`Uploading ${waecBiology1993Questions.length} WAEC Biology 1993 questions...`);
 
+    // First, create/update the biology subject document with 1993 in availableYears
+    const subjectRef = doc(db, 'exams', 'waec', 'subjects', 'biology');
+    const subjectDoc = await getDoc(subjectRef);
+    
+    const currentData = subjectDoc.exists() ? subjectDoc.data() : {};
+    const currentYears = currentData.availableYears || [];
+    const updatedYears = Array.from(new Set([...currentYears, 1993])); // Ensure 1993 is included
+    
+    await setDoc(subjectRef, {
+      name: 'Biology',
+      description: 'Biology subject for WAEC',
+      iconName: 'Leaf',
+      order: 1,
+      availableYears: updatedYears,
+      examId: 'waec',
+      ...(subjectDoc.exists() ? {} : { createdAt: serverTimestamp() }),
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    
+    console.log(`✅ Biology subject updated with available years: ${updatedYears.join(', ')}`);
+
+    // Now upload the questions
+    let uploadedCount = 0;
+    let skippedCount = 0;
+    
     for (const question of waecBiology1993Questions) {
-      const questionRef = doc(collection(db, 'exams', 'waec', 'questions'), question.id);
-      await setDoc(questionRef, question, { merge: true });
+      // Validate question has required fields
+      if (!question || !question.id || !question.text) {
+        console.warn(`⚠️ Skipping question with missing ID or text`);
+        skippedCount++;
+        continue;
+      }
+      
+      const questionRef = doc(collection(db, 'exams', 'waec', 'subjects', 'biology', 'questions'), question.id);
+      await setDoc(questionRef, {
+        ...question,
+        subjectId: 'biology',
+        examId: 'waec',
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+      uploadedCount++;
     }
 
-    console.log('WAEC Biology 1993 questions uploaded successfully!');
+    console.log('✅ WAEC Biology 1993 questions uploaded successfully!');
+    console.log(`📊 Total questions processed: ${waecBiology1993Questions.length}`);
+    console.log(`✅ Successfully uploaded: ${uploadedCount}`);
+    console.log(`⚠️ Skipped: ${skippedCount}`);
   } catch (error) {
-    console.error('Error uploading WAEC Biology 1993 questions:', error);
+    console.error('❌ Error uploading WAEC Biology 1993 questions:', error);
   }
 }
 

@@ -81,7 +81,7 @@ export function AuthForm({ initialMode = "login" }: AuthFormProps) {
     forgotPasswordSchema;
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(currentSchema),
+    resolver: zodResolver(currentSchema) as any,
     // Initialize all possible form fields with a default value to make them controlled.
     defaultValues: {
       name: "",

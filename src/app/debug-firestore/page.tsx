@@ -5,8 +5,17 @@ import { Button } from '@/components/ui/button';
 import { examService } from '@/lib/firestore-service';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+interface TestResults {
+  exams?: any[];
+  subjects?: any[];
+  subject?: any;
+  questions?: any[];
+  question?: any;
+  [key: string]: any;
+}
+
 export default function DebugFirestore() {
-  const [results, setResults] = useState<any>({});
+  const [results, setResults] = useState<TestResults>({});
   const [loading, setLoading] = useState(false);
 
   const runTests = async () => {
