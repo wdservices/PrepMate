@@ -1,6 +1,6 @@
 
 import { db } from '@/lib/firebase';
-import { collection, getDocs, query, orderBy, doc, getDoc, setDoc, where } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, getDoc, setDoc, where, updateDoc, serverTimestamp } from 'firebase/firestore';
 import type { FirestoreExamData, FirestoreSubjectData, Question } from '@/types';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import type { User } from "firebase/auth";
@@ -30,12 +30,53 @@ export async function getUserProfile(uid: string) {
     console.error("[firebase-service] Firestore (db) is not initialized. Cannot get user profile.");
     return null;
   }
-  const userRef = doc(db, "users", uid);
-  const docSnap = await getDoc(userRef);
-  if (docSnap.exists()) {
-    return docSnap.data();
-  } else {
+  
+  try {
+    const userRef = doc(db, "users", uid);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("[firebase-service] Error fetching user profile:", error);
+    // Check if it's a network error
+    if (error instanceof Error && (
+      error.message.includes('net::ERR_ABORTED') ||
+      error.message.includes('Failed to fetch') ||
+      error.message.includes('Network request failed')
+    )) {
+      console.warn("[firebase-service] Network error detected, user profile fetch failed");
+    }
     return null;
+  }
+}
+
+export async function updateUserSubscription(uid: string, subscriptionData: {
+  status: 'active' | 'inactive';
+  expiresAt: Date;
+}) {
+  if (!db) {
+    console.error("[firebase-service] Firestore (db) is not initialized. Cannot update user subscription.");
+    return;
+  }
+  if (!uid) {
+    console.error("[firebase-service] User UID is missing. Cannot update subscription.");
+    return;
+  }
+  
+  try {
+    const userRef = doc(db, "users", uid);
+    await updateDoc(userRef, {
+      isSubscribed: subscriptionData.status === 'active',
+      subscriptionEndsAt: subscriptionData.expiresAt,
+      subscriptionUpdatedAt: serverTimestamp(),
+    });
+    console.log(`[firebase-service] Subscription updated for user ${uid}: ${subscriptionData.status} until ${subscriptionData.expiresAt}`);
+  } catch (error) {
+    console.error("[firebase-service] Error updating user subscription:", error);
+    throw error;
   }
 }
 

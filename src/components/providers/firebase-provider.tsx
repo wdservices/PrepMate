@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import type { User as FirebaseUser } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth as firebaseAuthService } from "@/lib/firebase"; 
+import { getUserProfile } from "@/lib/firebase-service";
 import type { AppUser } from "@/types";
 
 interface FirebaseContextProps {
@@ -43,17 +44,50 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
           emailVerified: firebaseUser.emailVerified,
         });
         
-        // Fetch custom claims to get the user's role
-        const idTokenResult = await firebaseUser.getIdTokenResult(true); // Force refresh to get latest claims
-        const role = idTokenResult.claims.role as 'admin' | 'student' | undefined;
+        try {
+          // Fetch custom claims to get the user's role
+          const idTokenResult = await firebaseUser.getIdTokenResult(true); // Force refresh to get latest claims
+          const role = idTokenResult.claims.role as 'admin' | 'student' | undefined;
 
-        setUser({
-          ...firebaseUser,
-          role: role, // Assign the role from custom claims
-        } as AppUser); 
+          // Fetch user profile data from Firestore (includes subscription info)
+          let userProfile = null;
+          try {
+            userProfile = await getUserProfile(firebaseUser.uid);
+          } catch (profileError) {
+            console.warn("[FirebaseProvider] Failed to fetch user profile, retrying once:", profileError);
+            // Retry once after a short delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            try {
+              userProfile = await getUserProfile(firebaseUser.uid);
+            } catch (retryError) {
+              console.error("[FirebaseProvider] Failed to fetch user profile after retry:", retryError);
+              // Continue without profile data
+            }
+          }
+          
+          setUser({
+            ...firebaseUser,
+            role: role, // Assign the role from custom claims
+            // Add subscription data from Firestore profile
+            trialEndsAt: userProfile?.trialEndsAt?.toMillis ? userProfile.trialEndsAt.toMillis() : userProfile?.trialEndsAt,
+            isSubscribed: userProfile?.isSubscribed || false,
+            subscriptionEndsAt: userProfile?.subscriptionEndsAt?.toMillis ? userProfile.subscriptionEndsAt.toMillis() : userProfile?.subscriptionEndsAt,
+          } as AppUser); 
+          
+          console.log("[FirebaseProvider] Set user from auth with role and subscription data, userProfileLoading set to false.");
+        } catch (error) {
+          console.error("[FirebaseProvider] Error fetching user profile:", error);
+          // Fallback to basic user data if profile fetch fails
+          const idTokenResult = await firebaseUser.getIdTokenResult(true);
+          const role = idTokenResult.claims.role as 'admin' | 'student' | undefined;
+          
+          setUser({
+            ...firebaseUser,
+            role: role,
+          } as AppUser);
+        }
         
         setUserProfileLoading(false); 
-        console.log("[FirebaseProvider] Set user from auth with role, userProfileLoading set to false.");
 
       } else {
         console.log("[FirebaseProvider] No user from onAuthStateChanged. Setting user to null.");

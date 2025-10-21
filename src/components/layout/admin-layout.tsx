@@ -44,7 +44,8 @@ export function AdminLayout({ children }: { children: ReactNode }) {
 
   const adminNavItems = [
      { href: '/admin', label: 'Admin Dashboard', icon: Users, type: 'admin' as const },
-     { href: '/admin/revenue', label: 'Revenue', icon: DollarSign, type: 'admin' as const },
+     { href: '/admin/pricing', label: 'Price Management', icon: DollarSign, type: 'admin' as const },
+     { href: '/admin/revenue', label: 'Revenue', icon: BarChart3, type: 'admin' as const },
      { href: '/admin/users', label: 'Users', icon: Users, type: 'admin' as const },
      { href: '/admin/settings', label: 'Admin Settings', icon: Settings, type: 'admin' as const },
      { href: '/admin/upload', label: 'Upload Content', icon: UploadCloud, type: 'admin' as const },

@@ -1,189 +1,146 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { generateReferenceKey } from "@/lib/utils";
-import { FLUTTERWAVE_PUBLIC_KEY } from "@/config/client";
-import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-import { httpsCallable } from "firebase/functions";
-import { functions } from "@/lib/firebase";
-import { paymentService } from "@/lib/firestore-service";
-import { Payment } from "@/types";
-// import { toast } from "@/hooks/use-toast"; // Uncomment if you have a toast hook
+import { useAuth } from "@/components/providers/firebase-provider";
+import { PAYSTACK_PUBLIC_KEY } from "@/config/client";
 
-const COUNTRY_OPTIONS = [
-  { code: "NG", name: "Nigeria", currency: "NGN", symbol: "₦", planId: "143879", amount: 1500 },
-  { code: "GH", name: "Ghana", currency: "GHS", symbol: "₵", planId: "143880", amount: 13.8 },
-  { code: "GM", name: "Gambia", currency: "GMD", symbol: "D", planId: "143883", amount: 70 },
-  { code: "LR", name: "Liberia", currency: "LRD", symbol: "$", planId: "143881", amount: 180 },
-  { code: "SL", name: "Sierra Leone", currency: "SLL", symbol: "Le", planId: "143882", amount: 20500 },
-  // Add more WAEC countries as needed
-];
+declare global {
+  interface Window {
+    PaystackPop: any;
+  }
+}
 
 export default function PaymentPage() {
-  const [selectedCountry, setSelectedCountry] = useState(() => {
-    return COUNTRY_OPTIONS.length > 0 ? COUNTRY_OPTIONS[0] : null;
-  });
-  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = useAuth();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
 
   useEffect(() => {
-    // Listen for auth state changes
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
+    // Load Paystack script
+    const script = document.createElement("script");
+    script.src = "https://js.paystack.co/v1/inline.js";
+    script.async = true;
+    script.onload = () => setScriptLoaded(true);
+    document.head.appendChild(script);
 
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    // Dynamically load Flutterwave script
-    let script: HTMLScriptElement | null = null;
-    const loadScript = () => {
-      if (document.querySelector('script[src="https://checkout.flutterwave.com/v3.js"]')) {
-        setIsScriptLoaded(true);
-        return;
-      }
-      script = document.createElement("script");
-      script.src = "https://checkout.flutterwave.com/v3.js";
-      script.async = true;
-      script.onload = () => setIsScriptLoaded(true);
-      script.onerror = () => setIsScriptLoaded(false);
-      document.body.appendChild(script);
-    };
-    loadScript();
     return () => {
-      if (script && document.body.contains(script)) {
-        document.body.removeChild(script);
+      // Cleanup script on unmount
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
       }
     };
   }, []);
 
-  function generateReferenceKey(length: number) {
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "";
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
-  }
-
-  const handlePayment = () => {
-    if (!isScriptLoaded) {
-      alert("Payment system is still loading. Please try again in a moment.");
+  const payWithPaystack = () => {
+    if (!scriptLoaded) {
+      alert("Payment system is still loading. Please try again.");
       return;
     }
-    
-    if (!user) {
+
+    if (!user?.email) {
       alert("Please log in to make a payment.");
       return;
     }
-    
-    setIsProcessing(true);
-    // TODO: Fill in planId for each country when available
-    const planId = selectedCountry?.planId || "";
-    // @ts-ignore
-    window.FlutterwaveCheckout({
-      public_key: FLUTTERWAVE_PUBLIC_KEY,
-      tx_ref: generateReferenceKey(25),
-      amount: selectedCountry?.amount || 0,
-      currency: selectedCountry?.currency || "NGN",
-      payment_options: "card,banktransfer,ussd",
-      customer: {
-        email: user.email || "",
-        name: user.displayName || user.email || "User",
-      },
-      customizations: {
-        title: "PrepMate Subscription",
-        description: `Access to all WAEC/JAMB/NECO past questions and features for 1 month` ,
-        logo: "/images/prepmate- students writing exams.webp",
-      },
-      payment_plan: planId,
-      callback: async (response: any) => {
-        setIsProcessing(false);
-        if (response.status === "successful") {
-          // Call the Firebase function to set subscription claim
-          try {
-            if (!functions) {
-              throw new Error("Firebase functions not initialized");
-            }
-            const setSubscription = httpsCallable(functions, 'setSubscriptionAfterPayment');
-            await setSubscription();
 
-            // Add payment record to Firestore
-            const newPayment: Payment = {
-              userId: user.uid,
-              amount: selectedCountry?.amount || 0,
-              currency: selectedCountry?.currency || "NGN",
-              status: "completed",
-              timestamp: new Date(),
-            };
-            await paymentService.addPayment(newPayment);
+    setLoading(true);
 
-            // Force token refresh
-            const auth = getAuth();
-            await auth.currentUser?.getIdToken(true);
-            alert("Payment successful! Thank you for subscribing. Your access has been updated.");
-          } catch (err) {
-            console.error("Error setting subscription or adding payment:", err);
-            alert("Payment succeeded, but failed to update your subscription or record payment. Please contact support.");
+    // Example subscription pricing - you can modify these values
+    const subscriptionPrice = 5000; // ₦50 per month
+    const totalAmount = subscriptionPrice;
+
+    const handler = window.PaystackPop.setup({
+      key: PAYSTACK_PUBLIC_KEY,
+      email: user.email,
+      amount: totalAmount * 100, // Paystack accepts kobo (₦50 → 5,000 kobo)
+      currency: "NGN",
+      ref: "prepmate_" + Date.now(), // unique reference
+      callback: function(response: any) {
+        console.log(response);
+
+        // Send response.reference to backend to verify payment
+        fetch("/api/paystack/verify-payment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            reference: response.reference,
+            userId: user.uid 
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          setLoading(false);
+          if (data.status === "success") {
+            alert("Payment successful! Subscription activated.");
+            router.push("/dashboard");
+          } else {
+            alert("Payment verification failed. Please contact support.");
           }
-        } else {
-          alert("Payment not completed.");
-        }
+        })
+        .catch(error => {
+          setLoading(false);
+          console.error("Payment verification error:", error);
+          alert("Payment verification failed. Please contact support.");
+        });
       },
-      onclose: () => setIsProcessing(false),
+      onClose: function() {
+        setLoading(false);
+        alert("Payment window closed.");
+      }
     });
+
+    handler.openIframe();
   };
 
-  return (
-    <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h1 className="text-2xl font-bold mb-4">Subscribe to PrepMate</h1>
-      {!selectedCountry ? (
-        <div className="text-center text-red-500">
-          Loading payment options...
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Please Log In</h2>
+          <p>You need to be logged in to make a payment.</p>
         </div>
-      ) : (
-        <>
-          <label className="block mb-2 font-medium">Select your country:</label>
-          <select
-            className="w-full p-2 border rounded mb-4"
-            value={selectedCountry?.code}
-            onChange={e => {
-              const country = COUNTRY_OPTIONS.find(c => c.code === e.target.value);
-              if (country) setSelectedCountry(country);
-            }}
-          >
-            {COUNTRY_OPTIONS.map(country => (
-              <option key={country.code} value={country.code}>
-                {country.name} ({country.symbol})
-              </option>
-            ))}
-          </select>
-          <div className="mb-4">
-            <div className="text-lg font-semibold">
-              {selectedCountry?.symbol}{selectedCountry?.amount} / 1 month
-            </div>
-            <div className="text-gray-600 text-sm">
-              Access to all past questions, AI tutor, and more.
-            </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
+        <h2 className="text-2xl font-bold text-center mb-8">PrepMate Subscription</h2>
+        
+        <div className="mb-6">
+          <div className="border rounded-lg p-4 mb-4">
+            <h3 className="font-semibold text-lg mb-2">Monthly Subscription</h3>
+            <p className="text-gray-600 mb-2">Access to all exam questions and features</p>
+            <p className="text-2xl font-bold text-blue-600">₦50/month</p>
           </div>
-          <Button
-            onClick={handlePayment}
-            disabled={isProcessing || !isScriptLoaded}
-            className="w-full"
-          >
-            {isProcessing ? "Processing..." : `Pay ${selectedCountry?.symbol}${selectedCountry?.amount}`}
-          </Button>
-          <div className="text-xs text-gray-400 mt-4">
-            Powered by Flutterwave. Plan IDs will be set for each country soon.
-          </div>
-        </>
-      )}
+        </div>
+
+        <div className="mb-6">
+          <p className="text-sm text-gray-600 mb-2">
+            <strong>Email:</strong> {user.email}
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={payWithPaystack}
+          disabled={loading || !scriptLoaded}
+          className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-colors ${
+            loading || !scriptLoaded
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
+        >
+          {loading ? "Processing..." : !scriptLoaded ? "Loading..." : "Pay Now"}
+        </button>
+
+        <p className="text-xs text-gray-500 text-center mt-4">
+          Secure payment powered by Paystack
+        </p>
+      </div>
     </div>
   );
 }

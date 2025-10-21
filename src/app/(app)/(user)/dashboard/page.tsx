@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ExamCard } from '@/components/ui/exam-card';
+import { PaymentModal } from '@/components/ui/payment-modal';
 import { examService } from '@/lib/firestore-service';
 import { Exam } from '@/lib/firestore-service';
 import { Loader2 } from 'lucide-react';
@@ -11,6 +12,8 @@ export default function DashboardPage() {
   const [exams, setExams] = useState<Exam[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -33,7 +36,22 @@ export default function DashboardPage() {
   }, []);
 
   const handleExamClick = (examId: string) => {
-    router.push(`/exams/${examId}/subjects`);
+    const exam = exams.find(e => e.id === examId);
+    if (exam) {
+      setSelectedExam(exam);
+      setPaymentModalOpen(true);
+    }
+  };
+
+  const handlePaymentSuccess = () => {
+    if (selectedExam) {
+      router.push(`/exams/${selectedExam.id}/subjects`);
+    }
+  };
+
+  const handlePaymentModalClose = () => {
+    setPaymentModalOpen(false);
+    setSelectedExam(null);
   };
 
   if (loading) {
@@ -96,6 +114,16 @@ export default function DashboardPage() {
           />
         ))}
       </div>
+
+      {selectedExam && (
+        <PaymentModal
+          isOpen={paymentModalOpen}
+          onClose={handlePaymentModalClose}
+          onSuccess={handlePaymentSuccess}
+          examTitle={selectedExam.name}
+          examId={selectedExam.id}
+        />
+      )}
     </div>
   );
 }

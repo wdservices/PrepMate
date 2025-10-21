@@ -497,4 +497,20 @@ export const paymentService = {
       throw error;
     }
   },
+
+  async createPayment(paymentData: any): Promise<void> {
+    const db = getFirestoreDb();
+    if (!db) {
+      console.error('Firestore not initialized - db is null');
+      throw new Error('Firestore not initialized');
+    }
+    try {
+      const paymentsRef = collection(db, "payments");
+      await addDoc(paymentsRef, paymentData);
+      console.log("Payment record created successfully!");
+    } catch (error) {
+      console.error("Error creating payment record:", error);
+      throw error;
+    }
+  },
 };

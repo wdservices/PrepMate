@@ -11,6 +11,8 @@ import { useEffect, useState } from 'react';
 import { adminService } from '@/lib/firestore-service';
 import { AdminStats, RecentUserActivity, RevenueStats } from '@/types';
 import { RevenueCard } from '@/components/admin/revenue-card';
+import { PriceManagement } from '@/components/admin/price-management';
+import { ScholarshipManagement } from '@/components/admin/scholarship-management';
 
 
 
@@ -142,6 +144,18 @@ export default function AdminDashboardPage() {
             </CardContent>
           </Card>
         </div>
+      </div>
+
+      {/* Price Management */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-50">Price Management</h2>
+        <PriceManagement />
+      </div>
+
+      {/* Scholarship Management */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-50">Scholarship Management</h2>
+        <ScholarshipManagement />
       </div>
 
       {/* Recent Users Table */}
