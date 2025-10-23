@@ -38,8 +38,8 @@ export function ScholarshipManagement() {
       }
       const data = await response.json();
       setScholarship(data);
-      setNewDuration(data.duration.toString());
-      setNewDescription(data.description);
+      setNewDuration(data.duration ? data.duration.toString() : "0");
+      setNewDescription(data.description || "");
     } catch (error) {
       console.error("Error fetching scholarship:", error);
       toast({

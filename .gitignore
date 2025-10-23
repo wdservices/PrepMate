@@ -45,3 +45,8 @@ firebase-debug.log
 firestore-debug.log
 
 prepmate-6eb9d-firebase-adminsdk-fbsvc-bcfd6a3146.json
+node_modules/
+dist/
+build/
+.env
+.DS_Store

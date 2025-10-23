@@ -30,7 +30,7 @@ export function PriceManagement() {
       }
       const data = await response.json();
       setPricing(data);
-      setNewPrice((data.monthlyPrice / 100).toString()); // Convert from kobo to naira for display
+      setNewPrice(data.monthlyPrice && typeof data.monthlyPrice === 'number' ? (data.monthlyPrice / 100).toString() : "50"); // Convert from kobo to naira for display
     } catch (error) {
       console.error("Error fetching pricing:", error);
       toast({

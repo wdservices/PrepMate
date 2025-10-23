@@ -67,12 +67,16 @@ export function PaymentModal({
       const response = await fetch('/api/admin/pricing');
       const result = await response.json();
       
-      if (result.success && result.data) {
+      if (result.success && result.data && typeof result.data.monthlyPrice === 'number') {
         setCurrentPrice(result.data.monthlyPrice);
+      } else {
+        // Fallback to default price if API returns invalid data
+        setCurrentPrice(price);
       }
     } catch (error) {
       console.error('Error fetching price:', error);
       // Keep default price if fetch fails
+      setCurrentPrice(price);
     } finally {
       setPriceLoading(false);
     }
@@ -102,46 +106,53 @@ export function PaymentModal({
     onClose();
   };
 
+  const verifyPayment = async (reference: string) => {
+    try {
+      const verifyResponse = await fetch('/api/paystack/verify-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          reference,
+          examId,
+          userId: user.uid,
+        }),
+      });
+
+      const result = await verifyResponse.json();
+
+      if (result.success) {
+        onSuccess();
+        onClose();
+      } else {
+        throw new Error(result.error || 'Payment verification failed');
+      }
+    } catch (error) {
+      console.error('Payment verification error:', error);
+      alert('Payment verification failed. Please contact support.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handlePayment = async () => {
     if (!user || !paystackLoaded || scholarshipActive) return;
 
     setIsLoading(true);
 
     try {
-      // Define callback function separately to ensure it's properly validated
-      const paymentCallback = async (response: any) => {
-        try {
-          if (!response || !response.reference) {
-            throw new Error('Invalid payment response');
-          }
-
-          // Verify payment with backend
-          const verifyResponse = await fetch('/api/paystack/verify-payment', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              reference: response.reference,
-              examId,
-              userId: user.uid,
-            }),
-          });
-
-          const result = await verifyResponse.json();
-
-          if (result.success) {
-            onSuccess();
-            onClose();
-          } else {
-            throw new Error(result.error || 'Payment verification failed');
-          }
-        } catch (error) {
-          console.error('Payment verification error:', error);
-          alert('Payment verification failed. Please contact support.');
-        } finally {
+      // Define callback function as synchronous (Paystack requirement)
+      const paymentCallback = (response: any) => {
+        if (!response || !response.reference) {
+          console.error('Invalid payment response');
+          alert('Invalid payment response. Please try again.');
           setIsLoading(false);
+          return;
         }
+
+        // Handle async verification separately
+        verifyPayment(response.reference);
       };
 
       const closeCallback = () => {
@@ -188,6 +199,11 @@ export function PaymentModal({
   };
 
   const formatPrice = (priceInKobo: number) => {
+    // Validate input and provide fallback
+    if (typeof priceInKobo !== 'number' || isNaN(priceInKobo) || priceInKobo < 0) {
+      return `₦${(price / 100).toFixed(0)}`; // Use default price as fallback
+    }
+    
     const priceInNaira = priceInKobo / 100;
     // If it's a whole number, show without decimals
     if (priceInNaira % 1 === 0) {
