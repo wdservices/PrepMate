@@ -112,22 +112,23 @@ export function ScholarshipManagement() {
         }),
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to toggle scholarship");
+        throw new Error(result.error || "Failed to toggle scholarship");
       }
 
-      const updatedData = await response.json();
-      setScholarship(updatedData);
+      setScholarship(result);
       
       toast({
         title: "Success",
-        description: `Scholarship ${updatedData.isActive ? "activated" : "deactivated"} successfully`,
+        description: `Scholarship ${result.isActive ? "activated" : "deactivated"} successfully`,
       });
     } catch (error) {
       console.error("Error toggling scholarship:", error);
       toast({
         title: "Error",
-        description: "Failed to toggle scholarship",
+        description: error instanceof Error ? error.message : "Failed to toggle scholarship",
         variant: "destructive",
       });
     } finally {

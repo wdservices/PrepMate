@@ -88,8 +88,8 @@ export function PaymentModal({
       const response = await fetch('/api/admin/scholarship');
       const result = await response.json();
       
-      if (result.success && result.data) {
-        setScholarshipActive(result.data.isActive);
+      if (response.ok && result) {
+        setScholarshipActive(result.isActive);
       }
     } catch (error) {
       console.error('Error fetching scholarship status:', error);

@@ -84,7 +84,7 @@
     <script>
         // --- API & Environment Setup ---
         // Note: The __app_id and __firebase_config variables are provided by the hosting environment.
-        const apiKey = "";
+        const apiKey = "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";
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
         const chatForm = document.getElementById('chat-form');

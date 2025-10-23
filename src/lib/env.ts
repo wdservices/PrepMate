@@ -6,6 +6,7 @@
 // This will be replaced at build time with actual environment variables
 export const env = {
   GOOGLE_API_KEY: process.env.GOOGLE_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
+  NEXT_PUBLIC_GOOGLE_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
   NODE_ENV: process.env.NODE_ENV || 'development',
 } as const;
 
@@ -14,7 +15,7 @@ export const env = {
  * Logs warnings for any missing variables
  */
 export function checkEnv() {
-  const requiredVars = ['GOOGLE_API_KEY'] as const;
+  const requiredVars = ['GOOGLE_API_KEY', 'NEXT_PUBLIC_GOOGLE_API_KEY'] as const;
   
   for (const varName of requiredVars) {
     if (!env[varName]) {
@@ -28,6 +29,7 @@ if (typeof window === 'undefined' && process.env.NODE_ENV !== 'production') {
   checkEnv();
   console.log('Environment variables:', {
     GOOGLE_API_KEY: env.GOOGLE_API_KEY ? '✅ Set' : '❌ Missing',
+    NEXT_PUBLIC_GOOGLE_API_KEY: env.NEXT_PUBLIC_GOOGLE_API_KEY ? '✅ Set' : '❌ Missing',
     NODE_ENV: env.NODE_ENV,
   });
 }

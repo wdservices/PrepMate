@@ -2,7 +2,6 @@
 import type { ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Sparkles } from 'lucide-react';
 import { siteConfig } from '@/config/site';
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
@@ -11,7 +10,12 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <Link href="/" className="inline-flex items-center gap-2">
-            <Sparkles className="h-10 w-10 text-primary" />
+            <Image 
+              src="/prepmate_logo.png" 
+              alt="PrepMate Logo" 
+              width={40} 
+              height={40} 
+            />
             <span className="text-3xl font-bold text-foreground">{siteConfig.name}</span>
           </Link>
         </div>

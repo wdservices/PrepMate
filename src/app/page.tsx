@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { useAuth } from '@/components/providers/firebase-provider';
 import { Button } from '@/components/ui/button';
 import { siteConfig } from '@/config/site';
-import { Loader2, BookOpen, Brain, MessageSquare, LogIn, UserPlus, Sparkles, ArrowRight, CheckCircle, Zap, Lightbulb } from 'lucide-react';
+import { Loader2, BookOpen, Brain, MessageSquare, LogIn, UserPlus, ArrowRight, CheckCircle, Zap, Lightbulb } from 'lucide-react';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -81,7 +81,13 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
         <div className="container mx-auto flex h-20 max-w-screen-xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-2.5">
-            <Sparkles className="h-8 w-8 text-primary animate-pulse" />
+            <Image 
+              src="/prepmate_logo.png" 
+              alt="PrepMate Logo" 
+              width={32} 
+              height={32} 
+              className="animate-pulse"
+            />
             <span className="text-2xl font-semibold text-foreground tracking-tight">{siteConfig.name}</span>
           </Link>
           <nav className="flex items-center gap-2 sm:gap-3">
@@ -110,7 +116,13 @@ export default function LandingPage() {
             <div className="absolute bottom-0 right-0 w-64 h-64 bg-secondary rounded-full filter blur-3xl opacity-50"></div>
           </div>
           <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <Sparkles className="mx-auto h-12 w-12 sm:h-16 sm:w-16 text-primary mb-6" />
+            <Image 
+              src="/prepmate_logo.png" 
+              alt="PrepMate Logo" 
+              width={64} 
+              height={64} 
+              className="mx-auto mb-6"
+            />
             <h1 className="text-4xl font-extrabold tracking-tighter text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
               Ace Your Exams with <span className="text-primary block sm:inline">{siteConfig.name}</span>
             </h1>
@@ -194,7 +206,13 @@ export default function LandingPage() {
         {/* Call to Action Section */}
         <section className="py-16 md:py-24 bg-primary/90 text-primary-foreground">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <Sparkles className="mx-auto h-12 w-12 text-background mb-5 opacity-80" />
+            <Image 
+              src="/prepmate_logo.png" 
+              alt="PrepMate Logo" 
+              width={48} 
+              height={48} 
+              className="mx-auto mb-5 opacity-80"
+            />
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               Ready to Elevate Your Scores?
             </h2>
@@ -220,7 +238,12 @@ export default function LandingPage() {
       <footer className="py-10 border-t border-border/40 bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Link href="/" className="inline-flex items-center gap-2 mb-3">
-            <Sparkles className="h-7 w-7 text-primary" />
+            <Image 
+              src="/prepmate_logo.png" 
+              alt="PrepMate Logo" 
+              width={28} 
+              height={28} 
+            />
             <span className="text-xl font-semibold text-foreground">{siteConfig.name}</span>
           </Link>
           <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>

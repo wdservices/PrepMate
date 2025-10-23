@@ -18,7 +18,8 @@ import {
   SidebarSeparator, 
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
-import { LayoutGrid, BarChart3, Sparkles, BotMessageSquare, BookOpen, Settings } from 'lucide-react'; 
+import Image from 'next/image';
+import { LayoutGrid, BarChart3, BotMessageSquare, BookOpen, Settings } from 'lucide-react'; 
 import { usePathname } from 'next/navigation';
 import { examService, type Exam } from '@/lib/firestore-service';
 import { useState, useEffect } from 'react'; 
@@ -70,7 +71,13 @@ export function AppLayout({ children }: { children: ReactNode }) {
           <Sidebar collapsible="icon" variant="sidebar" side="left" className="bg-sidebar text-sidebar-foreground">
             <SidebarHeader className="p-3 flex justify-center items-center h-16 border-b border-sidebar-border">
               <Link href="/" className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center">
-                <Sparkles className="h-7 w-7 text-primary flex-shrink-0" />
+                <Image 
+                  src="/prepmate_logo.png" 
+                  alt="PrepMate Logo" 
+                  width={28} 
+                  height={28} 
+                  className="flex-shrink-0"
+                />
                 <span className="text-xl font-bold text-white group-data-[collapsible=icon]:hidden whitespace-nowrap">
                   {siteConfig.name}
                 </span>

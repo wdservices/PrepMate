@@ -103,7 +103,7 @@ export function AIAssistantChat({
   }, [messages]);
 
   const callGeminiAPI = async (userQuery: string, retryCount = 0): Promise<{text: string, sources: Array<{uri: string, title: string}>}> => {
-    const apiKey = ""; // Replace with your API key if needed
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY || "";
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
     const maxRetries = 3;
     const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff: 1s, 2s, 4s
