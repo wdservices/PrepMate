@@ -30,7 +30,7 @@ interface TranslationParams {
 // Configuration
 const CONFIG = {
   API_BASE_URL: 'https://generativelanguage.googleapis.com/v1beta',
-  MODEL_NAME: 'gemini-1.5-pro',
+  MODEL_NAME: 'gemini-1.5-flash',
   MAX_RETRIES: 2,
   INITIAL_RETRY_DELAY: 1000, // 1 second
   RATE_LIMIT_DELAY: 5000, // 5 seconds

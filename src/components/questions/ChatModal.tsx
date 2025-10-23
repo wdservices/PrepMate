@@ -7,7 +7,6 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { X, Send, Bot, User } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader2 } from "lucide-react";
-import { aiService } from "@/lib/ai-service-client";
 
 interface Message {
   role: "user" | "assistant";
@@ -19,6 +18,51 @@ interface ChatModalProps {
   onClose: () => void;
   subject: string;
   currentQuestion?: string;
+}
+
+// Direct Gemini API call function (same as working chatbot)
+async function callGeminiAPI(userQuery: string, subject: string): Promise<string> {
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY || "AIzaSyBYWniCnOrEFfaks74_fuHd5kKp42xtv4Q";
+  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  
+  const systemInstruction = `You are the PrepMate AI Tutor for ${subject}. Your primary goal is to provide clear, educational, and helpful responses to student questions. Be encouraging and patient while providing accurate information.`;
+
+  const payload = {
+    contents: [
+      {
+        role: 'user',
+        parts: [{ text: userQuery }]
+      }
+    ],
+    tools: [{ "google_search": {} }], 
+    systemInstruction: {
+      parts: [{ text: systemInstruction }]
+    },
+  };
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error(`API call failed with status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    const candidate = result.candidates?.[0];
+
+    if (candidate && candidate.content?.parts?.[0]?.text) {
+      return candidate.content.parts[0].text;
+    } else {
+      return "Sorry, I couldn't generate a response. Please try asking your question again.";
+    }
+  } catch (error) {
+    console.error("Gemini API Error:", error);
+    return "I'm having trouble connecting to the AI service. Please try again in a moment.";
+  }
 }
 
 export function ChatModal({ isOpen, onClose, subject, currentQuestion }: ChatModalProps) {
@@ -58,13 +102,7 @@ export function ChatModal({ isOpen, onClose, subject, currentQuestion }: ChatMod
         ? `Current question: ${currentQuestion}\n\n${input}`
         : input;
 
-      const response = await aiService.chat([
-        {
-          role: "system",
-          content: `You are a helpful ${subject} tutor. Provide clear, educational responses. Be encouraging and patient.`,
-        },
-        { role: "user", content: context },
-      ]);
+      const response = await callGeminiAPI(context, subject);
 
       setMessages((prev) => [
         ...prev,

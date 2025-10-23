@@ -16,7 +16,40 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ChatModal } from "./ChatModal";
-import { aiService } from "@/lib/ai-service-client";
+// Removed broken aiService import
+
+// Working Gemini API function
+async function callGeminiAPI(prompt: string): Promise<string> {
+  const apiKey = 'AIzaSyBYWniCnOrEFfaks74_fuHd5kKp42xtv4Q';
+  const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+  
+  const response = await fetch(`${apiUrl}?key=${apiKey}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      contents: [{
+        parts: [{
+          text: prompt
+        }]
+      }],
+      generationConfig: {
+        temperature: 0.7,
+        topK: 40,
+        topP: 0.95,
+        maxOutputTokens: 1024,
+      }
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`API request failed: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No explanation available.';
+}
 
 type Question = {
   id: string;
@@ -148,14 +181,18 @@ export function QuestionCard({
     setIsLoading(true);
     
     try {
-      // Generate AI explanation
-      const aiExplanation = await aiService.generateExplanation({
-        question: question.text,
-        selectedAnswer: option,
-        isCorrect: isAnswerCorrect,
-        correctAnswer: question.answer,
-        subject: 'this subject'
-      });
+      // Generate AI explanation using working Gemini API
+      const prompt = `As a helpful study assistant, explain this question:
+
+Question: ${question.text}
+Selected Answer: ${option}
+Correct Answer: ${question.answer}
+Is Selected Answer Correct: ${isAnswerCorrect ? 'Yes' : 'No'}
+Subject: ${subject}
+
+Please provide a clear, educational explanation that helps the student understand why the answer is ${isAnswerCorrect ? 'correct' : 'incorrect'} and explain the correct concept.`;
+
+      const aiExplanation = await callGeminiAPI(prompt);
       setExplanation(aiExplanation);
     } catch (aiError: any) {
       console.error('AI Explanation Error:', aiError);
